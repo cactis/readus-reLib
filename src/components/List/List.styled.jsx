@@ -1,0 +1,42 @@
+/* eslint-disable no-underscore-dangle */
+import React from 'react';
+import styled from 'styled-components';
+export const _List = styled.div.attrs((props) => ({ className: 'List' }))`
+  width: 100%;
+  .Header {
+    justify-content: flex-end;
+    align-items: center;
+    color: rgb(0, 0, 0);
+    font-size: 1.5rem;
+    padding: 1rem 0;
+    gap: 0.5rem;
+    flex-flow: row;
+    .Main {
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+  }
+`;
+
+export const _ListWrapper = styled.div.attrs((props) => ({
+  className: `ListWrapper`,
+}))`
+  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+`;
+
+export const _ListItem = styled.div.attrs((props) => ({
+  className: `ListItem`,
+}))`
+  /* border: 1px solid #aaa; */
+  /* padding: 1rem; */
+  /* aspect-ratio: 9/13; */
+  /* background-color: #dbdbdb; */
+
+  color: black;
+  cursor: pointer;
+  &:active {
+    transform: scale(0.98);
+  }
+`;
