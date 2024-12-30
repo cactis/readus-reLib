@@ -44,23 +44,10 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-// ipcMain.handle('user-data', async (event, fileName) => {
-//   const path = app.getPath('userData');
-//   return path;
-// });
-
-// ipcMain.handle('loadBooks', (event, arg) => {
-//   log([event, arg], '[event, arg] in main.js#ipcMain.on: loadBooks');
-//   let boooks = loadBooks();
-//   event.returnValue = books;
-//   // return books;
-//   return 'abc';
-// });
-
 ipcMain.on('loadBooks', (event, arg) => {
   log([event, arg], '[event, arg] in : ');
   let books = loadBooks();
-  log(books, 'books in : ipcMain.on(loadBooks)');
+  // log(books, 'books in : ipcMain.on(loadBooks)');
   // sendMessage('addBooksToLibrary', { books });
   // event.reply('loadBooks-reply', books);
   // event.returnValue = books;

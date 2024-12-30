@@ -13,6 +13,7 @@ export const EpubReaderCss = css`
     img,
     image {
       max-width: 90% !important;
+      height: unset !important;
       /* width: auto;
       height: auto; */
       padding: 1rem;

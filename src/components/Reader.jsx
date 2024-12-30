@@ -17,7 +17,6 @@ export const Reader = (props) => {
   const id = randStr('Reader');
 
   const [url, seturl] = useState(props.url);
-  let book, rendition;
 
   useEffect(() => {
     window.url = url;
@@ -29,8 +28,13 @@ export const Reader = (props) => {
     let _reader = window.ePubReader(url, {
       restore: true,
       contained: true,
+      styles: EpubReaderCss,
+      // generatePagination: true,
+      history: true,
     });
     await _reader.book.ready;
+    window._reader = _reader;
+    log(_reader, '_reader in : ');
     _reader.rendition.hooks.content.register((contents, view) => {
       customStyle();
     });
@@ -52,10 +56,28 @@ export const Reader = (props) => {
   let { children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
 
+  const saveBookPosition = () => {
+    let location = _reader.rendition.currentLocation();
+    log(location, 'location in : ');
+    let cfiString = location.start.cfi;
+    log(cfiString, 'cfiString in : ');
+    window.cfiString = cfiString;
+    _reader.saveSettings();
+    // var books_json = await window.bookConfig.getBooks()
+    // await window.bookConfig.changeBookValue(
+    //   books_json,
+    //   epubCodeSearch,
+    //   "lastPageOpened",
+    //   cfiString
+    // )
+  };
+
   const _return = (
     <Styled._Reader id={id} ref={root} className={`${className}`} {..._props}>
       <Button
         onClick={(e) => {
+          saveBookPosition();
+
           $(e.target).closest('wrapper').fadeOut(500).delay(1000).remove();
         }}
       >
