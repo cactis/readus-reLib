@@ -1,5 +1,5 @@
-import { app, contextBridge } from 'electron';
-import { log } from './lib';
+import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
+import { isDev, log, sendMessage } from './lib';
 
 const fs = require('fs');
 const path = require('path');
@@ -12,28 +12,38 @@ const booksExtensions = ['epub', 'mobi'];
 
 let _ = require('lodash');
 
+const storage_file = () => {
+  return `${app.getPath('userData')}/books.json`;
+};
+
 export const addBooks = async (files) => {
-  // log(files, 'files in addBooks: ');
-  return Promise.all(_.map(files, (file) => addBook(file))).then((books) => {
+  return Promise.all(
+    _.map(files, (file) =>
+      addBook(file).then((book) => {
+        BrowserWindow.getFocusedWindow().webContents.send('bookAdded', book);
+        return book;
+      }),
+    ),
+  ).then((books) => {
     log(books, 'books in : ');
     addBooksToStorage(books);
-    return 'books added';
+    return books;
   });
 };
 
+export const getAppPath = () => {
+  return app.getAppPath();
+};
+
 const addBook = async (file) => {
-  log(file, 'file in addBook: ');
-  let appPath = app.getAppPath();
+  // log(file, 'file in addBook: ');
   const coversPath = `${app.getPath('userData')}/covers`;
-  // let url = URL.createObjectURL(file);
-  // log(url, 'url in : addBook');
-  // return new Promise((resolve) => {
   return getChecksum(file).then((id) => {
     // log(id, 'id in : ');
     return Epub.createAsync(file, null, null).then((epub) => {
-      log(epub, 'epub in : ');
-      // log(process, 'process in : ');
-      // log(appPath, 'appPath in : ');
+      // log(epub, 'epub in : ');
+      let appPath = getAppPath();
+      log(appPath, 'appPath in : ');
       let cover = `${appPath}/assets/images/cover-not-available.jpg`;
       let coverExt = epub.metadata.cover
         ? _.last(epub.manifest[epub.metadata.cover]?.href.split('.'))
@@ -52,6 +62,7 @@ const addBook = async (file) => {
         language: epub.metadata.language,
         publisher: epub.metadata.publisher,
         id,
+        createdAt: new Date(),
       };
       // log(book, 'book in addBook: ');
       return book;
@@ -64,23 +75,28 @@ export const addBooksToStorage = (books) => {
   let _books = loadBooks();
   _books = _.concat(_books, books);
   _books = _.uniqBy(_books, 'id');
+  // ipcMain.sendMessage('booksAdded', books);
+  // BrowserWindow.getFocusedWindow().webContents.send('booksAdded', books);
   saveBooks(_books);
 };
 
 export const loadBooks = () => {
-  return getStorage('books') || [];
+  log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
+  log(isDev(), 'isDev() in : ');
+  let books = getStorage('books') || [];
+  books = books.sort((a, b) => (a.createdAt - b.createdAt ? 1 : -1));
+  return books;
 };
 
 // contextBridge.exposeInMainWorld('Library', {
 //   loadBooks: (files) => loadBooks(files),
 // });
 
-const storage_file = '.data/books.json';
-
 export const getStorage = (key) => {
+  log(storage_file(), 'storage_file() in : ');
   let data = [];
   try {
-    data = fs.readFileSync(storage_file, 'utf-8');
+    data = fs.readFileSync(storage_file(), 'utf-8');
     return JSON.parse(data);
   } catch (error) {
     return null;
@@ -92,7 +108,7 @@ export const saveBooks = (data) => {
   // storage[key] = data;
   let _storage = JSON.stringify(data, null, 2);
   log(_storage, '_storage in : ');
-  fs.writeFileSync(storage_file, _storage);
+  fs.writeFileSync(storage_file(), _storage);
 };
 const crypto = require('crypto');
 

@@ -16,7 +16,7 @@ export const Cover = (props) => {
   // _src = '../../assets/images/undefined-cover.jpg';
   let { children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
-  log(src, 'src in : ');
+  // log(src, 'src in : ');
   let _src = `file://${src}`;
   // src.indexOf('undefined') > -1
   //   ? `file:///Users/cactis/www/readus-reLib${src}`
@@ -29,7 +29,15 @@ export const Cover = (props) => {
       {..._props}
       // style={{ backgroundImage: `url(file://${src})` }}
     >
-      <img src={_src} onerror="this.style.display='none'" />
+      <img
+        src={_src}
+        onError={(e) => {
+          $(e.target).attr(
+            'src',
+            'file:///Users/cactis/www/readus-reLib/assets/images/cover-not-available.jpg',
+          );
+        }}
+      />
     </Styled._Cover>
   );
 

@@ -9,16 +9,19 @@
  * `./src/main.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  dialog,
+  ipcRenderer,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { log } from '../libs/lib';
-import { addBooks } from '../libs/library';
-
-// let $ = require('jquery')
-// window.$ = $
-// window.jQuery = $
+import { log, sendMessage } from '../libs/lib';
+import { addBooks, loadBooks } from '../libs/library';
 
 class AppUpdater {
   constructor() {
@@ -30,13 +33,45 @@ class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
+// ipcMain.handle('read-user-data', async (event, fileName) => {
+//   const path = app.getPath('userData');
+//   return path;
+// });
+
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
   console.log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on('openBookChooserDialog', () => {
+// ipcMain.handle('user-data', async (event, fileName) => {
+//   const path = app.getPath('userData');
+//   return path;
+// });
+
+// ipcMain.handle('loadBooks', (event, arg) => {
+//   log([event, arg], '[event, arg] in main.js#ipcMain.on: loadBooks');
+//   let boooks = loadBooks();
+//   event.returnValue = books;
+//   // return books;
+//   return 'abc';
+// });
+
+ipcMain.on('loadBooks', (event, arg) => {
+  log([event, arg], '[event, arg] in : ');
+  let books = loadBooks();
+  log(books, 'books in : ipcMain.on(loadBooks)');
+  // sendMessage('addBooksToLibrary', { books });
+  // event.reply('loadBooks-reply', books);
+  // event.returnValue = books;
+  event.reply('booksLoad', books);
+  // sendMessage('booksLoad', books);
+  // ipcRenderer.send('booksLoad', books);
+  return books;
+});
+
+ipcMain.on('openBookChooserDialog', (event, arg) => {
+  log([event, arg], '[event, arg] in : ');
   dialog
     .showOpenDialog({
       properties: ['openFile', 'multiSelections'],
@@ -47,6 +82,7 @@ ipcMain.on('openBookChooserDialog', () => {
       if (!result.canceled) {
         addBooks(result.filePaths).then((books) => {
           log(books, 'books in on openBookChooserDialog: ');
+          sendMessage('addBooksToLibrary', { books });
         });
       }
     })

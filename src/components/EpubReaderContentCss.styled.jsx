@@ -5,14 +5,16 @@ export const EpubReaderCss = css`
     font-size: 130%;
     padding: 2rem !important;
     p {
-      line-height: 2 !important;
+      line-height: 1.8 !important;
       /* color: black !important; */
       font-family: unset !important;
       margin: 1rem 0 !important;
     }
     img,
     image {
-      max-width: 90%;
+      max-width: 90% !important;
+      /* width: auto;
+      height: auto; */
       padding: 1rem;
       background-color: white;
       box-shadow: 0 0 15px 0 #aaaaaa82;

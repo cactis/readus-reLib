@@ -11,7 +11,7 @@ export const BookItem = (props) => {
 
   let { children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
-  log(data, 'data in BookItem: ');
+  // log(data, 'data in BookItem: ');
   const _return = (
     <Styled._BookItem id={id} ref={root} className={`${className}`} {..._props}>
       <Cover src={data.cover} />

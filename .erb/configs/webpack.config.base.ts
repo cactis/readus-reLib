@@ -50,6 +50,7 @@ const configuration: webpack.Configuration = {
   },
 
   plugins: [
+    // new webpack.ExternalsPlugin('commonjs', ['electron']),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
     }),

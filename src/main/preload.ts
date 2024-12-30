@@ -2,53 +2,12 @@ console.log('src/main/preload.ts loaded');
 
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { log } from '../libs/lib';
-import { getStorage, loadBooks } from '../libs/library';
-
-const { app } = require('electron');
-
-const fs = require('fs');
-const path = require('path');
-const fse = require('fs-extra');
-const Vibrant = require('node-vibrant/browser');
-const Epub = require('epub2').EPub;
-const convert = require('ebook-convert');
-
-const booksExtensions = ['epub', 'mobi'];
+import { loadBooks } from '../libs/library';
 
 let _ = require('lodash');
 
-// const addBooks = async (files) => {
-//   // log(files, 'files in addBooks: ');
-//   await _.map(files, (file) => {
-//     addBook(file);
-//   });
-// };
-
-// const addBook = async (file) => {
-//   log(file, 'file in addBook: ');
-//   // let url = URL.createObjectURL(file);
-//   // log(url, 'url in : addBook');
-//   return Epub.createAsync(file, null, null).then((epub) => {
-//     log(epub, 'epub in : ');
-//     return epub;
-//   });
-
-//   return new Promise((resolve) => {
-//     log(file, 'file in addBook: ');
-//   });
-// };
-export const getBooks = () => {
-  let books = loadBooks();
-  log(books, 'books in : ');
-  books = books.map((book, i) => {
-    // book.cover = `${app.getPath('userData')}`;
-    return book;
-  });
-  return books || [];
-};
-
 contextBridge.exposeInMainWorld('Library', {
-  getBooks: (files) => getBooks(files),
+  loadBooks: loadBooks,
 });
 
 export type Channels = 'ipc-example';
@@ -74,5 +33,10 @@ const electronHandler = {
 };
 
 contextBridge.exposeInMainWorld('electron', electronHandler);
+
+const gonHandler = {
+  appPath: '/',
+};
+contextBridge.exposeInMainWorld('gon', gonHandler);
 
 export type ElectronHandler = typeof electronHandler;

@@ -29,6 +29,26 @@ export const _ListWrapper = styled.div.attrs((props) => ({
 export const _ListItem = styled.div.attrs((props) => ({
   className: `ListItem`,
 }))`
+  position: relative;
+  &.new {
+    animation: fade-in 0.5s;
+    animation-iteration-count: 1;
+    &:before {
+      content: 'New';
+      position: absolute;
+      z-index: 100;
+      padding: 0.2rem 0.5rem;
+      background: #8000bb;
+      border-radius: 5px;
+      font-size: 0.6rem;
+      color: white;
+      margin: 0.5rem;
+      right: 0;
+      /* font-style: italic; */
+      font-weight: bold;
+    }
+  }
+
   /* border: 1px solid #aaa; */
   /* padding: 1rem; */
   /* aspect-ratio: 9/13; */

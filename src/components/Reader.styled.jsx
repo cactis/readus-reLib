@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ReaderCss } from './ReaderCss.js';
 
 export const _Reader = styled.div.attrs((props) => ({ className: 'Reader' }))`
+  z-index: 100;
   left: 0;
   top: 0;
   width: 100vw;

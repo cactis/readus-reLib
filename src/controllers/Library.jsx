@@ -12,7 +12,17 @@ import {
 import { BiBookAdd } from 'react-icons/bi';
 
 import { renderComponent } from '../libs/lib.jsx';
-import { log, newArray } from '../libs/lib.js';
+import {
+  broadcast,
+  log,
+  newArray,
+  onMessage,
+  sendMessage,
+} from '../libs/lib.js';
+
+// const { ipcRenderer } = require('electron');
+
+// import { ipcRenderer } from 'electron';
 // import { dialog } from 'electron';
 
 // const { dialog } = require('electron');
@@ -23,10 +33,41 @@ export const Library = (props) => {
   const root = React.createRef();
   const id = 'Library';
   const formId = 'file-input';
-  useEffect(() => {}, []);
+  let _data = [];
+  useEffect(() => {
+    sendMessage('loadBooks');
+    onMessage('booksLoad', (books) => {
+      log(books, 'books in Library 222: ');
+      setdata(books);
+      _data = books;
+    });
 
+    // useEffect(() => {
+    //   _data = data;
+    // }, [data]);
+    // window.electron.ipcRenderer.sendMessage('aaa');
+    // ipcRenderer.invoke('some-name', someArgument).then((result) => {
+    // ...
+    // });
+    // log('books in : Library#useEffect');
+
+    onMessage('bookAdded', (book) => {
+      log(book, 'book in bookAdded Library#onMessage: bookAdded ');
+      // setdata([book, ...data]);
+      // broadcast('prependItems', [book]);
+      prependItems([book]);
+      // BrowserWindow.getFocusedWindow().webContents.send('prependItems', [book]);
+    });
+  }, []);
+
+  // useEffect(()=> {_data = data}, [data])
+
+  const prependItems = (items) => {
+    _data = [...items, ..._data];
+    setdata(_data);
+  };
   const { children, className = '', ..._props } = props;
-  const [data, setdata] = useState(props.data || []);
+  const [data, setdata] = useState([]);
 
   const _return = (
     // eslint-disable-next-line react/jsx-pascal-case
@@ -40,17 +81,18 @@ export const Library = (props) => {
           toolbar={
             <Button
               onClick={(e) => {
-                window.electron.ipcRenderer.sendMessage(
-                  'openBookChooserDialog',
-                );
+                sendMessage('openBookChooserDialog', { a: 1 });
+                // window.electron.ipcRenderer.sendMessage(
+                //   'openBookChooserDialog',
+                // );
               }}
             >
               <BiBookAdd />
               加入書籍
             </Button>
           }
-          data={window.Library.getBooks()}
-          // data={[]}
+          // data={window.Library.loadBooks()}
+          data={data}
         />
       </Body>
       <Footer>power by Readus</Footer>
