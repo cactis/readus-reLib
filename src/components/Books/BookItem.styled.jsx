@@ -15,7 +15,7 @@ export const _Title = styled.div.attrs((props) => ({ className: `Title` }))`
 
 export const _Author = styled.div.attrs((props) => ({ className: `Author` }))`
   font-size: 0.85rem;
-  color: 777;
+  /* color: 777; */
   white-space: nowrap;
   overflow: hidden;
   line-height: 1.6;

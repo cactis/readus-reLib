@@ -7,9 +7,14 @@ import {
   Footer,
   Header,
   List,
+  Main,
   Reader,
+  Side,
 } from '../components';
 import { BiBookAdd } from 'react-icons/bi';
+import { GoGear } from 'react-icons/go';
+import { CiSearch } from 'react-icons/ci';
+import { CiFilter } from 'react-icons/ci';
 
 import { renderComponent } from '../libs/lib.jsx';
 import {
@@ -73,8 +78,20 @@ export const Library = (props) => {
     // eslint-disable-next-line react/jsx-pascal-case
     <Styled._Library id={id} ref={root} className={`${className} `} {..._props}>
       <Header>
-        <Styled._Logo>reLib</Styled._Logo>
+        <Side>
+          <Styled._Logo>reLib</Styled._Logo>
+        </Side>
+        <Main>
+          <Styled._Search>
+            <CiSearch />
+            <input placeholder="Search Book Titles" />
+          </Styled._Search>
+          <CiFilter />
+        </Main>
         {/* <List data={newArray(5)} /> */}
+        <Side>
+          <GoGear />
+        </Side>
       </Header>
       <Body>
         <List

@@ -1,8 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ReaderCss } from './ReaderCss.js';
+import { _Flex, _Main } from './Layout/Layout.styled.jsx';
 
-export const _Reader = styled.div.attrs((props) => ({ className: 'Reader' }))`
+export const _Reader = styled(_Flex).attrs((props) => ({
+  className: 'Reader',
+}))`
+  flex-flow: column;
   z-index: 100;
   left: 0;
   top: 0;
@@ -30,4 +34,53 @@ export const _Reader = styled.div.attrs((props) => ({ className: 'Reader' }))`
     background-color: #4646467d;
     color: #fff;
   }
+  .Footer {
+    justify-content: space-between;
+    z-index: 100;
+    color: #333;
+    font-size: 0.8rem;
+    padding: 1rem 2rem;
+  }
+`;
+
+export const _TitleBar = styled(_Flex).attrs((props) => ({
+  className: `TitleBar`,
+}))`
+  color: #888;
+  flex-flow: row;
+  .Main {
+    align-items: center;
+    /* justify-content: center; */
+  }
+  .Side {
+    padding: 0.5rem 0 0 1rem;
+    width: 5rem;
+  }
+  margin-bottom: 2rem;
+`;
+
+export const _MainL = styled(_Main).attrs((props) => ({
+  className: `MainL`,
+}))`
+  flex: 1;
+`;
+
+export const _MainR = styled(_Main).attrs((props) => ({
+  className: `MainR`,
+}))`
+  flex: 1;
+  justify-content: flex-end;
+`;
+
+export const _FooterL = styled(_Flex).attrs((props) => ({
+  className: `FooterL`,
+}))`
+  flex: 1;
+`;
+
+export const _FooterR = styled(_Flex).attrs((props) => ({
+  className: `FooterR`,
+}))`
+  flex: 1;
+  justify-content: flex-end;
 `;

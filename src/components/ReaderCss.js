@@ -36,22 +36,19 @@ export const ReaderCss = css`
   }
 
   #titlebar {
-    height: 8%;
+    /* height: 8%;
     min-height: 20px;
-    /* margin: 0 50px 0 50px; */
     padding: 1rem 0;
     position: relative;
     color: #4f4f4f;
     margin-bottom: 3rem;
-    /* font-weight: 100; */
-    /* font-family: Georgia, 'Times New Roman', Times, serif; */
     opacity: 0.8;
-    text-align: center;
-    z-index: 10;
+    text-align: center; */
+    z-index: 100;
     border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
-    &:hover {
+    /* &:hover {
       opacity: 1;
-    }
+    } */
     & a {
       cursor: pointer;
       /* width: 18px;
@@ -64,45 +61,10 @@ export const ReaderCss = css`
       /* border-radius: 4px; */
       font-size: 1.5rem;
     }
-
-    #opener,
-    #title-controls {
-      position: absolute;
-      top: 0;
-      margin: 1rem;
-    }
-    #title-controls {
-      right: 0;
-    }
-
-    #metainfo {
-      > * {
-        display: block;
-      }
-      #chapter-title {
-        font-size: 0.9rem;
-      }
-    }
-  }
-
-  #titlebar a::before {
-    visibility: visible;
-  }
-
-  #titlebar a:hover {
-    opacity: 0.8;
-    /* border: 1px rgba(0, 0, 0, 0.2) solid; */
-    padding: 3px;
-  }
-
-  #titlebar a:active {
-    opacity: 1;
-    color: rgba(0, 0, 0, 0.6);
-    /* margin: 1px -1px -1px 1px; */
   }
 
   #book-title {
-    font-weight: 600;
+    font-weight: 400;
   }
 
   #title-seperator {
@@ -206,24 +168,10 @@ export const ReaderCss = css`
     height: 14px;
   }
 
-  #opener {
-    /* padding: 10px 10px; */
-    float: left;
-    outline: none;
-  }
-
-  /* #opener #slider {
-  width: 25px;
-} */
-
   #metainfo {
     display: inline-block;
     text-align: center;
     max-width: 80%;
-  }
-
-  #title-controls {
-    float: right;
   }
 
   #panels a {

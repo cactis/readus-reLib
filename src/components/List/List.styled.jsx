@@ -54,7 +54,7 @@ export const _ListItem = styled.div.attrs((props) => ({
   /* aspect-ratio: 9/13; */
   /* background-color: #dbdbdb; */
 
-  color: black;
+  /* color: black; */
   cursor: pointer;
   &:active {
     transform: scale(0.98);
