@@ -2,7 +2,7 @@
 
 A local ebook library manager and reader, built with Electron, React, and Epub.js.
 
-<img src='(./assets/images/logo.png' width='50%'/>
+<img src='./assets/images/logo.png' width='50%'/>
 
 ## Overview
 
