@@ -179,7 +179,7 @@ export const Reader = (props) => {
                 </a>
               </div>
             </Side>
-            <Main>
+            <Main className={``}>
               <Styled._MainL>
                 <div id="metainfo">
                   <span id="book-title"></span>

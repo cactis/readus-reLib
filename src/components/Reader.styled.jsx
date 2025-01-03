@@ -30,7 +30,7 @@ export const _Reader = styled(_Flex).attrs((props) => ({
     border-radius: 50%;
     width: 30px;
     height: 30px;
-    margin: 2rem;
+    margin: 1.2rem 1rem;
     background-color: #4646467d;
     color: #fff;
   }
@@ -48,24 +48,31 @@ export const _TitleBar = styled(_Flex).attrs((props) => ({
 }))`
   color: #888;
   flex-flow: row;
+  font-size: 0.8rem;
   .Main {
     align-items: center;
-    /* justify-content: center; */
+    justify-content: space-between;
+    > * {
+      /* overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis; */
+      max-width: 45vw;
+    }
   }
   .Side {
     padding: 0.5rem 0 0 1rem;
     width: 5rem;
   }
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
 `;
 
-export const _MainL = styled(_Main).attrs((props) => ({
+export const _MainL = styled(_Flex).attrs((props) => ({
   className: `MainL`,
 }))`
   flex: 1;
 `;
 
-export const _MainR = styled(_Main).attrs((props) => ({
+export const _MainR = styled(_Flex).attrs((props) => ({
   className: `MainR`,
 }))`
   flex: 1;

@@ -18,6 +18,7 @@ export const Cover = (props) => {
   const [data, setdata] = useState(props.data || []);
   // log(src, 'src in : ');
   let _src = `file://${src}`;
+  // _src = 'https://readus.org/images/2c2eb4c0c7f5a1902c937094/OEBPS/Image00000.jpg';
   // src.indexOf('undefined') > -1
   //   ? `file:///Users/cactis/www/readus-reLib${src}`
   //   : `file://${src}`;
@@ -31,7 +32,7 @@ export const Cover = (props) => {
     >
       <img
         src={_src}
-        onError={(e) => {
+        onError_={(e) => {
           $(e.target).attr(
             'src',
             'file:///Users/cactis/www/readus-reLib/assets/images/cover-not-available.jpg',

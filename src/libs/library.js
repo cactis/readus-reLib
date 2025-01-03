@@ -41,7 +41,7 @@ const addBook = async (file) => {
   return getChecksum(file).then((id) => {
     // log(id, 'id in : ');
     return Epub.createAsync(file, null, null).then((epub) => {
-      // log(epub, 'epub in : ');
+      log(epub, 'epub in : ');
       let appPath = getAppPath();
       log(appPath, 'appPath in : ');
       let cover = `${appPath}/assets/images/cover-not-available.jpg`;

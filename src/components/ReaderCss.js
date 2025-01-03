@@ -65,6 +65,10 @@ export const ReaderCss = css`
 
   #book-title {
     font-weight: 400;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 
   #title-seperator {
@@ -171,7 +175,7 @@ export const ReaderCss = css`
   #metainfo {
     display: inline-block;
     text-align: center;
-    max-width: 80%;
+    max-width: 40vw;
   }
 
   #panels a {
