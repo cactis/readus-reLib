@@ -85,6 +85,26 @@ export const _FooterL = styled(_Flex).attrs((props) => ({
   flex: 1;
 `;
 
+export const _FooterM = styled(_Flex).attrs((props) => ({
+  className: `FooterM`,
+}))`
+  flex: 3;
+  #controls {
+    width: 100%;
+    text-align: center;
+    display: block;
+  }
+
+  #controls > input[type='range'] {
+    width: 100%;
+    appearance: auto;
+    cursor: default;
+    color: red;
+    padding: initial;
+    border: initial;
+  }
+`;
+
 export const _FooterR = styled(_Flex).attrs((props) => ({
   className: `FooterR`,
 }))`

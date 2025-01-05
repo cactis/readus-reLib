@@ -7,6 +7,7 @@ import {
   EpubReaderCss,
 } from './EpubReaderContentCss.styled.jsx';
 import { TfiMenuAlt } from 'react-icons/tfi';
+const _ = require('lodash');
 
 // require('../../vendors/jszip.min.js')
 // import { ePub } from '../js/epub.js'
@@ -18,10 +19,86 @@ export const Reader = (props) => {
   const defaultDocumentTitle = document.title;
   const [url, seturl] = useState(props.url);
 
+  let epub, book, rendition;
+
+  var controls, slider;
+  var slide = function () {
+    let percent = slider.value;
+    log(percent, 'percent in : ');
+    var cfi = book.locations.cfiFromPercentage(percent);
+    log(cfi, 'cfi in slide: ');
+    rendition.display(cfi);
+  };
+  var mouseDown = false;
+
+  useEffect(() => {
+    controls = document.getElementById('controls');
+    slider = document.getElementById('current-percent');
+  }, []);
+
   useEffect(() => {
     window.url = url;
     loadEpub();
   }, [url]);
+
+  const loadEpub1 = async () => {
+    let epub = ePub(url);
+    window.epub = epub;
+    log(window.epub, 'window.epub in : ');
+    rendition = epub.renderTo('viewer', {
+      flow: 'paginated',
+      manager: 'default',
+      width: '100%',
+      header: '100%',
+      // manager: bookLayoutStyle.manager,
+      // flow: bookLayoutStyle.flow,
+      // width: bookLayoutStyle.width,
+      // height: '100%',
+    });
+    // if (book_infos.lastPageOpened != null) {
+    //   rendition.display(book_infos.lastPageOpened)
+    // } else {
+    rendition.display();
+    // }
+    epub.ready
+      .then(function () {
+        const stored = localStorage.getItem(epub.key() + '-locations');
+        log(stored, 'stored in : ');
+        if (stored) {
+          return epub.locations.load(stored);
+        } else {
+          return epub.locations.generate(1024); // Generates CFI for every X characters (Characters per/page)
+        }
+      })
+      .then(function (locations) {
+        localStorage.setItem(epub.key() + '-locations', epub.locations.save());
+      });
+
+    $('#prev')
+      .off('click')
+      .on('click', async function () {
+        rendition.prev();
+
+        // updateSavePagesButton(book_saved_pages, current_cfi)
+        updatePageNumber();
+      });
+    $('#next')
+      .off('click')
+      .on('click', async function () {
+        rendition.next();
+        // updateSavePagesButton(book_saved_pages, current_cfi)
+        updatePageNumber();
+      });
+    rendition.hooks.content.register((contents, rendition) => {
+      // rendition.book.locations.generate(1024);
+      // log([contents, rendition], '[contents, rendition] in : ');
+      // log(
+      //   rendition.book.locations.total,
+      //   'rendition.book.locations.total. in : ',
+      // );
+      customStyle();
+    });
+  };
 
   const loadEpub = async () => {
     log(window.ePubReader, 'window.ePubReader in : ');
@@ -32,33 +109,147 @@ export const Reader = (props) => {
       // generatePagination: true,
       history: true,
     });
-    await _reader.book.ready;
-    window._reader = _reader;
-    window._book = _reader.book;
 
-    // _reader.book.locations.generate(512).then((_) => {
-    //   _reader.book.locations.save();
-    //   log(_reader.book.locations, '_reader.book.locations in : ');
-    //   updatePageInfo();
+    book = epub = _reader.book;
+    rendition = _reader.rendition;
+
+    await epub.ready
+      .then(function () {})
+      .then(function (locations) {
+        log([controls, slider], '[controls, slider] in : ');
+        slider.setAttribute('type', 'range');
+        slider.setAttribute('min', 0);
+        slider.setAttribute('max', 100);
+        // slider.setAttribute("max", book.locations.total+1);
+        slider.setAttribute('step', 1);
+        slider.setAttribute('value', 0);
+
+        slider.addEventListener('change', slide, false);
+        slider.addEventListener(
+          'mousedown',
+          function () {
+            mouseDown = true;
+          },
+          false,
+        );
+        slider.addEventListener(
+          'mouseup',
+          function () {
+            mouseDown = false;
+          },
+          false,
+        );
+      });
+    // rendition.display().then((location) => {
+    //   log(location, 'location in : ');
+    //   var currentLocation = rendition.currentLocation();
+    //   // Get the Percentage (or location) from that CFI
+    //   var currentPage = book.locations.percentageFromCfi(
+    //     currentLocation.start.cfi,
+    //   );
+    //   log(currentPage, 'currentPage in : ');
+    //   // slider.value = currentPage;
+    //   // currentPage.value = currentPage;
     // });
 
-    log(_reader, '_reader in : ');
+    // .displayed((e) => {
+    //   var currentLocation = rendition.currentLocation();
+    //   // Get the Percentage (or location) from that CFI
+    //   var currentPage = book.locations.percentageFromCfi(
+    //     currentLocation.start.cfi,
+    //   );
+    // });
+    log(_reader.book.locations.totals, '_reader.book.locations.totals in : ');
 
-    _reader.rendition.on('rendered', async function (section) {
-      log(section, 'section in : ');
-      // updatePageInfo(_reader.rendition.currentLocation().start.cfi);
+    window._reader = _reader;
+    window.epub = epub;
+
+    // _reader.rendition.on('selectionChanged', async (e) => {
+    //   log(e, 'e in : selectionChanged');
+    // });
+    _reader.rendition.on('locationChanged', async (location) => {
+      log(location, 'location in locationChanged: ');
+      const spineItem = location.start.cfi
+        ? book.spine.get(location.start.cfi.idref)
+        : book.spine.items[location.start.index];
+      log(spineItem, 'spineItem in : ');
+      let href = _.last(location.href?.split('/'));
+      log(href, 'href in : ');
+      let title = book.navigation.toc.filter(
+        (item, _) => item.href.indexOf(href) > -1,
+      )[0];
+      log(book.navigation.toc, 'book.navigation.toc in : ');
+      log(title, 'title in : ');
+      title = title?.label.replace(/[\\n\s]/g, '');
+      log(title, 'title.label in : ');
+      $('#chapter-label').text(title);
     });
-    _reader.rendition.on('relocated', function (location) {
-      console.log(
-        '翻页 cfirange.start=' +
-          location.start.cfi +
-          '; cfirange.end=' +
-          location.end.cfi,
-      );
-      console.log('total: ' + location.start.displayed.total);
-      console.log('page: ' + location.start.displayed.page);
+    // log(window._reader, 'window._reader in : ');
+
+    // let totalPages = 0;
+    // for (const item of book.spine.items) {
+    //   // const locations = await rendition.getLocations(item);
+    //   // totalPages += locations.length;
+    // }
+    // log(totalPages, 'totalPages in : ');
+    // // totalPagesDisplay.textContent = totalPages;
+    // // _reader.book.locations.generate(512).then((_) => {
+    // //   _reader.book.locations.save();
+    // //   log(_reader.book.locations, '_reader.book.locations in : ');
+    // //   updatePageNumber();
+    // // });
+
+    // log(_reader, '_reader in : ');
+
+    // rendition.on('rendered', async function (section) {
+    //   log(section, 'section in : ');
+    //   // updatePageNumber();
+    // });
+
+    // rendition.on('relocated', function (location) {
+    //   var percent = book.locations.percentageFromCfi(location.start.cfi);
+    //   var percentage = Math.floor(percent * 100);
+    //   // if(!mouseDown) {
+    //   //     slider.value = percentage;
+    //   // }
+    //   // currentPage.value = percentage;
+    //   console.log(percentage);
+    // });
+
+    rendition.on('relocated', function (location) {
+      log(location, 'location in : ');
+      updatePageNumber();
+
+      var percent = book.locations.percentageFromCfi(location.start.cfi);
+      log(percent, 'percent in : ');
+      var percentage = Math.floor(percent * 100);
+      if (!mouseDown) {
+        slider.value = percentage;
+      }
+      log(percentage, 'percentage in : ');
+      // currentPage.value = percentage;
+      console.log(location);
+
+      // var percent = book.locations.percentageFromCfi(location.start.cfi);
+      // log(percent, 'percent in : ');
+      // var percentage = Math.floor(percent * 100);
+      // log(percentage, 'percentage in : ');
+      // // if(!mouseDown) {
+      // // 		slider.value = percentage;
+      // // }
+      // // currentPage.value = percentage;
+      // // console.log(location);
+      // console.log(
+      //   '翻页 cfirange.start=' +
+      //     location.start.cfi +
+      //     '; cfirange.end=' +
+      //     location.end.cfi,
+      // );
+      // console.log('total: ' + location.start.displayed.total);
+      // console.log('page: ' + location.start.displayed.page);
     });
-    _reader.rendition.hooks.content.register((contents, rendition) => {
+
+    rendition.hooks.content.register((contents, rendition) => {
       // rendition.book.locations.generate(1024);
       log([contents, rendition], '[contents, rendition] in : ');
       log(
@@ -67,9 +258,11 @@ export const Reader = (props) => {
       );
       customStyle();
     });
-    $('#next, #prev').bind('click', (e) => {
-      updatePageInfo();
-    });
+
+    // $('#next, #prev').bind('click', (e) => {
+    //   log('#next, #prev clicked');
+    //   updatePageNumber();
+    // });
   };
 
   const customStyle = () => {
@@ -89,14 +282,15 @@ export const Reader = (props) => {
   const [data, setdata] = useState(props.data || []);
 
   const saveBookPosition = () => {
-    let location = _reader.rendition.currentLocation();
+    let location = rendition.currentLocation();
     log(location, 'location in : ');
     let startCfi = location.start?.cfi;
-    updatePageInfo(startCfi);
+    updatePageNumber();
     log(startCfi, 'startCfi in : ');
     window.startCfi = startCfi;
 
-    _reader.saveSettings();
+    // epub.locations.save();
+    // _reader.saveSettings();
     // var books_json = await window.bookConfig.getBooks()
     // await window.bookConfig.changeBookValue(
     //   books_json,
@@ -106,18 +300,29 @@ export const Reader = (props) => {
     // )
   };
 
-  const updatePageInfo = (cfi) => {
-    cfi = _reader.rendition.currentLocation().start.cfi;
+  const updatePageNumber = () => {
+    var location = rendition.currentLocation();
+    log(location, 'location: updatePageNumber');
+    let { start, end } = location;
+    let page = start.displayed.page;
+    let total = start.displayed.total;
+    // var total_pages = epub.locations.total;
+    // console.log(total_pages, 'total_pages');
+    // var page = Math.floor(
+    //   epub.locations.percentageFromCfi(cfi) * total_pages,
+    // );
+
+    // cfi = _reader.rendition.currentLocation().start.cfi;
     // log([location, cfi], '[location, cfi] in : ');
     // let { page, total } = location.start.displayed;
     // log([page, total], '[page, total] in : ');
-    let book_epub = _reader.book;
-    var total_pages = book_epub.locations.total;
-    var progress = Math.floor(
-      book_epub.locations.percentageFromCfi(cfi) * total_pages,
-    );
-    log([progress, total_pages], '[progress, total_pages] in : ');
-    $('#page-number').text(`${progress} / ${total_pages}`);
+    // let book = _reader.book;
+    // var total_pages = book.locations.total;
+    // var page = Math.floor(
+    //   book.locations.percentageFromCfi(cfi) * total_pages,
+    // );
+    log([page, total], '[page, total] in : ');
+    $('#page-number').text(`${page} / ${total}`);
   };
 
   const _return = (
@@ -130,6 +335,7 @@ export const Reader = (props) => {
       <Button
         onClick={(e) => {
           saveBookPosition();
+          _reader.unload();
           document.title = defaultDocumentTitle;
           $(e.target).closest('wrapper').fadeOut(500).delay(1000).remove();
         }}
@@ -187,7 +393,7 @@ export const Reader = (props) => {
                   {/* <span id="chapter-title__"></span> */}
                 </div>
               </Styled._MainL>
-              <Styled._MainR>Chapter Title</Styled._MainR>
+              <Styled._MainR id="chapter-label"></Styled._MainR>
             </Main>
             <Side>
               <div id="title-controls">
@@ -230,6 +436,16 @@ export const Reader = (props) => {
       </Body>
       <Footer className={`__`}>
         <Styled._FooterL id="chapter-title">作者名稱</Styled._FooterL>
+        <Styled._FooterM>
+          <div id="controls">
+            <input
+              id="current-percent"
+              size="1"
+              type="range"
+              defaultValue={0}
+            />
+          </div>
+        </Styled._FooterM>
         <Styled._FooterR id="page-number"></Styled._FooterR>
       </Footer>
     </Styled._Reader>
