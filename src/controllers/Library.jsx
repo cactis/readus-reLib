@@ -16,7 +16,7 @@ import { GoGear } from 'react-icons/go';
 import { CiSearch } from 'react-icons/ci';
 import { CiFilter } from 'react-icons/ci';
 
-import { renderComponent } from '../libs/lib.jsx';
+import { renderComponent, runLast } from '../libs/lib.jsx';
 import {
   broadcast,
   log,
@@ -39,13 +39,11 @@ export const Library = (props) => {
   const id = 'Library';
   const formId = 'file-input';
   let _data = [];
+
+  const [keyword, setkeyword] = useState(props.keyword);
+
   useEffect(() => {
-    sendMessage('loadBooks');
-    onMessage('booksLoad', (books) => {
-      log(books, 'books in Library 222: ');
-      setdata(books);
-      _data = books;
-    });
+    loadData();
 
     // useEffect(() => {
     //   _data = data;
@@ -65,6 +63,19 @@ export const Library = (props) => {
     });
   }, []);
 
+  const loadData = () => {
+    sendMessage('loadBooks', { keyword });
+    onMessage('booksLoad', (books) => {
+      log(books, 'books in Library 222: ');
+      setdata(books);
+      _data = books;
+    });
+  };
+
+  useEffect(() => {
+    loadData();
+  }, [keyword]);
+
   // useEffect(()=> {_data = data}, [data])
 
   const prependItems = (items) => {
@@ -74,6 +85,14 @@ export const Library = (props) => {
   const { children, className = '', ..._props } = props;
   const [data, setdata] = useState([]);
 
+  const onChange = (e) => {
+    runLast(() => {
+      log(e, 'e in onChange: ');
+      let keyword = $('#search-input').val();
+      log(keyword, 'keyword in : ');
+      setkeyword(keyword);
+    });
+  };
   const _return = (
     // eslint-disable-next-line react/jsx-pascal-case
     <Styled._Library id={id} ref={root} className={`${className} `} {..._props}>
@@ -84,7 +103,11 @@ export const Library = (props) => {
         <Main>
           <Styled._Search>
             <CiSearch />
-            <input placeholder="Search Book Titles" />
+            <input
+              id="search-input"
+              placeholder="Search Book Titles"
+              onChange={onChange}
+            />
           </Styled._Search>
           <CiFilter />
         </Main>

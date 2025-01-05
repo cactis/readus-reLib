@@ -80,10 +80,17 @@ export const addBooksToStorage = (books) => {
   saveBooks(_books);
 };
 
-export const loadBooks = () => {
-  log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
-  log(isDev(), 'isDev() in : ');
+export const loadBooks = ({ keyword }) => {
+  // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
+  // log(isDev(), 'isDev() in : ');
+  log(keyword, 'keyword in library.js#loadBooks: ');
   let books = getStorage('books') || [];
+  if (keyword) {
+    books = books.filter(
+      (book, i) =>
+        book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
+    );
+  }
   books = books.sort((a, b) => (a.createdAt - b.createdAt ? 1 : -1));
   return books;
 };

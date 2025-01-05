@@ -1,5 +1,6 @@
 {
   "name": "readus-relib",
+  "version": "0.1",
   "description": "An Epub Reader for desktop",
   "keywords": [
     "electron",

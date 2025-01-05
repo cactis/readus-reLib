@@ -1,5 +1,7 @@
 // import { ipcRenderer } from 'electron';
 
+import MD5 from 'crypto-js/md5';
+
 export const randStr = (pre) => {
   let _pre = pre ? `${pre}-` : '';
   return _pre + (Math.random() + 1).toString(36).substring(4);
@@ -9,8 +11,10 @@ export const newArray = (number) => {
   return Array.from(Array(number).keys());
 };
 
-export const log = (msg, pre = '') => {
-  console.log(msg, pre);
+export const log = (msg, title = '') => {
+  console.log(`--- ${title}`);
+  console.log(msg);
+  console.log(`--- ${title}`);
 };
 
 export const stop = (e) => {
@@ -55,6 +59,10 @@ export const delayed = (func, wait = 1000, ...args) => {
 
 export const isDev = () => {
   return process.env.NODE_ENV == 'development';
+};
+
+export const funcId = (func) => {
+  return MD5(String(func)).toString();
 };
 
 // export const userDataPath = (run) => {
