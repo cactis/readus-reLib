@@ -1,6 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { delayed, funcId } from './lib';
+import ReactDOM, { createRoot } from 'react-dom/client';
+import { delayed, funcId, log } from './lib';
+import { Popup } from '../components';
 
 export const renderComponent = (component) => {
   let body = document.getElementsByTagName('body')[0];
@@ -18,4 +19,12 @@ export const runLast = (func, wait = 1000, ...args) => {
   window._runLast[key] && clearTimeout(window._runLast[key]);
   window._runLast[key] = delayed(func, wait, ...args);
   // log(window._runLast, 'window._runLast in : 2222')
+};
+
+export const popup = (component) => {
+  let target = $('body').append("<span class='unwrappable'></span>").children();
+  target = _.last(target);
+  log(target, 'target in : ');
+  let root = createRoot(target);
+  root.render(<Popup>{component}</Popup>);
 };

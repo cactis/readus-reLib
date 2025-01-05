@@ -89,3 +89,16 @@ export const _FileInput = styled.input.attrs((props) => ({
 }))`
   ${_Button.componentStyle.rules}
 `;
+
+export const _Popup = styled.div.attrs((props) => ({ className: `Popup` }))`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #454545eb;
+  cursor: pointer;
+`;

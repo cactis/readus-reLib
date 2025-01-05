@@ -8,6 +8,7 @@ import {
   Header,
   List,
   Main,
+  QRCode,
   Reader,
   Side,
 } from '../components';
@@ -16,23 +17,16 @@ import { GoGear } from 'react-icons/go';
 import { CiSearch } from 'react-icons/ci';
 import { CiFilter } from 'react-icons/ci';
 
-import { renderComponent, runLast } from '../libs/lib.jsx';
+import { popup, renderComponent, runLast } from '../libs/lib.jsx';
 import {
   broadcast,
   log,
   newArray,
   onMessage,
+  randStr,
   sendMessage,
+  stop,
 } from '../libs/lib.js';
-
-// const { ipcRenderer } = require('electron');
-
-// import { ipcRenderer } from 'electron';
-// import { dialog } from 'electron';
-
-// const { dialog } = require('electron');
-// const fs = require('fs');
-// const path = require('path');
 
 export const Library = (props) => {
   const root = React.createRef();
@@ -113,7 +107,21 @@ export const Library = (props) => {
         </Main>
         {/* <List data={newArray(5)} /> */}
         <Side>
-          <GoGear />
+          <GoGear
+            id="settings"
+            onClick={(e) => {
+              let token = randStr('readus-relib');
+              let data = `http://192.168.31.207:3000/relib?t=${token}`;
+              popup(<QRCode data={data} />);
+              // $('#qrcode').toggleClass('visible', true);
+              // $('body *').one('click', (m) => {
+              //   $('#qrcode').toggleClass('visible', false);
+              //   // stop(m);
+              //   // m.stopPropagation();
+              //   // m.preventDefault();
+              // });
+            }}
+          />
         </Side>
       </Header>
       <Body>

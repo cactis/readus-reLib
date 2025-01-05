@@ -8,13 +8,15 @@ export const _Library = styled.div.attrs((props) => ({
 }))`
   /* background-color: #333;
   color: white; */
-  color: #333;
+  color: #0c0b0b;
   width: 100%;
   height: 100%;
   display: flex;
   flex-flow: column;
   > .Header {
     font-size: 1.5rem;
+    #settings {
+    }
     > * {
       justify-content: center;
       align-items: center;
@@ -71,4 +73,21 @@ export const _Search = styled(_Flex).attrs((props) => ({
     border: none;
     outline: none;
   }
+`;
+
+export const _QRCode = styled.canvas.attrs((props) => ({
+  className: `QRCode`,
+}))`
+  display: none;
+  &.visible {
+    display: unset;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1000;
+    box-shadow: 0 0 10000rem 100rem #000000d6;
+    transform: translate(-50%, -50%);
+  }
+  width: 2rem;
+  aspect-ratio: 1;
 `;

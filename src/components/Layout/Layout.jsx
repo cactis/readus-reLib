@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Layout.styled.jsx';
+import { delayed, stop } from '../../libs/lib.js';
 
 export const Header = (props) => {
   return <Styled._Header {...props}></Styled._Header>;
@@ -27,4 +28,20 @@ export const Button = (props) => {
 
 export const FileInput = (props) => {
   return <Styled._FileInput {...props}></Styled._FileInput>;
+};
+
+export const Popup = (props) => {
+  return (
+    <Styled._Popup
+      onClick={(e) => {
+        let $t = $(e.target).closest('.unwrappable');
+        $t.fadeOut();
+        delayed(() => {
+          $t.remove();
+        });
+        stop(e);
+      }}
+      {...props}
+    />
+  );
 };
