@@ -1,6 +1,8 @@
 // import { ipcRenderer } from 'electron';
 
 import MD5 from 'crypto-js/md5';
+// import { machineId, machineIdSync } from 'node-machine-id';
+// import { first, all } from 'macaddress-local-machine';
 
 export const randStr = (pre) => {
   let _pre = pre ? `${pre}-` : '';
@@ -68,3 +70,9 @@ export const funcId = (func) => {
 // export const userDataPath = (run) => {
 //   ipcRenderer.invoke('user-data-path').then((path) => run(path));
 // };
+
+export const getMachineId = async () => {
+  // return await machineId();
+  // const macAddress = first();
+  // console.log(macAddress);
+};

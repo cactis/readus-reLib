@@ -21,12 +21,13 @@ export const addBooks = async (files) => {
     _.map(files, (file) =>
       addBook(file).then((book) => {
         BrowserWindow.getFocusedWindow().webContents.send('bookAdded', book);
+        addBooksToStorage([book]);
         return book;
       }),
     ),
   ).then((books) => {
     log(books, 'books in : ');
-    addBooksToStorage(books);
+    // addBooksToStorage(books);
     return books;
   });
 };

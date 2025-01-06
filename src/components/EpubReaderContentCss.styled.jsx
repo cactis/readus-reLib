@@ -4,6 +4,7 @@ export const EpubReaderCss = css`
   body {
     font-size: 130%;
     padding: 2rem !important;
+    background: unset !important;
     p {
       line-height: 1.8 !important;
       /* color: black !important; */

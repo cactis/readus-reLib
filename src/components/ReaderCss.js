@@ -76,8 +76,8 @@ export const ReaderCss = css`
   }
 
   #viewer {
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 75%;
     /* margin-left: 10%; */
     margin: 0 auto;
     max-width: 1250px;
@@ -237,7 +237,7 @@ export const ReaderCss = css`
     position: absolute;
     width: 1px;
     border-right: 1px #000 solid;
-    height: 80%;
+    height: 75%;
     z-index: 1;
     left: 50%;
     margin-left: -1px;

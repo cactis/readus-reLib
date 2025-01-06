@@ -99,6 +99,6 @@ export const _Popup = styled.div.attrs((props) => ({ className: `Popup` }))`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #454545eb;
+  background-color: #222121cf;
   cursor: pointer;
 `;

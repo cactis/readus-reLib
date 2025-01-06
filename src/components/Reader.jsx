@@ -434,8 +434,7 @@ export const Reader = (props) => {
         </div>
         <div className="overlay"></div>
       </Body>
-      <Footer className={`__`}>
-        <Styled._FooterL id="chapter-title">作者名稱</Styled._FooterL>
+      <Styled._PageSlider>
         <Styled._FooterM>
           <div id="controls">
             <input
@@ -446,6 +445,9 @@ export const Reader = (props) => {
             />
           </div>
         </Styled._FooterM>
+      </Styled._PageSlider>
+      <Footer className={`__`}>
+        <Styled._FooterL id="chapter-title">作者名稱</Styled._FooterL>
         <Styled._FooterR id="page-number"></Styled._FooterR>
       </Footer>
     </Styled._Reader>

@@ -44,8 +44,8 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on('loadBooks', (event, arg) => {
-  log([event, arg], '[event, arg] in : ');
+ipcMain.on('loadBooks', (event, arg = {}) => {
+  log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   let { keyword } = arg;
   log(keyword, 'keyword in main.js: ');
   let books = loadBooks({ keyword });

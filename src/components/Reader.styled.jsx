@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ReaderCss } from './ReaderCss.js';
-import { _Flex, _Main } from './Layout/Layout.styled.jsx';
+import { _Flex, _Footer, _Main } from './Layout/Layout.styled.jsx';
+import { Footer } from './Layout/Layout.jsx';
 
 export const _Reader = styled(_Flex).attrs((props) => ({
   className: 'Reader',
@@ -40,6 +41,11 @@ export const _Reader = styled(_Flex).attrs((props) => ({
     color: #333;
     font-size: 0.8rem;
     padding: 1rem 2rem;
+    gap: 1rem;
+    > * {
+      /* align-items: center;
+      justify-content: center; */
+    }
   }
 `;
 
@@ -83,16 +89,20 @@ export const _FooterL = styled(_Flex).attrs((props) => ({
   className: `FooterL`,
 }))`
   flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export const _FooterM = styled(_Flex).attrs((props) => ({
   className: `FooterM`,
 }))`
-  flex: 3;
+  flex: 1;
   #controls {
     width: 100%;
     text-align: center;
-    display: block;
+    display: flex;
+    align-items: center;
   }
 
   #controls > input[type='range'] {
@@ -102,7 +112,10 @@ export const _FooterM = styled(_Flex).attrs((props) => ({
     color: red;
     padding: initial;
     border: initial;
+    height: 1px;
+    cursor: pointer;
   }
+  gap: 1rem;
 `;
 
 export const _FooterR = styled(_Flex).attrs((props) => ({
@@ -110,4 +123,11 @@ export const _FooterR = styled(_Flex).attrs((props) => ({
 }))`
   flex: 1;
   justify-content: flex-end;
+  white-space: nowrap;
+`;
+
+export const _PageSlider = styled(_Footer).attrs((props) => ({
+  className: `PageSlider`,
+}))`
+  margin: 3rem 10% -1rem;
 `;

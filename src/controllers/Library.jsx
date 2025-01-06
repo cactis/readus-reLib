@@ -113,13 +113,6 @@ export const Library = (props) => {
               let token = randStr('readus-relib');
               let data = `http://192.168.31.207:3000/relib?t=${token}`;
               popup(<QRCode data={data} />);
-              // $('#qrcode').toggleClass('visible', true);
-              // $('body *').one('click', (m) => {
-              //   $('#qrcode').toggleClass('visible', false);
-              //   // stop(m);
-              //   // m.stopPropagation();
-              //   // m.preventDefault();
-              // });
             }}
           />
         </Side>
