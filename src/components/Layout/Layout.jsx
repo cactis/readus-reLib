@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react';
 import * as Styled from './Layout.styled.jsx';
 import { delayed, stop } from '../../libs/lib.js';
 
+export const Flex = (props) => {
+  return <Styled._Flex {...props}></Styled._Flex>;
+};
+
+export const Col = (props) => {
+  return <Styled._Col {...props}></Styled._Col>;
+};
+export const Row = (props) => {
+  return <Styled._Row {...props}></Styled._Row>;
+};
+
 export const Header = (props) => {
   return <Styled._Header {...props}></Styled._Header>;
 };
@@ -31,17 +42,29 @@ export const FileInput = (props) => {
 };
 
 export const Popup = (props) => {
+  let { onClose } = props;
   return (
     <Styled._Popup
       onClick={(e) => {
-        let $t = $(e.target).closest('.unwrappable');
-        $t.fadeOut();
-        delayed(() => {
-          $t.remove();
-        });
+        if ($(e.target).hasClass('Popup')) {
+          let $t = $(e.target).closest('.unwrappable');
+          $t.fadeOut();
+          delayed(() => {
+            $t.remove();
+          });
+          onClose && onClose();
+        }
         stop(e);
       }}
       {...props}
     />
+  );
+};
+
+export const Ellipsis = ({ data, children, ..._props }) => {
+  return (
+    <Styled._Ellipsis {..._props}>
+      <div>{data || children}</div>
+    </Styled._Ellipsis>
   );
 };

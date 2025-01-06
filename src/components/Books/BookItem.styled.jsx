@@ -1,22 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Ellipsis } from '../Layout';
+import { _Col, _Flex } from '../Layout/Layout.styled';
 
-export const _BookItem = styled.div.attrs((props) => ({
+export const _BookItem = styled(_Col).attrs((props) => ({
   className: 'BookItem',
-}))``;
+}))`
+  gap: 0.2rem;
+`;
 
-export const _Title = styled.div.attrs((props) => ({ className: `Title` }))`
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 2;
-  text-overflow: ellipsis;
+export const _Title = styled(Ellipsis).attrs((props) => ({
+  className: `Title`,
+}))`
   font-weight: 500;
 `;
 
-export const _Author = styled.div.attrs((props) => ({ className: `Author` }))`
+export const _Author = styled(Ellipsis).attrs((props) => ({
+  className: `Author`,
+}))`
   font-size: 0.85rem;
   /* color: 777; */
-  white-space: nowrap;
-  overflow: hidden;
-  line-height: 1.6;
 `;

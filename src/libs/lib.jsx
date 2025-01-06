@@ -21,10 +21,10 @@ export const runLast = (func, wait = 1000, ...args) => {
   // log(window._runLast, 'window._runLast in : 2222')
 };
 
-export const popup = (component) => {
+export const popup = (component, props) => {
   let target = $('body').append("<span class='unwrappable'></span>").children();
   target = _.last(target);
   log(target, 'target in : ');
   let root = createRoot(target);
-  root.render(<Popup>{component}</Popup>);
+  root.render(<Popup {...props}>{component}</Popup>);
 };

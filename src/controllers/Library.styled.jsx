@@ -25,6 +25,7 @@ export const _Library = styled.div.attrs((props) => ({
       gap: 0.5rem;
     }
     .Side {
+      gap: 1rem;
     }
   }
   > .Header,

@@ -16,6 +16,7 @@ import { BiBookAdd } from 'react-icons/bi';
 import { GoGear } from 'react-icons/go';
 import { CiSearch } from 'react-icons/ci';
 import { CiFilter } from 'react-icons/ci';
+import { TbPlugConnected } from 'react-icons/tb';
 
 import { popup, renderComponent, runLast } from '../libs/lib.jsx';
 import {
@@ -26,6 +27,8 @@ import {
   randStr,
   sendMessage,
   stop,
+  wsClose,
+  wsConnect,
 } from '../libs/lib.js';
 
 export const Library = (props) => {
@@ -58,11 +61,13 @@ export const Library = (props) => {
   }, []);
 
   const loadData = () => {
-    sendMessage('loadBooks', { keyword });
-    onMessage('booksLoad', (books) => {
-      log(books, 'books in Library 222: ');
-      setdata(books);
-      _data = books;
+    runLast(() => {
+      sendMessage('loadBooks', { keyword });
+      onMessage('booksLoad', (books) => {
+        log(books, 'books in Library 222: ');
+        setdata(books);
+        _data = books;
+      });
     });
   };
 
@@ -107,12 +112,19 @@ export const Library = (props) => {
         </Main>
         {/* <List data={newArray(5)} /> */}
         <Side>
+          <TbPlugConnected
+            onClick={(e) => {
+              wsConnect();
+            }}
+          />
+
           <GoGear
             id="settings"
             onClick={(e) => {
               let token = randStr('readus-relib');
               let data = `http://192.168.31.207:3000/relib?t=${token}`;
-              popup(<QRCode data={data} />);
+              wsConnect();
+              popup(<QRCode data={data} />, { onClose: wsClose });
             }}
           />
         </Side>
@@ -122,7 +134,7 @@ export const Library = (props) => {
           toolbar={
             <Button
               onClick={(e) => {
-                sendMessage('openBookChooserDialog', { a: 1 });
+                sendMessage('openBookChooserDialog');
                 // window.electron.ipcRenderer.sendMessage(
                 //   'openBookChooserDialog',
                 // );

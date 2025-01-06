@@ -7,6 +7,13 @@ export const _Flex = styled.div.attrs((props) => ({ className: `Flex` }))`
   display: flex;
 `;
 
+export const _Col = styled(_Flex).attrs((props) => ({ className: `Flex` }))`
+  flex-flow: column;
+`;
+export const _Row = styled(_Flex).attrs((props) => ({ className: `Flex` }))`
+  flex-flow: row;
+`;
+
 export const _Header = styled(_Flex).attrs((props) => ({
   className: `Header`,
 }))`
@@ -101,4 +108,15 @@ export const _Popup = styled.div.attrs((props) => ({ className: `Popup` }))`
   justify-content: center;
   background-color: #222121cf;
   cursor: pointer;
+`;
+
+export const _Ellipsis = styled(_Flex).attrs((props) => ({
+  className: `Ellipsis`,
+}))`
+  overflow: hidden;
+  * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
 `;

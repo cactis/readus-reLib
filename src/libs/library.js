@@ -26,7 +26,7 @@ export const addBooks = async (files) => {
       }),
     ),
   ).then((books) => {
-    log(books, 'books in : ');
+    // log(books, 'books in : ');
     // addBooksToStorage(books);
     return books;
   });
@@ -37,14 +37,14 @@ export const getAppPath = () => {
 };
 
 const addBook = async (file) => {
-  // log(file, 'file in addBook: ');
+  log(file, 'file in addBook: ');
   const coversPath = `${app.getPath('userData')}/covers`;
   return getChecksum(file).then((id) => {
     // log(id, 'id in : ');
     return Epub.createAsync(file, null, null).then((epub) => {
-      log(epub, 'epub in : ');
+      // log(epub, 'epub in : ');
       let appPath = getAppPath();
-      log(appPath, 'appPath in : ');
+      // log(appPath, 'appPath in : ');
       let cover = `${appPath}/assets/images/cover-not-available.jpg`;
       let coverExt = epub.metadata.cover
         ? _.last(epub.manifest[epub.metadata.cover]?.href.split('.'))
@@ -81,7 +81,8 @@ export const addBooksToStorage = (books) => {
   saveBooks(_books);
 };
 
-export const loadBooks = ({ keyword }) => {
+export const loadBooks = (arg = {}) => {
+  let { keyword } = arg;
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
   log(keyword, 'keyword in library.js#loadBooks: ');
@@ -112,6 +113,7 @@ export const getStorage = (key) => {
 };
 
 export const saveBooks = (data) => {
+  log(data.length, 'data.length in saveBooks: ');
   // let storage = getStorage() || {};
   // storage[key] = data;
   let _storage = JSON.stringify(data, null, 2);
