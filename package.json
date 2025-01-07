@@ -185,7 +185,7 @@
   },
   "build": {
     "productName": "Readus-reLib",
-    "appId": "org.erb.ElectronReact",
+    "appId": "org.readus.reLib",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
