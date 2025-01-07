@@ -19,21 +19,22 @@ export const _Reader = styled(_Flex).attrs((props) => ({
 
   ${ReaderCss}
 
-  .Button {
+  #close-reader {
     position: absolute;
     right: 0;
     top: 0;
-    padding: 10px;
-    cursor: pointer;
-    background-color: white;
+    /* background-color: white; */
     z-index: 100;
-    color: black;
-    border-radius: 50%;
+    /* color: black; */
+    /* border-radius: 50%; */
+    margin: 1.2rem 1rem;
+    font-size: 1.3rem;
+    /* background-color: #4646467d; */
+    color: white;
+    background: #aaaaaa;
     width: 30px;
     height: 30px;
-    margin: 1.2rem 1rem;
-    background-color: #4646467d;
-    color: #fff;
+    font-weight: 500;
   }
   .Footer {
     justify-content: space-between;

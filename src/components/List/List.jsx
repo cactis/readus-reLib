@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './List.styled.jsx';
 import { Header, Main, Side } from '../Layout/Layout.jsx';
-import { CgMenuGridR } from 'react-icons/cg';
-import { TbLayoutList } from 'react-icons/tb';
-import { TbLayoutGrid } from 'react-icons/tb';
 import { BookItem } from '../Books/BookItem.jsx';
-import { TfiReload } from 'react-icons/tfi';
-import { renderComponent } from '../../libs/lib.jsx';
+import { renderComponent, sendMessage } from '../../libs/lib.jsx';
 import { Reader } from '../Reader.jsx';
-import {
-  delayed,
-  log,
-  onMessage,
-  randStr,
-  sendMessage,
-  subscribe,
-} from '../../libs/lib.js';
+import { delayed, log, onMessage, randStr, subscribe } from '../../libs/lib.js';
+import { Icon } from '../Commons/Icon.jsx';
 // import { BrowserWindow } from 'electron';
 // import { ipcMain } from 'electron';
 export const List = (props) => {
@@ -50,22 +40,24 @@ export const List = (props) => {
       time={time}
       {..._props}
     >
-      <Header>
+      <Header className={``}>
         <Side>{toolbar}</Side>
-        <Main>
-          <TfiReload
+        <Main></Main>
+        <Side className={`r`}>
+          <Icon
+            name="TfiReload"
             onClick={(e) => {
               setdata([]);
               delayed(() => {
                 // setdata(window?.Library?.loadBooks());
                 sendMessage('loadBooks');
-                // sendMessage('loadBooks');
               }, 100);
             }}
           />
-          <TbLayoutList />
-          <TbLayoutGrid />
-        </Main>
+          <Styled._Counts>total: {data.length} items</Styled._Counts>
+          <Icon name="TbLayoutList" />
+          {/* <Icon name="TbLayoutGrid" /> */}
+        </Side>
       </Header>
       <Styled._ListWrapper>
         {data.map((item, index) => (

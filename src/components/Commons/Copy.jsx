@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Copy.styled.jsx';
 import { copyToClipboard, randStr } from '../../libs/lib.js';
-import { IoCopyOutline } from 'react-icons/io5';
 import { Ellipsis, Main, Side } from '../Layout/Layout.jsx';
+import { Icon } from './Icon.jsx';
 
 export const Copy = (props) => {
   const root = React.createRef();
@@ -32,7 +32,7 @@ export const Copy = (props) => {
         <Ellipsis data={data} />
       </Main>
       <Side>
-        <IoCopyOutline onClick={copy} />
+        <Icon name="IoCopyOutline" onClick={copy} />
       </Side>
     </Styled._Copy>
   );

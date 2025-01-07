@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const _Layout = styled.div.attrs((props) => ({ className: 'Layout' }))``;
 
@@ -32,35 +32,36 @@ export const _Footer = styled(_Header).attrs((props) => ({
   className: `Footer`,
 }))``;
 
+export const ButtonCss = css`
+  appearance: none;
+  background-color: #0554c2;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system, system-ui, 'Segoe UI', Helvetica, Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  padding: 0.4rem 0.8rem;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  gap: 0.5rem;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const _Button = styled.div.attrs((props) => ({ className: `Button` }))`
   & {
-    appearance: none;
-    background-color: #0554c2;
-    border: 1px solid rgba(27, 31, 35, 0.15);
-    border-radius: 6px;
-    box-shadow: rgba(27, 31, 35, 0.1) 0 1px 0;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-family: -apple-system, system-ui, 'Segoe UI', Helvetica, Arial,
-      sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
-    padding: 6px 16px;
-    position: relative;
-    text-align: center;
-    text-decoration: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    vertical-align: middle;
-    white-space: nowrap;
-    gap: 0.5rem;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${ButtonCss}
   }
 
   &:focus:not(:focus-visible):not(.focus-visible) {

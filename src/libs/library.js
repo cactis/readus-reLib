@@ -1,5 +1,5 @@
 import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
-import { isDev, log, sendMessage } from './lib';
+import { isDev, log } from './lib';
 
 const fs = require('fs');
 const path = require('path');
@@ -85,8 +85,6 @@ export const addBooksToStorage = (books) => {
   _books = _.concat(_books, books);
   _books = _.uniqBy(_books, 'id');
   _books = _.compact(_books);
-  // ipcMain.sendMessage('booksAdded', books);
-  // BrowserWindow.getFocusedWindow().webContents.send('booksAdded', books);
   saveBooks(_books);
 };
 

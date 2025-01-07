@@ -27,16 +27,6 @@ export const stop = (e) => {
   }
 };
 
-export const sendMessage = (event, data) => {
-  log([event, data], '[event, data] in lib#sendMessage: ');
-  window.electron.ipcRenderer.sendMessage(event, data);
-};
-
-export const onMessage = (event, run) => {
-  // log([event, run], '[event, run] in lib#onMessage: ');
-  window.electron.ipcRenderer.on(event, run);
-};
-
 export const broadcast = (status, data = {}, from = '') => {
   // log([status, data], '[status, data] in Lib#broadcast: ');
   let message = { status, data };

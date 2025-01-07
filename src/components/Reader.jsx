@@ -6,7 +6,7 @@ import {
   EpubReaderContentCss,
   EpubReaderCss,
 } from './EpubReaderContentCss.styled.jsx';
-import { TfiMenuAlt } from 'react-icons/tfi';
+import { Icon } from './Commons/Icon.jsx';
 const _ = require('lodash');
 
 // require('../../vendors/jszip.min.js')
@@ -332,16 +332,17 @@ export const Reader = (props) => {
       className={`${className} __`}
       {..._props}
     >
-      <Button
+      <Icon
+        name="MdClose"
+        className={`round`}
+        id="close-reader"
         onClick={(e) => {
           saveBookPosition();
           _reader.unload();
           document.title = defaultDocumentTitle;
           $(e.target).closest('wrapper').fadeOut(500).delay(1000).remove();
         }}
-      >
-        X
-      </Button>
+      />
       {/* <Header className={`_`}></Header> */}
       <Body className={`__`}>
         <div id="sidebar">
@@ -381,7 +382,7 @@ export const Reader = (props) => {
             <Side>
               <div id="opener">
                 <a id="slider" className="icon-menu_">
-                  <TfiMenuAlt id="slider" />
+                  <Icon name="TfiMenuAlt" id="slider" />
                 </a>
               </div>
             </Side>

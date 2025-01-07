@@ -1,8 +1,9 @@
 {
   "name": "readus-relib",
-  "version": "0.12",
-  "description": "An Epub Reader for desktop",
+  "description": "An Personal Library for desktop",
   "keywords": [
+    "personal library",
+    "ebook manager",
     "electron",
     "react",
     "reload",

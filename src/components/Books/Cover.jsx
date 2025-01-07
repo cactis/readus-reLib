@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Cover.styled.jsx';
-import { log, randStr, sendMessage, stop } from '../../libs/lib';
-import { IoMdAddCircleOutline } from 'react-icons/io';
+import { log, randStr, stop } from '../../libs/lib';
+import { Icon } from '../Commons/Icon.jsx';
+import { sendMessage } from '../../libs/lib.jsx';
 
 export const Cover = (props) => {
   const root = React.createRef();
@@ -41,7 +42,8 @@ export const Cover = (props) => {
         }}
       />
       <Styled._AddAgain>
-        <IoMdAddCircleOutline
+        <Icon
+          name="IoMdAddCircleOutline"
           onClick={(e) => {
             sendMessage('addBook', data);
             stop(e);

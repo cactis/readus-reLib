@@ -11,6 +11,16 @@ export const renderComponent = (component) => {
   root.render(component);
 };
 
+export const sendMessage = (event, data) => {
+  log([event, data], '[event, data] in lib#sendMessage: ');
+  window.electron?.ipcRenderer.sendMessage(event, data);
+};
+
+export const onMessage = (event, run) => {
+  // log([event, run], '[event, run] in lib#onMessage: ');
+  window.electron?.ipcRenderer.on(event, run);
+};
+
 window._runLast = {};
 export const runLast = (func, wait = 1000, ...args) => {
   // log(window._runLast, 'window._runLast in : 111')

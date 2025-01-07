@@ -7,13 +7,20 @@ export const _List = styled.div.attrs((props) => ({ className: 'List' }))`
     justify-content: flex-end;
     align-items: center;
     color: rgb(0, 0, 0);
-    font-size: 1.5rem;
     padding: 1rem 0;
     gap: 0.5rem;
     flex-flow: row;
+    .Icon {
+    }
     .Main {
-      justify-content: flex-end;
-      gap: 1rem;
+      /* justify-content: flex-end; */
+    }
+    .Side {
+      &.r {
+        font-size: 1.5rem;
+      }
+      gap: 0.5rem;
+      align-items: center;
     }
   }
 `;
@@ -59,4 +66,10 @@ export const _ListItem = styled.div.attrs((props) => ({
   &:active {
     transform: scale(0.98);
   }
+`;
+
+export const _Counts = styled.span.attrs((props) => ({
+  className: `Counts`,
+}))`
+  font-size: 1rem;
 `;

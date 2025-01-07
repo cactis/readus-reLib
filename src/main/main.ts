@@ -20,7 +20,7 @@ import {
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { log, sendMessage } from '../libs/lib';
+import { log } from '../libs/lib';
 import { addBooks, loadBooks } from '../libs/library';
 
 class AppUpdater {

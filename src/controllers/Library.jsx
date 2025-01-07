@@ -6,26 +6,26 @@ import {
   FileInput,
   Footer,
   Header,
+  Icon,
   List,
   Main,
   QRCode,
   Reader,
   Side,
 } from '../components';
-import { BiBookAdd } from 'react-icons/bi';
-import { GoGear } from 'react-icons/go';
-import { CiSearch } from 'react-icons/ci';
-import { CiFilter } from 'react-icons/ci';
-import { TbPlugConnected } from 'react-icons/tb';
 
-import { popup, renderComponent, runLast } from '../libs/lib.jsx';
+import {
+  onMessage,
+  popup,
+  renderComponent,
+  runLast,
+  sendMessage,
+} from '../libs/lib.jsx';
 import {
   broadcast,
   log,
   newArray,
-  onMessage,
   randStr,
-  sendMessage,
   stop,
   wsClose,
   wsConnect,
@@ -42,21 +42,9 @@ export const Library = (props) => {
   useEffect(() => {
     loadData();
 
-    // useEffect(() => {
-    //   _data = data;
-    // }, [data]);
-    // window.electron.ipcRenderer.sendMessage('aaa');
-    // ipcRenderer.invoke('some-name', someArgument).then((result) => {
-    // ...
-    // });
-    // log('books in : Library#useEffect');
-
     onMessage('bookAdded', (book) => {
       log(book, 'book in bookAdded Library#onMessage: bookAdded ');
-      // setdata([book, ...data]);
-      // broadcast('prependItems', [book]);
       prependItems([book]);
-      // BrowserWindow.getFocusedWindow().webContents.send('prependItems', [book]);
     });
   }, []);
 
@@ -74,8 +62,6 @@ export const Library = (props) => {
   useEffect(() => {
     loadData();
   }, [keyword]);
-
-  // useEffect(()=> {_data = data}, [data])
 
   const prependItems = (items) => {
     _data = [...items, ..._data];
@@ -101,24 +87,25 @@ export const Library = (props) => {
         </Side>
         <Main>
           <Styled._Search>
-            <CiSearch />
+            <Icon name="CiSearch" />
             <input
               id="search-input"
               placeholder="Search Book Titles"
               onChange={onChange}
             />
           </Styled._Search>
-          <CiFilter />
+          <Icon name="CiFilter" />
         </Main>
         {/* <List data={newArray(5)} /> */}
         <Side>
-          <TbPlugConnected
+          <Icon
+            name="TbPlugConnected"
             onClick={(e) => {
               wsConnect();
             }}
           />
-
-          <GoGear
+          <Icon
+            name="GoGear"
             id="settings"
             onClick={(e) => {
               let token = randStr('readus-relib');
@@ -132,17 +119,17 @@ export const Library = (props) => {
       <Body>
         <List
           toolbar={
-            <Button
+            <Icon
+              className={`button`}
+              name="BiBookAdd"
+              label="Add Books"
               onClick={(e) => {
                 sendMessage('openBookChooserDialog');
                 // window.electron.ipcRenderer.sendMessage(
                 //   'openBookChooserDialog',
                 // );
               }}
-            >
-              <BiBookAdd />
-              加入書籍
-            </Button>
+            />
           }
           // data={window.Library.loadBooks()}
           data={data}
