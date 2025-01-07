@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { _Float } from '../Layout/Layout.styled';
 export const _Cover = styled.div.attrs((props) => ({ className: 'Cover' }))`
   width: 100%;
   /* aspect-ratio: 9/16; */
@@ -23,4 +24,11 @@ export const _Cover = styled.div.attrs((props) => ({ className: 'Cover' }))`
     top: 0;
     left: 0;
   }
+`;
+
+export const _AddAgain = styled(_Float).attrs((props) => ({
+  className: `AddAgain`,
+}))`
+  bottom: 0.5rem;
+  right: 0.5rem;
 `;

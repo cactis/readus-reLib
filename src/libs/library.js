@@ -41,33 +41,41 @@ const addBook = async (file) => {
   const coversPath = `${app.getPath('userData')}/covers`;
   return getChecksum(file).then((id) => {
     // log(id, 'id in : ');
-    return Epub.createAsync(file, null, null).then((epub) => {
-      // log(epub, 'epub in : ');
-      let appPath = getAppPath();
-      // log(appPath, 'appPath in : ');
-      let cover = `${appPath}/assets/images/cover-not-available.jpg`;
-      let coverExt = epub.metadata.cover
-        ? _.last(epub.manifest[epub.metadata.cover]?.href.split('.'))
-        : null;
-      if (coverExt) cover = `${coversPath}/${id}.${coverExt}`;
-      epub.getImageAsync(epub.metadata.cover).then(async function ([data, _]) {
-        await fse.outputFile(cover, data, 'binary');
+    try {
+      return Epub.createAsync(file, null, null).then((epub) => {
+        // log(epub, 'epub in : ');
+        let appPath = getAppPath();
+        // log(appPath, 'appPath in : ');
+        let cover = `${appPath}/assets/images/cover-not-available.jpg`;
+        let coverExt = epub.metadata.cover
+          ? _.last(epub.manifest[epub.metadata.cover]?.href.split('.'))
+          : null;
+        if (coverExt) cover = `${coversPath}/${id}.${coverExt}`;
+        return epub.getImageAsync(epub.metadata.cover).then(async function ([
+          data,
+          _,
+        ]) {
+          return fse.outputFile(cover, data, 'binary').then(() => {
+            var book = {
+              title: epub.metadata.title || 'unknown',
+              author: epub.metadata.creator || 'unknown',
+              cover: cover,
+              url: file,
+              data: epub.metadata.date,
+              language: epub.metadata.language,
+              publisher: epub.metadata.publisher,
+              id,
+              createdAt: new Date(),
+            };
+            // log(book, 'book in addBook: ');
+            return book;
+          });
+        });
       });
-
-      var book = {
-        title: epub.metadata.title || 'unknown',
-        author: epub.metadata.creator || 'unknown',
-        cover: cover,
-        url: file,
-        data: epub.metadata.date,
-        language: epub.metadata.language,
-        publisher: epub.metadata.publisher,
-        id,
-        createdAt: new Date(),
-      };
-      // log(book, 'book in addBook: ');
-      return book;
-    });
+    } catch (error) {
+      log(error, 'error in : ');
+      return null;
+    }
   });
   // });
 };
@@ -76,6 +84,7 @@ export const addBooksToStorage = (books) => {
   let _books = loadBooks();
   _books = _.concat(_books, books);
   _books = _.uniqBy(_books, 'id');
+  _books = _.compact(_books);
   // ipcMain.sendMessage('booksAdded', books);
   // BrowserWindow.getFocusedWindow().webContents.send('booksAdded', books);
   saveBooks(_books);
@@ -87,6 +96,7 @@ export const loadBooks = (arg = {}) => {
   // log(isDev(), 'isDev() in : ');
   log(keyword, 'keyword in library.js#loadBooks: ');
   let books = getStorage('books') || [];
+  books = _.compact(books);
   if (keyword) {
     books = books.filter(
       (book, i) =>
@@ -117,7 +127,7 @@ export const saveBooks = (data) => {
   // let storage = getStorage() || {};
   // storage[key] = data;
   let _storage = JSON.stringify(data, null, 2);
-  log(_storage, '_storage in : ');
+  // log(_storage, '_storage in : ');
   fs.writeFileSync(storage_file(), _storage);
 };
 const crypto = require('crypto');

@@ -14,7 +14,7 @@ export const BookItem = (props) => {
   // log(data, 'data in BookItem: ');
   const _return = (
     <Styled._BookItem id={id} ref={root} className={`${className}`} {..._props}>
-      <Cover src={data.cover} />
+      <Cover src={data.cover} data={data} />
       <Styled._Title>{data.title}</Styled._Title>
       <Styled._Author>{data.author}</Styled._Author>
     </Styled._BookItem>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Cover.styled.jsx';
-import { log, randStr } from '../../libs/lib';
+import { log, randStr, sendMessage, stop } from '../../libs/lib';
+import { IoMdAddCircleOutline } from 'react-icons/io';
 
 export const Cover = (props) => {
   const root = React.createRef();
@@ -15,7 +16,7 @@ export const Cover = (props) => {
   // let _src = 'https://readus.org/images/1d1930c5c02182dc561e6cff/cover.jpeg';
   // _src = '../../assets/images/undefined-cover.jpg';
   let { children, className = '', ..._props } = props;
-  const [data, setdata] = useState(props.data || []);
+  const [data, setdata] = useState(props.data);
   // log(src, 'src in : ');
   let _src = `file://${src}`;
   // _src = 'https://readus.org/images/2c2eb4c0c7f5a1902c937094/OEBPS/Image00000.jpg';
@@ -39,6 +40,14 @@ export const Cover = (props) => {
           );
         }}
       />
+      <Styled._AddAgain>
+        <IoMdAddCircleOutline
+          onClick={(e) => {
+            sendMessage('addBook', data);
+            stop(e);
+          }}
+        />
+      </Styled._AddAgain>
     </Styled._Cover>
   );
 
