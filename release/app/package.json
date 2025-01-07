@@ -1,12 +1,12 @@
 {
-  "name": "electron-react-boilerplate",
-  "version": "4.6.0",
-  "description": "A foundation for scalable desktop apps",
+  "name": "readus-relib",
+  "version": "0.12.7",
+  "description": "An Personal Library for desktop",
   "license": "MIT",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "Cactis Lin",
+    "email": "cactis.lin@gmail.com",
+    "url": "https://readus.org"
   },
   "main": "./dist/main/main.js",
   "scripts": {
