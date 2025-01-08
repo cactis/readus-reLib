@@ -20,8 +20,12 @@ export const addBooks = async (files) => {
   return Promise.all(
     _.map(files, (file) =>
       addBook(file).then((book) => {
-        BrowserWindow.getFocusedWindow().webContents.send('bookAdded', book);
-        addBooksToStorage([book]);
+        BrowserWindow.getFocusedWindow().webContents.send('bookAdded', {
+          id: book.id,
+          ...book.meta,
+          url: [book.meta.url],
+        });
+        addBooksToStorage(book);
         return book;
       }),
     ),
@@ -56,7 +60,7 @@ const addBook = async (file) => {
           _,
         ]) {
           return fse.outputFile(cover, data, 'binary').then(() => {
-            var book = {
+            var meta = {
               title: epub.metadata.title || 'unknown',
               author: epub.metadata.creator || 'unknown',
               cover: cover,
@@ -64,11 +68,10 @@ const addBook = async (file) => {
               date: epub.metadata.date,
               language: epub.metadata.language,
               publisher: epub.metadata.publisher,
-              id,
               createdAt: new Date(),
             };
             // log(book, 'book in addBook: ');
-            return book;
+            return { id, meta };
           });
         });
       });
@@ -80,27 +83,46 @@ const addBook = async (file) => {
   // });
 };
 
-export const addBooksToStorage = (books) => {
-  let _books = loadBooks();
-  _books = _.concat(_books, books);
-  _books = _.uniqBy(_books, 'id');
-  _books = _.compact(_books);
+export const addBooksToStorage = ({ id, meta }) => {
+  let _books = loadBooksData();
+  let _meta = _books[id];
+  if (_meta) {
+    _meta.url = _.uniq([..._meta.url, meta.url]);
+    // _meta.createdAt = _.uniq([..._meta.createdAt, meta.createdAt]);
+  } else {
+    _meta = meta;
+    _meta.url = [_meta.url];
+    // _meta.createdAt = [_meta.createdAt];
+  }
+  _books[id] = _meta;
+
+  log(_books, '_books in addBooksToStorage: ');
+  // _books = _.concat(_books, books);
+  // _books = _.uniqBy(_books, 'id');
+  // _books = _.compact(_books);
+
   saveBooks(_books);
 };
 
-export const loadBooks = (arg = {}) => {
+export const loadBooksData = (arg = {}) => {
   let { keyword } = arg;
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
-  let books = getStorage('books') || [];
-  books = _.compact(books);
-  if (keyword) {
-    books = books.filter(
-      (book, i) =>
-        book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
-    );
-  }
+  let books = getStorage('books') || {};
+  log(books, 'books in loadBooks: ');
+  // books = _.compact(books);
+  // if (keyword) {
+  //   books = books.filter(
+  //     (book, i) =>
+  //       book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
+  //   );
+  // }
+  return books;
+};
+export const loadBooks = (arg = {}) => {
+  let books = loadBooksData(arg);
+  books = Object.values(books);
   books = books.sort((a, b) => (a.createdAt - b.createdAt ? 1 : -1));
   return books;
 };
@@ -111,9 +133,10 @@ export const loadBooks = (arg = {}) => {
 
 export const getStorage = (key) => {
   // log(storage_file(), 'storage_file() in : ');
-  let data = [];
+  let data;
   try {
     data = fs.readFileSync(storage_file(), 'utf-8');
+    log(data, 'data in getStorage: ');
     return JSON.parse(data);
   } catch (error) {
     return null;
@@ -121,6 +144,7 @@ export const getStorage = (key) => {
 };
 
 export const saveBooks = (data) => {
+  log(data, 'data in saveBooks: ');
   // log(data.length, 'data.length in saveBooks: ');
   // let storage = getStorage() || {};
   // storage[key] = data;

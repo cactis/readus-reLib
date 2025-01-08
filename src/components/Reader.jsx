@@ -101,6 +101,7 @@ export const Reader = (props) => {
   };
 
   const loadEpub = async () => {
+    log(url, 'url in : ');
     log(window.ePubReader, 'window.ePubReader in : ');
     let _reader = window.ePubReader(url, {
       restore: true,
@@ -282,11 +283,10 @@ export const Reader = (props) => {
   const [data, setdata] = useState(props.data || []);
 
   const saveBookPosition = () => {
+    log(rendition, 'rendition in : ');
     let location = rendition.currentLocation();
-    log(location, 'location in : ');
     let startCfi = location.start?.cfi;
     updatePageNumber();
-    log(startCfi, 'startCfi in : ');
     window.startCfi = startCfi;
 
     // epub.locations.save();
@@ -301,6 +301,7 @@ export const Reader = (props) => {
   };
 
   const updatePageNumber = () => {
+    if (!rendition) return false;
     var location = rendition.currentLocation();
     log(location, 'location: updatePageNumber');
     let { start, end } = location;

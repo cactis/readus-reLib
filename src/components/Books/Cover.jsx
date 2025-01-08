@@ -43,6 +43,14 @@ export const Cover = (props) => {
       />
       <Styled._AddAgain>
         <Icon
+          label={data.url.length}
+          onClick={(e) => {
+            log(data.url, 'data.url in : ');
+            alert(`有${data.url.length}個重覆檔案。`);
+            stop(e);
+          }}
+        />
+        <Icon
           name="IoMdAddCircleOutline"
           onClick={(e) => {
             sendMessage('addBook', data);

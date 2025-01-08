@@ -12,6 +12,7 @@ export const _BookItem = styled(_Col).attrs((props) => ({
 export const _Title = styled(Ellipsis).attrs((props) => ({
   className: `Title`,
 }))`
+  padding-top: 0.2rem;
   font-weight: 500;
 `;
 

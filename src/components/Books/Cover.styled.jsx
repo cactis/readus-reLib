@@ -29,6 +29,11 @@ export const _Cover = styled.div.attrs((props) => ({ className: 'Cover' }))`
 export const _AddAgain = styled(_Float).attrs((props) => ({
   className: `AddAgain`,
 }))`
-  bottom: 0.5rem;
-  right: 0.5rem;
+  bottom: 0;
+  right: 0;
+  flex-flow: row;
+  width: 100%;
+  background-color: #ffffff66;
+  padding: 0.2rem 0.5rem;
+  justify-content: flex-end;
 `;

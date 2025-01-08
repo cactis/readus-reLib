@@ -45,7 +45,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.on('addBook', (event, arg = {}) => {
-  addBooks([arg.url]);
+  addBooks(arg.url);
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {

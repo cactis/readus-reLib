@@ -111,4 +111,5 @@ export const _Ellipsis = styled(_Flex).attrs((props) => ({
 
 export const _Float = styled.span.attrs((props) => ({ className: `Float` }))`
   position: absolute;
+  display: flex;
 `;

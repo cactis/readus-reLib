@@ -69,7 +69,9 @@ export const List = (props) => {
               data={item}
               onClick={(e) => {
                 // alert(item.title);
-                renderComponent(<Reader url={`file://${item.url}`} />);
+                log(item, 'item in : ');
+                renderComponent(<Reader url={`file://${item.url[0]}`} />);
+                stop(e);
               }}
             />
           </Styled._ListItem>

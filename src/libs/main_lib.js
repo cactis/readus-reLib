@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM, { createRoot } from 'react-dom/client';
 import { delayed, funcId, log } from './lib.js';
-import { Popup } from '../components';
+import { Popup } from '../components/index.js';
 
 const renderComponent = (component) => {
   let body = document.getElementsByTagName('body')[0];
