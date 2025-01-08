@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Popup.styled.jsx';
-import { delayed, randStr } from '../../libs/lib.js';
+import { delayed, log, randStr } from '../../libs/lib.js';
 import { Float } from './Layout.jsx';
+import ReactDOM, { createRoot } from 'react-dom/client';
 
 const Popup = (props) => {
   const root = React.createRef();
