@@ -61,7 +61,7 @@ const addBook = async (file) => {
               author: epub.metadata.creator || 'unknown',
               cover: cover,
               url: file,
-              data: epub.metadata.date,
+              date: epub.metadata.date,
               language: epub.metadata.language,
               publisher: epub.metadata.publisher,
               id,
@@ -92,7 +92,7 @@ export const loadBooks = (arg = {}) => {
   let { keyword } = arg;
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
-  log(keyword, 'keyword in library.js#loadBooks: ');
+  // log(keyword, 'keyword in library.js#loadBooks: ');
   let books = getStorage('books') || [];
   books = _.compact(books);
   if (keyword) {
@@ -110,7 +110,7 @@ export const loadBooks = (arg = {}) => {
 // });
 
 export const getStorage = (key) => {
-  log(storage_file(), 'storage_file() in : ');
+  // log(storage_file(), 'storage_file() in : ');
   let data = [];
   try {
     data = fs.readFileSync(storage_file(), 'utf-8');
@@ -121,7 +121,7 @@ export const getStorage = (key) => {
 };
 
 export const saveBooks = (data) => {
-  log(data.length, 'data.length in saveBooks: ');
+  // log(data.length, 'data.length in saveBooks: ');
   // let storage = getStorage() || {};
   // storage[key] = data;
   let _storage = JSON.stringify(data, null, 2);

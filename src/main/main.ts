@@ -49,10 +49,10 @@ ipcMain.on('addBook', (event, arg = {}) => {
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
-  log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
-  let { keyword } = arg;
-  log(keyword, 'keyword in main.js: ');
-  let books = loadBooks({ keyword });
+  // log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
+  const { keyword } = arg;
+  // log(keyword, 'keyword in main.js: ');
+  const books = loadBooks({ keyword });
   // log(books, 'books in : ipcMain.on(loadBooks)');
   // sendMessage('addBooksToLibrary', { books });
   // event.reply('loadBooks-reply', books);

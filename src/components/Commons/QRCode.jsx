@@ -35,6 +35,7 @@ export const QRCode = (props) => {
         <Styled._Canvas id="canvas" />
       </Body>
       <Footer>
+        遠端存取網址：
         <Copy data={data} />
       </Footer>
     </Styled._QRCode>

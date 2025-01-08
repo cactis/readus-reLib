@@ -1,39 +1,35 @@
-// import { ipcRenderer } from 'electron';
+const LZString = require('lz-string');
+const MD5 = require('crypto-js/md5');
 
-import LZString from 'lz-string';
-import MD5 from 'crypto-js/md5';
-// import { machineId, machineIdSync } from 'node-machine-id';
-// import { first, all } from 'macaddress-local-machine';
-
-export const randStr = (pre) => {
+const randStr = (pre) => {
   let _pre = pre ? `${pre}-` : '';
   return _pre + (Math.random() + 1).toString(36).substring(4);
 };
 
-export const newArray = (number) => {
+const newArray = (number) => {
   return Array.from(Array(number).keys());
 };
 
-export const log = (msg, title = '') => {
+const log = (msg, title = '') => {
   console.log(`--- ${title}`);
   console.log(msg);
   console.log(`--- ${title}`);
 };
 
-export const stop = (e) => {
+const stop = (e) => {
   if (e) {
     e.preventDefault();
     e.stopPropagation();
   }
 };
 
-export const broadcast = (status, data = {}, from = '') => {
+const broadcast = (status, data = {}, from = '') => {
   // log([status, data], '[status, data] in Lib#broadcast: ');
   let message = { status, data };
   if (data) $('body').trigger('onWsMessage', { message });
 };
 
-export const subscribe = (callback) => {
+const subscribe = (callback) => {
   $('body').on('onWsMessage', (e, { message }) => {
     // log(message, 'message in Lib#subscribt: ');
     let { status, data, info } = message;
@@ -43,29 +39,27 @@ export const subscribe = (callback) => {
   });
 };
 
-export const tip = (msg) => {
+const tip = (msg) => {
   log(msg, 'msg in : ');
 };
-export const delayed = (func, wait = 1000, ...args) => {
+const delayed = (func, wait = 1000, ...args) => {
   let timeoutId = setTimeout((args) => {
     func.apply(null, args);
   }, wait);
   return timeoutId;
 };
 
-export const isDev = () => {
+const isDev = () => {
   return process.env.NODE_ENV == 'development';
 };
 
-export const funcId = (func) => {
+const funcId = (func) => {
   return MD5(String(func)).toString();
 };
 
-// export const userDataPath = (run) => {
-//   ipcRenderer.invoke('user-data-path').then((path) => run(path));
-// };
 let ws;
-export const wsConnect = (props) => {
+const wsConnect = (props = {}) => {
+  let { token } = props;
   if (ws) ws.close();
   let url = 'wss://readus.org/cable';
   // let url = 'ws://192.168.31.207:3000/';
@@ -75,7 +69,6 @@ export const wsConnect = (props) => {
   window.ws = ws;
   let runCommand = (command, data) => {
     // log(command, 'command in runCommand: ');
-    let token = 'abc';
     if (token) {
       var msg = {
         command: command,
@@ -113,11 +106,11 @@ export const wsConnect = (props) => {
   };
 };
 
-export const wsClose = (props) => {
+const wsClose = (props) => {
   if (ws) ws.close();
 };
 
-export const copyToClipboard = (text) => {
+const copyToClipboard = (text) => {
   setStorage('clipboard', text);
   // popup({ title: '複製成功', message: getStorage('clipboard') })
   log(text, 'text in : ');
@@ -130,7 +123,7 @@ export const copyToClipboard = (text) => {
   document.body.removeChild(elem);
 };
 
-export const setStorage = (key, value) => {
+const setStorage = (key, value) => {
   log([key, value], '[key, value] in Lib#setStorage');
   if (key) {
     var compressed = compress(JSON.stringify(value));
@@ -139,17 +132,39 @@ export const setStorage = (key, value) => {
   }
 };
 
-export const getStorage = (key) => {
-  // log(key, 'key in getStorage')
-  if (!key) return null;
-  var decompressed = decompress(localStorage.getItem(key));
-  let v = decompressed;
-  return v ? JSON.parse(v) : null;
+const getStorage = (key, value) => {
+  let data = localStorage.getItem(key);
+  if (data) {
+    var _data = decompress(data);
+    return _data ? JSON.parse(_data) : null;
+  } else {
+    return value ? setStorage(key, value) : null;
+  }
 };
 
-export const compress = (data) => {
+const compress = (data) => {
   return LZString.compressToUTF16(data);
 };
-export const decompress = (data) => {
+const decompress = (data) => {
   return LZString.decompressFromUTF16(data);
+};
+
+module.exports = {
+  randStr,
+  newArray,
+  log,
+  stop,
+  broadcast,
+  subscribe,
+  tip,
+  delayed,
+  isDev,
+  funcId,
+  wsConnect,
+  wsClose,
+  copyToClipboard,
+  setStorage,
+  getStorage,
+  compress,
+  decompress,
 };

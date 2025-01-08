@@ -63,7 +63,7 @@ export const Reader = (props) => {
     epub.ready
       .then(function () {
         const stored = localStorage.getItem(epub.key() + '-locations');
-        log(stored, 'stored in : ');
+        // log(stored, 'stored in : ');
         if (stored) {
           return epub.locations.load(stored);
         } else {

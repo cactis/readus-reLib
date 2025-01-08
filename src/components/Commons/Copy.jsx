@@ -16,14 +16,15 @@ export const Copy = (props) => {
   const copy = (e) => {
     let { target } = props;
     let $t = $(e.target);
+    let _data;
     if (!data) {
-      data = $t.parent().text() || $t.parent().parent().text();
+      _data = $t.parent().text() || $t.parent().parent().text();
     }
     if (target) {
-      data = $(target).val() || $(target).text();
+      _data = $(target).val() || $(target).text();
     }
     // log(data, 'data in Copy: ')
-    copyToClipboard(data);
+    copyToClipboard(_data);
     stop(e);
   };
   const _return = (

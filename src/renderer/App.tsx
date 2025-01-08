@@ -5,9 +5,9 @@ import icon from '../../assets/icon.svg';
 import './App.scss';
 import { Library } from '../controllers';
 
-let $ = require('jquery');
-window.$ = $;
-window.jQuery = $;
+// let $ = require('jquery');
+// window.$ = $;
+// window.jQuery = $;
 
 export default function App() {
   return (

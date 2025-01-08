@@ -9,20 +9,23 @@ import {
   Icon,
   List,
   Main,
+  popup,
   QRCode,
   Reader,
+  Settings,
   Side,
 } from '../components';
 
 import {
+  getEventPos,
   onMessage,
-  popup,
   renderComponent,
   runLast,
   sendMessage,
-} from '../libs/lib.jsx';
+} from '../libs/main_lib.js';
 import {
   broadcast,
+  getStorage,
   log,
   newArray,
   randStr,
@@ -35,13 +38,14 @@ export const Library = (props) => {
   const root = React.createRef();
   const id = 'Library';
   const formId = 'file-input';
+  const token = getStorage('token', randStr('readus-relib'));
   let _data = [];
 
   const [keyword, setkeyword] = useState(props.keyword);
 
   useEffect(() => {
     loadData();
-
+    wsConnect();
     onMessage('bookAdded', (book) => {
       log(book, 'book in bookAdded Library#onMessage: bookAdded ');
       prependItems([book]);
@@ -74,7 +78,7 @@ export const Library = (props) => {
     runLast(() => {
       log(e, 'e in onChange: ');
       let keyword = $('#search-input').val();
-      log(keyword, 'keyword in : ');
+      // log(keyword, 'keyword in : ');
       setkeyword(keyword);
     });
   };
@@ -108,10 +112,12 @@ export const Library = (props) => {
             name="GoGear"
             id="settings"
             onClick={(e) => {
-              let token = randStr('readus-relib');
-              let data = `http://192.168.31.207:3000/relib?t=${token}`;
-              wsConnect();
-              popup(<QRCode data={data} />, { onClose: wsClose });
+              wsConnect({ token });
+              popup(<Settings token={token} />, {
+                className: 'Dropdown',
+                onClose: wsClose,
+                position: getEventPos(e),
+              });
             }}
           />
         </Side>
