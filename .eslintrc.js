@@ -4,7 +4,7 @@ module.exports = {
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     // 'import/no-extraneous-dependencies': 'off',
-    // 'react/react-in-jsx-scope': 'off',
+    'react/react-in-jsx-scope': 'on',
     // 'react/jsx-filename-extension': 'off',
     // 'import/extensions': 'off',
     // 'import/no-unresolved': 'off',
