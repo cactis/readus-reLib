@@ -1,10 +1,9 @@
-console.log('src/renderer/App.tsx loaded');
-
 import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.scss';
 import { Library } from '../controllers';
 
+console.log('src/renderer/App.tsx loaded');
 // let $ = require('jquery');
 // window.$ = $;
 // window.jQuery = $;

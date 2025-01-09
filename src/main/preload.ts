@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import { getAppPath, loadBooks, loadBooksData } from '../libs/library';
 
-console.log('src/main/preload.ts loaded');
+// console.log('src/main/preload.ts loaded');
 
-let _ = require('lodash');
+// let _ = require('lodash');
 
 contextBridge.exposeInMainWorld('Library', {
   loadBooks,
