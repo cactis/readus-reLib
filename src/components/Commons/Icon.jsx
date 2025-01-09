@@ -5,6 +5,8 @@ import { log, randStr } from '../../libs/lib';
 import * as md from 'react-icons/md';
 import * as bi from 'react-icons/bi';
 import * as tf from 'react-icons/tfi';
+import * as fa from 'react-icons/fa';
+import * as fa6 from 'react-icons/fa6';
 import * as go from 'react-icons/go';
 import * as tb from 'react-icons/tb';
 import * as ci from 'react-icons/ci';
@@ -16,9 +18,10 @@ export const Icon = (props) => {
   const root = React.createRef();
   const id = randStr('Icon');
   let _Icon;
-  let { label, name, children, className = '', ..._props } = props;
+  let { $if, label, name, children, className = '', ..._props } = props;
+  if ($if == false) return null;
   if (name) {
-    let modules = [go, md, bi, io, tf, tb, ci, io5, cg];
+    let modules = [go, md, bi, io, fa6, fa, tf, tb, ci, io5, cg];
     let module = modules.filter(
       (module, i) => typeof module[name] == 'function',
     )[0];

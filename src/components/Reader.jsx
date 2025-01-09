@@ -281,7 +281,7 @@ export const Reader = (props) => {
     window.startCfi = startCfi;
 
     // epub.locations.save();
-    // _reader.saveSettings();
+    _reader.saveSettings();
     // var books_json = await window.bookConfig.getBooks()
     // await window.bookConfig.changeBookValue(
     //   books_json,
@@ -334,7 +334,7 @@ export const Reader = (props) => {
         id="close-reader"
         onClick={(e) => {
           saveBookPosition();
-          _reader.unload();
+          // _reader.unload();
           document.title = defaultDocumentTitle;
           $(e.target).closest('wrapper').fadeOut(500).delay(1000).remove();
         }}

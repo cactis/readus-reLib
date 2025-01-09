@@ -22,10 +22,10 @@ export const _Library = styled.div.attrs((props) => ({
       align-items: center;
     }
     .Main {
-      gap: 0.5rem;
+      /* gap: 0.5rem; */
     }
     .Side {
-      gap: 1rem;
+      gap: 0rem;
     }
   }
   > .Header,

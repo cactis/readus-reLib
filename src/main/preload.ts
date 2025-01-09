@@ -1,13 +1,14 @@
-console.log('src/main/preload.ts loaded');
-
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { log } from '../libs/lib';
-import { loadBooks } from '../libs/library';
+import { getAppPath, loadBooks, loadBooksData } from '../libs/library';
+
+console.log('src/main/preload.ts loaded');
 
 let _ = require('lodash');
 
 contextBridge.exposeInMainWorld('Library', {
-  loadBooks: loadBooks,
+  loadBooks,
+  getAppPath,
+  loadBooksData,
 });
 
 export type Channels = 'ipc-example';

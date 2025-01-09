@@ -13,7 +13,9 @@ const booksExtensions = ['epub', 'mobi'];
 let _ = require('lodash');
 
 const storage_file = () => {
-  return `${app.getPath('userData')}/books.json`;
+  let _storageFile = `${app.getPath('userData')}/books.json`;
+  log(_storageFile, '_storageFile in : ');
+  return _storageFile;
 };
 
 export const addBooks = async (files) => {
@@ -37,6 +39,7 @@ export const addBooks = async (files) => {
 };
 
 export const getAppPath = () => {
+  log(app, 'app in : ');
   return app.getAppPath();
 };
 
@@ -105,24 +108,24 @@ export const addBooksToStorage = ({ id, meta }) => {
 };
 
 export const loadBooksData = (arg = {}) => {
-  let { keyword } = arg;
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
   let books = getStorage('books') || {};
   log(books, 'books in loadBooks: ');
   // books = _.compact(books);
-  // if (keyword) {
-  //   books = books.filter(
-  //     (book, i) =>
-  //       book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
-  //   );
-  // }
   return books;
 };
 export const loadBooks = (arg = {}) => {
+  let { keyword } = arg;
   let books = loadBooksData(arg);
   books = Object.values(books);
+  if (keyword) {
+    books = books.filter(
+      (book, i) =>
+        book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
+    );
+  }
   books = books.sort((a, b) => (a.createdAt - b.createdAt ? 1 : -1));
   return books;
 };
@@ -132,7 +135,6 @@ export const loadBooks = (arg = {}) => {
 // });
 
 export const getStorage = (key) => {
-  // log(storage_file(), 'storage_file() in : ');
   let data;
   try {
     data = fs.readFileSync(storage_file(), 'utf-8');

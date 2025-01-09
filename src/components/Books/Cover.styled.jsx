@@ -33,7 +33,8 @@ export const _AddAgain = styled(_Float).attrs((props) => ({
   right: 0;
   flex-flow: row;
   width: 100%;
-  background-color: #ffffff66;
-  padding: 0.2rem 0.5rem;
+  background-color: #494949;
+  color: white;
+  padding: 0.3rem 0.1rem;
   justify-content: flex-end;
 `;

@@ -48,6 +48,18 @@ ipcMain.on('addBook', (event, arg = {}) => {
   addBooks(arg.url);
 });
 
+ipcMain.on('getAppPath', (event, arg) => {
+  const path = app.getAppPath();
+  log(path, 'path in : ');
+  // const file = `file://${path}/books.json`;
+  // log(file, 'file in : ');
+  // shell.openExternal(file);
+  // shell.showItemInFolder(path);
+  event.reply('getAppPath', path);
+});
+
+ipcMain.on('loadBooksData', (event, arg) => {});
+
 ipcMain.on('loadBooks', (event, arg = {}) => {
   // log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;

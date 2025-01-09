@@ -41,7 +41,7 @@ const Popup = (props) => {
 const popup = (component, props) => {
   let target = $('body').append("<span class='unwrappable'></span>").children();
   target = _.last(target);
-  log(target, 'target in : ');
+  // log(target, 'target in : ');
   let root = createRoot(target);
   root.render(<Popup {...props}>{component}</Popup>);
 };

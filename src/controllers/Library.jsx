@@ -6,9 +6,11 @@ import {
   FileInput,
   Footer,
   Header,
+  Html,
   Icon,
   List,
   Main,
+  Popup,
   popup,
   QRCode,
   Reader,
@@ -25,7 +27,9 @@ import {
 } from '../libs/main_lib.js';
 import {
   broadcast,
+  copyToClipboard,
   getStorage,
+  isDev,
   log,
   newArray,
   randStr,
@@ -98,11 +102,32 @@ export const Library = (props) => {
               onChange={onChange}
             />
           </Styled._Search>
-          <Icon name="CiFilter" />
         </Main>
         {/* <List data={newArray(5)} /> */}
         <Side>
           <Icon
+            name="FaRegFileLines"
+            $if={false}
+            onClick={(e) => {
+              let json = window.Library.loadBooksData();
+
+              log(json, 'json in : ');
+              let data = `<pre>${JSON.stringify(json)}</pre>`;
+              log(data, 'data in : ');
+              // sendMessage('getAppPath');
+              // onMessage('getAppPath', (path) => {
+              //   runLast(() => {
+              //     const file = `${path}/books.json`;
+              //     log(file, 'file in : ');
+              //     // copyToClipboard(file);
+              //     popup(<Html data={data} />);
+              //   }, 100);
+              // });
+              stop(e);
+            }}
+          />
+          <Icon
+            $if={isDev()}
             name="TbPlugConnected"
             onClick={(e) => {
               wsConnect();

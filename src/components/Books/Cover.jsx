@@ -43,6 +43,7 @@ export const Cover = (props) => {
       />
       <Styled._AddAgain>
         <Icon
+          $if={data.url.length > 1}
           label={data.url.length}
           onClick={(e) => {
             log(data.url, 'data.url in : ');
@@ -51,7 +52,7 @@ export const Cover = (props) => {
           }}
         />
         <Icon
-          name="IoMdAddCircleOutline"
+          name="IoReload"
           onClick={(e) => {
             sendMessage('addBook', data);
             stop(e);
