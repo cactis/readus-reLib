@@ -16,6 +16,6 @@ export const _Icon = styled(_Flex).attrs((props) => ({ className: 'Icon' }))`
     padding: 0.3rem;
   }
   &:hover {
-    transform: scale(0.8);
+    transform: scale(0.9);
   }
 `;
