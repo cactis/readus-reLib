@@ -75,11 +75,6 @@ const getBase64 = (file) => {
     fetch(`file://${file}`)
       .then((response) => response.arrayBuffer())
       .then((ab) => {
-        // log(ab, 'ab in : ');
-        // var base64String = btoa(
-        //   String.fromCharCode.apply(null, new Uint8Array(ab)),
-        // );
-
         var binary = '';
         var bytes = new Uint8Array(ab);
         var len = bytes.byteLength;
@@ -87,31 +82,10 @@ const getBase64 = (file) => {
           binary += String.fromCharCode(bytes[i]);
         }
         const base64String = window.btoa(binary);
-        // log(base64String, 'base64String in : ');
         resolve(`${pre}${base64String}`);
-        // do stuff with `ArrayBuffer` representation of file
       })
       .catch((err) => reject(err));
   });
-  // return new Promise((resolve, reject) => {
-  //   log(file, 'file in : ');
-  //   file = new File([''], file, {
-  //     type: `image/${file.split('.')[(-1, 1)]}`,
-  //     path: file,
-  //   });
-  //   log(file, 'file in : ');
-  //   var reader = new FileReader();
-  //   reader.readAsDataURL(file);
-  //   reader.onload = function () {
-  //     let base64 = reader.result;
-  //     log(base64, 'base64 in : ');
-  //     resolve(base64);
-  //     // console.log(reader.result);
-  //   };
-  //   reader.onerror = function (error) {
-  //     console.log('Error: ', error);
-  //   };
-  // });
 };
 
 const peerConnect = (props = {}) => {
@@ -141,6 +115,11 @@ const peerConnect = (props = {}) => {
       peerSend({ data: books, size: books.length, event: 'booksLoad' });
     });
   });
+
+  onMessage('getBookContent', (data) => {
+    log(data, 'data in getBookContent: ');
+    peerSend({ data: data, event: 'getBookContent' });
+  });
   peer.on('connection', (conn) => {
     log(conn, 'conn on event : conn:connection');
     window.conn = conn;
@@ -158,13 +137,16 @@ const peerConnect = (props = {}) => {
       data = JSON.parse(data);
       log(data, 'received data on event : conn:data');
       let { request, url, keyword } = data;
+
       if (request && url) {
-        switch (url) {
-          case '/books':
+        log(url, 'url in : ');
+        switch (true) {
+          case /\/books$/.test(url):
             sendMessage('loadBooks', { keyword });
-
             break;
-
+          case /\/Users/.test(url):
+            sendMessage('getBookContent', { url });
+            break;
           default:
             break;
         }

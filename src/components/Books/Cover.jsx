@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Cover.styled.jsx';
-import { log, randStr, stop } from '../../libs/lib';
+import { isDev, log, randStr, stop } from '../../libs/lib';
 import { Icon } from '../Commons/Icon.jsx';
 import { sendMessage } from '../../libs/window_lib.js';
 
@@ -42,6 +42,14 @@ export const Cover = (props) => {
         }}
       />
       <Styled._AddAgain>
+        <Icon
+          $if={isDev()}
+          label="getBookContent"
+          onClick={(e) => {
+            sendMessage('getBookContent', { url: data.url[0] });
+            stop(e);
+          }}
+        />
         <Icon
           $if={data.url.length > 1}
           label={data.url.length}

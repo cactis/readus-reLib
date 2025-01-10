@@ -2,31 +2,19 @@ import React, { useState, useEffect } from 'react';
 import * as Styled from './List.styled.jsx';
 import { Header, Main, Side } from '../Layout/Layout.jsx';
 import { BookItem } from '../Books/BookItem.jsx';
-import { renderComponent, sendMessage } from '../../libs/window_lib.js';
+import { sendMessage } from '../../libs/window_lib.js';
 import { Reader } from '../Reader.jsx';
 import { delayed, log, onMessage, randStr, subscribe } from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';
-// import { BrowserWindow } from 'electron';
-// import { ipcMain } from 'electron';
+
 export const List = (props) => {
   const root = React.createRef();
   const id = randStr('List');
   let _data = [];
 
-  let { toolbar, children, className = '', ..._props } = props;
+  let { onItemClick, toolbar, children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
   const [time, settime] = useState(props.time);
-
-  // const prependItems = (items) => {
-  //   setdata([...items, ...data]);
-  // };
-
-  // useEffect(() => {
-  //   subscribe(({ status, data }) => {
-  //     log([status, data], '[status, data] in : ');
-  //     prependItems(data);
-  //   });
-  // }, []);
 
   useEffect(() => {
     setdata(props.data);
@@ -68,10 +56,7 @@ export const List = (props) => {
             <BookItem
               data={item}
               onClick={(e) => {
-                // alert(item.title);
-                log(item, 'item in : ');
-                renderComponent(<Reader url={`file://${item.url[0]}`} />);
-                stop(e);
+                onItemClick({ item, e });
               }}
             />
           </Styled._ListItem>

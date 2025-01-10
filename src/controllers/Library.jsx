@@ -152,6 +152,12 @@ export const Library = (props) => {
       </Header>
       <Body>
         <List
+          onItemClick={({ e, item }) => {
+            // alert(item.title);
+            log(item, 'item in : ');
+            renderComponent(<Reader url={`file://${item.url[0]}`} />);
+            stop(e);
+          }}
           toolbar={
             <Icon
               className={`button`}

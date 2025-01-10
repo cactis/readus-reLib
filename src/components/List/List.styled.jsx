@@ -55,13 +55,6 @@ export const _ListItem = styled.div.attrs((props) => ({
       font-weight: bold;
     }
   }
-
-  /* border: 1px solid #aaa; */
-  /* padding: 1rem; */
-  /* aspect-ratio: 9/13; */
-  /* background-color: #dbdbdb; */
-
-  /* color: black; */
   cursor: pointer;
   &:active {
     transform: scale(0.98);

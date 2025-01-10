@@ -43,6 +43,24 @@ export const getAppPath = () => {
   return app.getAppPath();
 };
 
+export const getBookContent = (file) => {
+  return new Promise((resolve, reject) => {
+    Epub.createAsync(file, null, null).then((epub) => {
+      // log(epub, 'epub in : ');
+      const { toc } = epub;
+      const { contents } = epub.spine;
+      Promise.all(
+        contents.map((chapter, i) =>
+          epub.getChapterAsync(chapter.id).then((texts) => {
+            log(texts, 'texts in : ');
+            return texts;
+          }),
+        ),
+      ).then((result) => resolve(result));
+    });
+  });
+};
+
 const addBook = async (file) => {
   log(file, 'file in addBook: ');
   const coversPath = `${app.getPath('userData')}/covers`;
@@ -53,10 +71,6 @@ const addBook = async (file) => {
         // log(epub, 'epub in : ');
         const { toc } = epub;
         const { contents } = epub.spine;
-        // log([toc, contents], '[toc, contents] in : ');
-        // log(toc[3], 'toc[3] in : ');
-        // let id = toc[3].id
-        let _id = contents[0].id;
         Promise.all(
           contents.map((chapter, i) =>
             epub.getChapterAsync(chapter.id).then((texts) => {
@@ -65,15 +79,6 @@ const addBook = async (file) => {
             }),
           ),
         ).then((result) => log(result, 'result in : '));
-        // log(_texts, '_texts in : ');
-        // let id = contents[3].href;
-        // epub.getChapter(_id, (error, texts) => {
-        //   log(error, 'error in : ');
-        //   log(texts, 'texts in : ');
-        //   log([toc[0], contents[0]], '[toc[0], contents[0]] in : ');
-        //   log(_id, '_id in : ');
-        //   log(epub.version, 'epub.version in : ');
-        // });
 
         let appPath = getAppPath();
         // log(appPath, 'appPath in : ');
@@ -115,19 +120,11 @@ export const addBooksToStorage = ({ id, meta }) => {
   let _meta = _books[id];
   if (_meta) {
     _meta.url = _.uniq([..._meta.url, meta.url]);
-    // _meta.createdAt = _.uniq([..._meta.createdAt, meta.createdAt]);
   } else {
     _meta = meta;
     _meta.url = [_meta.url];
-    // _meta.createdAt = [_meta.createdAt];
   }
   _books[id] = _meta;
-
-  // log(_books, '_books in addBooksToStorage: ');
-  // _books = _.concat(_books, books);
-  // _books = _.uniqBy(_books, 'id');
-  // _books = _.compact(_books);
-
   saveBooks(_books);
 };
 
@@ -143,7 +140,10 @@ export const loadBooksData = (arg = {}) => {
 export const loadBooks = (arg = {}) => {
   let { keyword } = arg;
   let books = loadBooksData(arg);
-  books = Object.values(books);
+  // log(Object.keys(books), 'Object.keys(books) in : ');
+  books = Object.keys(books).map((id, i) => {
+    return { id, ...books[id] };
+  });
   if (keyword) {
     books = books.filter(
       (book, i) =>

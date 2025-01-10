@@ -21,7 +21,7 @@ import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { log } from '../libs/lib';
-import { addBooks, loadBooks } from '../libs/library';
+import { addBooks, getBookContent, loadBooks } from '../libs/library';
 
 class AppUpdater {
   constructor() {
@@ -60,20 +60,22 @@ ipcMain.on('getAppPath', (event, arg) => {
 
 ipcMain.on('loadBooksData', (event, arg) => {});
 
+ipcMain.on('getBookContent', (event, arg = {}) => {
+  log([event, arg], '[event, arg] in : ipcMain.on(getBook)');
+  const { url } = arg;
+  log(url, 'url in : ');
+  getBookContent(url).then((data) => {
+    log(data, 'data in : ');
+    event.reply('getBookContent', data);
+  });
+  // const books = loadBooks({ keyword });
+});
+
 ipcMain.on('loadBooks', (event, arg = {}) => {
   log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;
-  // log(keyword, 'keyword in main.js: ');
   const books = loadBooks({ keyword });
-  // log(books, 'books in : ipcMain.on(loadBooks)');
-  // sendMessage('addBooksToLibrary', { books });
-  // event.reply('loadBooks-reply', books);
-  // event.returnValue = books;
-
   event.reply('booksLoad', books.slice(0, 10));
-  // sendMessage('booksLoad', books);
-  // ipcRenderer.send('booksLoad', books);
-  // return books;
 });
 
 ipcMain.on('openBookChooserDialog', (event, arg) => {
