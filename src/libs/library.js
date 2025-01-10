@@ -14,7 +14,7 @@ let _ = require('lodash');
 
 const storage_file = () => {
   let _storageFile = `${app.getPath('userData')}/books.json`;
-  log(_storageFile, '_storageFile in : ');
+  // log(_storageFile, '_storageFile in : ');
   return _storageFile;
 };
 
@@ -39,7 +39,7 @@ export const addBooks = async (files) => {
 };
 
 export const getAppPath = () => {
-  log(app, 'app in : ');
+  // log(app, 'app in : ');
   return app.getAppPath();
 };
 
@@ -51,6 +51,30 @@ const addBook = async (file) => {
     try {
       return Epub.createAsync(file, null, null).then((epub) => {
         // log(epub, 'epub in : ');
+        const { toc } = epub;
+        const { contents } = epub.spine;
+        // log([toc, contents], '[toc, contents] in : ');
+        // log(toc[3], 'toc[3] in : ');
+        // let id = toc[3].id
+        let _id = contents[0].id;
+        Promise.all(
+          contents.map((chapter, i) =>
+            epub.getChapterAsync(chapter.id).then((texts) => {
+              log(texts, 'texts in : ');
+              return texts;
+            }),
+          ),
+        ).then((result) => log(result, 'result in : '));
+        // log(_texts, '_texts in : ');
+        // let id = contents[3].href;
+        // epub.getChapter(_id, (error, texts) => {
+        //   log(error, 'error in : ');
+        //   log(texts, 'texts in : ');
+        //   log([toc[0], contents[0]], '[toc[0], contents[0]] in : ');
+        //   log(_id, '_id in : ');
+        //   log(epub.version, 'epub.version in : ');
+        // });
+
         let appPath = getAppPath();
         // log(appPath, 'appPath in : ');
         let cover = `${appPath}/assets/images/cover-not-available.jpg`;
@@ -99,7 +123,7 @@ export const addBooksToStorage = ({ id, meta }) => {
   }
   _books[id] = _meta;
 
-  log(_books, '_books in addBooksToStorage: ');
+  // log(_books, '_books in addBooksToStorage: ');
   // _books = _.concat(_books, books);
   // _books = _.uniqBy(_books, 'id');
   // _books = _.compact(_books);
@@ -112,7 +136,7 @@ export const loadBooksData = (arg = {}) => {
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
   let books = getStorage('books') || {};
-  log(books, 'books in loadBooks: ');
+  // log(books, 'books in loadBooks: ');
   // books = _.compact(books);
   return books;
 };
@@ -138,7 +162,7 @@ export const getStorage = (key) => {
   let data;
   try {
     data = fs.readFileSync(storage_file(), 'utf-8');
-    log(data, 'data in getStorage: ');
+    // log(data, 'data in getStorage: ');
     return JSON.parse(data);
   } catch (error) {
     return null;
@@ -146,7 +170,7 @@ export const getStorage = (key) => {
 };
 
 export const saveBooks = (data) => {
-  log(data, 'data in saveBooks: ');
+  // log(data, 'data in saveBooks: ');
   // log(data.length, 'data.length in saveBooks: ');
   // let storage = getStorage() || {};
   // storage[key] = data;

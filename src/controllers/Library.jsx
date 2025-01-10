@@ -21,10 +21,11 @@ import {
 import {
   getEventPos,
   onMessage,
+  peerConnect,
   renderComponent,
   runLast,
   sendMessage,
-} from '../libs/main_lib.js';
+} from '../libs/window_lib.js';
 import {
   broadcast,
   copyToClipboard,
@@ -50,8 +51,9 @@ export const Library = (props) => {
   useEffect(() => {
     loadData();
     wsConnect();
+    peerConnect();
     onMessage('bookAdded', (book) => {
-      log(book, 'book in bookAdded Library#onMessage: bookAdded ');
+      // log(book, 'book in bookAdded Library#onMessage: bookAdded ');
       prependItems([book]);
     });
   }, []);
@@ -60,7 +62,7 @@ export const Library = (props) => {
     runLast(() => {
       sendMessage('loadBooks', { keyword });
       onMessage('booksLoad', (books) => {
-        log(books, 'books in Library 222: ');
+        // log(books, 'books in Library 222: ');
         setdata(books);
         _data = books;
       });
@@ -107,22 +109,23 @@ export const Library = (props) => {
         <Side>
           <Icon
             name="FaRegFileLines"
-            $if={false}
+            $if={isDev()}
             onClick={(e) => {
               let json = window.Library.loadBooksData();
 
               log(json, 'json in : ');
               let data = `<pre>${JSON.stringify(json)}</pre>`;
               log(data, 'data in : ');
-              // sendMessage('getAppPath');
-              // onMessage('getAppPath', (path) => {
-              //   runLast(() => {
-              //     const file = `${path}/books.json`;
-              //     log(file, 'file in : ');
-              //     // copyToClipboard(file);
-              //     popup(<Html data={data} />);
-              //   }, 100);
-              // });
+
+              sendMessage('getAppPath');
+              onMessage('getAppPath', (path) => {
+                runLast(() => {
+                  const file = `${path}/books.json`;
+                  log(file, 'file in : ');
+                  // copyToClipboard(file);
+                  popup(<Html data={data} />);
+                }, 100);
+              });
               stop(e);
             }}
           />
@@ -130,7 +133,7 @@ export const Library = (props) => {
             $if={isDev()}
             name="TbPlugConnected"
             onClick={(e) => {
-              wsConnect();
+              peerConnect();
             }}
           />
           <Icon

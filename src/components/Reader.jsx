@@ -7,7 +7,7 @@ import {
   EpubReaderCss,
 } from './EpubReaderContentCss.styled.jsx';
 import { Icon } from './Commons/Icon.jsx';
-import { runLast } from '../libs/main_lib.js';
+import { runLast } from '../libs/window_lib.js';
 const _ = require('lodash');
 
 export const Reader = (props) => {
@@ -41,10 +41,11 @@ export const Reader = (props) => {
     loadEpub();
   }, [url]);
 
+  let _reader;
   const loadEpub = async () => {
     log(url, 'url in : ');
     log(window.ePubReader, 'window.ePubReader in : ');
-    let _reader = window.ePubReader(url, {
+    _reader = window.ePubReader(url, {
       restore: true,
       contained: true,
       styles: EpubReaderCss,
@@ -298,6 +299,7 @@ export const Reader = (props) => {
     if (!location) return false;
 
     let { start, end } = location;
+    if (!start) return false;
     let page = start.displayed.page;
     let total = start.displayed.total;
 

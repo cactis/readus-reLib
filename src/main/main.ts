@@ -61,7 +61,7 @@ ipcMain.on('getAppPath', (event, arg) => {
 ipcMain.on('loadBooksData', (event, arg) => {});
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
-  // log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
+  log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;
   // log(keyword, 'keyword in main.js: ');
   const books = loadBooks({ keyword });
@@ -69,24 +69,25 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
   // sendMessage('addBooksToLibrary', { books });
   // event.reply('loadBooks-reply', books);
   // event.returnValue = books;
-  event.reply('booksLoad', books);
+
+  event.reply('booksLoad', books.slice(0, 10));
   // sendMessage('booksLoad', books);
   // ipcRenderer.send('booksLoad', books);
-  return books;
+  // return books;
 });
 
 ipcMain.on('openBookChooserDialog', (event, arg) => {
-  log([event, arg], '[event, arg] in : ');
+  // log([event, arg], '[event, arg] in : ');
   dialog
     .showOpenDialog({
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'Epub Files', extensions: ['epub'] }],
     })
     .then((result) => {
-      log(result, 'result in : ');
+      // log(result, 'result in : ');
       if (!result.canceled) {
         addBooks(result.filePaths).then((books) => {
-          log(books, 'books in on openBookChooserDialog: ');
+          // log(books, 'books in on openBookChooserDialog: ');
           sendMessage('addBooksToLibrary', { books });
         });
       }

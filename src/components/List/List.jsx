@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as Styled from './List.styled.jsx';
 import { Header, Main, Side } from '../Layout/Layout.jsx';
 import { BookItem } from '../Books/BookItem.jsx';
-import { renderComponent, sendMessage } from '../../libs/main_lib.js';
+import { renderComponent, sendMessage } from '../../libs/window_lib.js';
 import { Reader } from '../Reader.jsx';
 import { delayed, log, onMessage, randStr, subscribe } from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';

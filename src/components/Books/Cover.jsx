@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import * as Styled from './Cover.styled.jsx';
 import { log, randStr, stop } from '../../libs/lib';
 import { Icon } from '../Commons/Icon.jsx';
-import { sendMessage } from '../../libs/main_lib.js';
+import { sendMessage } from '../../libs/window_lib.js';
 
 export const Cover = (props) => {
   const root = React.createRef();
