@@ -1,8 +1,12 @@
-/*
-  The purpose of this class is to create our connection string and authenticate to database prior to running and db creation or model creation.
-*/
 const sqlite3 = require('sqlite3').verbose();
+const { app } = require('electron');
+
 const { Sequelize } = require('sequelize');
+
+// console.log(app, 'app in : ');
+// const dataPath = app.getPath('userData');
+// console.log(dataPath);
+const dataPath = '.';
 // const sequelize = new Sequelize('sqlite:../storage/relib.db'); //Export this connection to our main and ipcRenderer, export models from index.js in the models folder
 const sequelize = new Sequelize('database', null, null, {
   pool: {
@@ -11,10 +15,9 @@ const sequelize = new Sequelize('database', null, null, {
     acquire: 30000,
     idle: 10000,
   },
-  // 手动配置sqlite3，默认的不会被识别
   dialectModule: sqlite3,
   dialect: 'sqlite',
-  storage: './database.sqlite',
+  storage: `${dataPath}/database.sqlite`,
 });
 
 async function authenticatedConnection() {

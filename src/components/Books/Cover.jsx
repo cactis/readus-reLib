@@ -45,7 +45,7 @@ export const Cover = (props) => {
         <Icon name="CiTrash" />
         <Icon
           $if={isDev()}
-          label="getBookContent"
+          name="IoMdBook"
           onClick={(e) => {
             sendMessage('getBookContent', { url: data.url[0] });
             stop(e);
