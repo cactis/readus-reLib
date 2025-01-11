@@ -21,6 +21,9 @@ import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { log } from '../libs/lib';
+
+// require('../libs/db/index');
+// const { Book } = require('../libs/db/models/index');
 import { addBooks, getBookContent, loadBooks } from '../libs/library';
 
 class AppUpdater {
@@ -141,7 +144,8 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
-    icon: getAssetPath('icon.png'),
+    icon: getAssetPath('favicon.icon'),
+    // icon: getAssetPath('icon.png'),
     webPreferences: {
       webviewTag: true,
       webSecurity: false,
