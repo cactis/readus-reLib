@@ -50,7 +50,7 @@ export const List = (props) => {
       <Styled._ListWrapper>
         {data.map((item, index) => (
           <Styled._ListItem
-            key={`${item.id}-${index}`}
+            key={`${item.sha256}-${index}`}
             className={item.new ? 'new' : ''}
           >
             <BookItem

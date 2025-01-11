@@ -31,3 +31,7 @@ npm-debug.log.*
 .data
 
 storage
+
+database.sqlite
+Gemfile
+Guardfile

@@ -1,19 +1,22 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database'); //Bring configured db into model for init
 const { Database } = require('sqlite3');
+const { log } = require('../../lib');
 class Book extends Model {
   // static upperCaseFirstName() {
   //   return this.firstname.toUpperCase();
   // }
   async build(attrs) {
+    log(attrs, 'attrs in Book#build: ');
     try {
       const book = await Book.create(attrs);
       return await book.save();
     } catch (e) {
-      const topLevelError = e.errors[0];
-      console.log(
-        `Issue creating book {Message: ${topLevelError.message}, Type: ${topLevelError.type}, Value: ${topLevelError.value} already exists}`,
-      );
+      log(e, 'e in Book.build: ');
+      // const topLevelError = e.errors;
+      // console.log(
+      //   `Issue creating book {Message: ${topLevelError.message}, Type: ${topLevelError.type}, Value: ${topLevelError.value} already exists}`,
+      // );
     }
     return null;
   }
@@ -30,12 +33,23 @@ Book.init(
     title: {
       type: DataTypes.TEXT,
     },
-    cover: Database.TEXT,
     author: DataTypes.TEXT,
+    cover: DataTypes.TEXT,
+    date: DataTypes.TEXT,
     language: DataTypes.TEXT,
     publisher: DataTypes.TEXT,
-    url: DataTypes.ARRAY,
-    date: DataTypes.TEXT,
+    // url: DataTypes.ARRAY(DataTypes.TEXT),
+    url: Sequelize.JSON,
+    // url: {
+    //   type: Sequelize.STRING,
+    //   allowNull: false,
+    //   get() {
+    //     return this.getDataValue('url').split(';');
+    //   },
+    //   set(val) {
+    //     this.setDataValue('url', val.join(';'));
+    //   },
+    // },
     createdAt: DataTypes.DATE,
   },
   { sequelize },

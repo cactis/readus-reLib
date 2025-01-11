@@ -42,6 +42,7 @@ export const Cover = (props) => {
         }}
       />
       <Styled._AddAgain>
+        <Icon name="CiTrash" />
         <Icon
           $if={isDev()}
           label="getBookContent"
@@ -51,8 +52,8 @@ export const Cover = (props) => {
           }}
         />
         <Icon
-          $if={data.url.length > 1}
-          label={data.url.length}
+          $if={data.url?.length > 1}
+          label={data.url?.length}
           onClick={(e) => {
             log(data.url, 'data.url in : ');
             alert(`有${data.url.length}個重覆檔案。`);

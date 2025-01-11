@@ -1,5 +1,6 @@
 import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
 import { isDev, log } from './lib';
+import { Book } from './db/models';
 
 const fs = require('fs');
 const path = require('path');
@@ -21,19 +22,27 @@ const storage_file = () => {
 export const addBooks = async (files) => {
   return Promise.all(
     _.map(files, (file) =>
-      addBook(file).then((book) => {
-        BrowserWindow.getFocusedWindow().webContents.send('bookAdded', {
-          id: book.id,
-          ...book.meta,
-          url: [book.meta.url],
-        });
-        addBooksToStorage(book);
+      getDataFromEpub(file).then((book) => {
+        try {
+          Book.prototype.build(book).then(() => {
+            log('book created', "'book created' in : ");
+            BrowserWindow.getFocusedWindow().webContents.send(
+              'bookAdded',
+              book,
+            );
+          });
+          Book.findAll().then((books) => {
+            log(books, 'books in : ');
+          });
+          // mainWindow.webContents.send('recieveBooks', JSON.stringify(books, null, 2));//Push our data to component once mounted.
+        } catch (e) {
+          console.log(`Error selecting books ${e}`);
+        }
+
         return book;
       }),
     ),
   ).then((books) => {
-    // log(books, 'books in : ');
-    // addBooksToStorage(books);
     return books;
   });
 };
@@ -61,49 +70,38 @@ export const getBookContent = (file) => {
   });
 };
 
-const addBook = async (file) => {
-  log(file, 'file in addBook: ');
+const getDataFromEpub = async (file) => {
+  log(file, 'file in getDataFromEpub: ');
   const coversPath = `${app.getPath('userData')}/covers`;
-  return getChecksum(file).then((id) => {
+  return getSha256(file).then((sha256) => {
     // log(id, 'id in : ');
     try {
       return Epub.createAsync(file, null, null).then((epub) => {
-        // log(epub, 'epub in : ');
-        const { toc } = epub;
-        const { contents } = epub.spine;
-        Promise.all(
-          contents.map((chapter, i) =>
-            epub.getChapterAsync(chapter.id).then((texts) => {
-              log(texts, 'texts in : ');
-              return texts;
-            }),
-          ),
-        ).then((result) => log(result, 'result in : '));
-
         let appPath = getAppPath();
         // log(appPath, 'appPath in : ');
         let cover = `${appPath}/assets/images/cover-not-available.jpg`;
         let coverExt = epub.metadata.cover
           ? _.last(epub.manifest[epub.metadata.cover]?.href.split('.'))
           : null;
-        if (coverExt) cover = `${coversPath}/${id}.${coverExt}`;
+        if (coverExt) cover = `${coversPath}/${sha256}.${coverExt}`;
         return epub.getImageAsync(epub.metadata.cover).then(async function ([
           data,
           _,
         ]) {
           return fse.outputFile(cover, data, 'binary').then(() => {
-            var meta = {
+            var book = {
+              sha256,
               title: epub.metadata.title || 'unknown',
               author: epub.metadata.creator || 'unknown',
               cover: cover,
-              url: file,
+              url: [file],
               date: epub.metadata.date,
               language: epub.metadata.language,
               publisher: epub.metadata.publisher,
               createdAt: new Date(),
             };
-            // log(book, 'book in addBook: ');
-            return { id, meta };
+            // log(book, 'book in getDataFromEpub: ');
+            return book;
           });
         });
       });
@@ -115,42 +113,36 @@ const addBook = async (file) => {
   // });
 };
 
-export const addBooksToStorage = ({ id, meta }) => {
-  let _books = loadBooksData();
-  let _meta = _books[id];
-  if (_meta) {
-    _meta.url = _.uniq([..._meta.url, meta.url]);
-  } else {
-    _meta = meta;
-    _meta.url = [_meta.url];
-  }
-  _books[id] = _meta;
-  saveBooks(_books);
-};
-
 export const loadBooksData = (arg = {}) => {
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
-  let books = getStorage('books') || {};
+  return Book.findAll().then((books) => {
+    log(books[(-1, 1)], 'books[-1,1] in : ');
+    books = books.map((item, i) => item.dataValues);
+    log(books, 'books in loadBooksData: ');
+    return books;
+  });
+  // let books = getStorage('books') || {};
   // log(books, 'books in loadBooks: ');
   // books = _.compact(books);
-  return books;
+  // return books;
 };
 export const loadBooks = (arg = {}) => {
-  let { keyword } = arg;
   let books = loadBooksData(arg);
-  // log(Object.keys(books), 'Object.keys(books) in : ');
-  books = Object.keys(books).map((id, i) => {
-    return { id, ...books[id] };
-  });
-  if (keyword) {
-    books = books.filter(
-      (book, i) =>
-        book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
-    );
-  }
-  books = books.sort((a, b) => (a.createdAt - b.createdAt ? 1 : -1));
+  // let { keyword } = arg;
+  // let books = loadBooksData(arg);
+  // // log(Object.keys(books), 'Object.keys(books) in : ');
+  // books = Object.keys(books).map((id, i) => {
+  //   return { id, ...books[id] };
+  // });
+  // if (keyword) {
+  //   books = books.filter(
+  //     (book, i) =>
+  //       book.title.indexOf(keyword) > -1 || book.author.indexOf(keyword) > -1,
+  //   );
+  // }
+  // books = books.sort((a, b) => (a.createdAt - b.createdAt ? 1 : -1));
   return books;
 };
 
@@ -180,8 +172,8 @@ export const saveBooks = (data) => {
 };
 const crypto = require('crypto');
 
-const getChecksum = (path) => {
-  // log(path, 'path in getChecksum: ');
+const getSha256 = (path) => {
+  // log(path, 'path in getSha256: ');
   return new Promise((resolve, reject) => {
     // if absolutely necessary, use md5
     const hash = crypto.createHash('sha256');
@@ -192,45 +184,45 @@ const getChecksum = (path) => {
     });
     input.on('close', () => {
       let sha256 = hash.digest('hex');
-      // log(sha256, 'sha256 in getChecksum: ');
+      // log(sha256, 'sha256 in getSha256: ');
       resolve(sha256);
     });
   });
 };
 
-export const getBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    if (typeof file == 'string') {
-      resolve(window.currentEpub.base64);
-    } else {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        let base64 = reader.result.toString();
-        // let sha256 = getSha256(base64)
-        // let md5 = getMd5(base64)
-        // let { sha256, md5 } = getSha256FromFile(file)
-        getSha256FromFile(file).then(({ sha256, md5 }) => {
-          log(sha256, 'sha256 in : ');
-          resolve({ md5, sha256, base64 });
-        });
-      };
-      reader.onerror = (error) => reject(error);
-    }
-  });
-};
-export const getSha256FromFile = (file) => {
-  return new Promise((resolve, reject) => {
-    var reader = new FileReader();
-    reader.onload = function (e) {
-      var wordArray = CryptoJS.lib.WordArray.create(e.target.result);
-      var sha256 = CryptoJS.SHA256(wordArray).toString();
-      var md5 = CryptoJS.MD5(wordArray).toString();
-      resolve({ md5, sha256 });
-    };
-    reader.readAsArrayBuffer(file);
-  });
-};
+// export const getBase64 = (file) => {
+//   return new Promise((resolve, reject) => {
+//     if (typeof file == 'string') {
+//       resolve(window.currentEpub.base64);
+//     } else {
+//       const reader = new FileReader();
+//       reader.readAsDataURL(file);
+//       reader.onload = () => {
+//         let base64 = reader.result.toString();
+//         // let sha256 = getSha256(base64)
+//         // let md5 = getMd5(base64)
+//         // let { sha256, md5 } = getSha256FromFile(file)
+//         getSha256FromFile(file).then(({ sha256, md5 }) => {
+//           log(sha256, 'sha256 in : ');
+//           resolve({ md5, sha256, base64 });
+//         });
+//       };
+//       reader.onerror = (error) => reject(error);
+//     }
+//   });
+// };
+// export const getSha256FromFile = (file) => {
+//   return new Promise((resolve, reject) => {
+//     var reader = new FileReader();
+//     reader.onload = function (e) {
+//       var wordArray = CryptoJS.lib.WordArray.create(e.target.result);
+//       var sha256 = CryptoJS.SHA256(wordArray).toString();
+//       var md5 = CryptoJS.MD5(wordArray).toString();
+//       resolve({ md5, sha256 });
+//     };
+//     reader.readAsArrayBuffer(file);
+//   });
+// };
 
 // getMd5 = (data) => {
 //   return MD5(JSON.stringify(data)).toString()

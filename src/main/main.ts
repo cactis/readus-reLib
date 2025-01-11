@@ -1,13 +1,3 @@
-/* eslint global-require: off, no-console: off, promise/always-return: off */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build:main`, this file is compiled to
- * `./src/main.js` using webpack. This gives us some performance wins.
- */
 import path from 'path';
 import {
   app,
@@ -20,10 +10,11 @@ import {
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { log } from '../libs/lib';
+import { log as _log } from '../libs/lib';
+import log from 'electron-log';
 
-// require('../libs/db/index');
-// const { Book } = require('../libs/db/models/index');
+require('../libs/db/index');
+const { Book } = require('../libs/db/models/index');
 import { addBooks, getBookContent, loadBooks } from '../libs/library';
 
 class AppUpdater {
@@ -43,7 +34,7 @@ let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
+  _log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -53,9 +44,9 @@ ipcMain.on('addBook', (event, arg = {}) => {
 
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
-  log(path, 'path in : ');
+  _log(path, 'path in : ');
   // const file = `file://${path}/books.json`;
-  // log(file, 'file in : ');
+  // _log(file, 'file in : ');
   // shell.openExternal(file);
   // shell.showItemInFolder(path);
   event.reply('getAppPath', path);
@@ -64,41 +55,43 @@ ipcMain.on('getAppPath', (event, arg) => {
 ipcMain.on('loadBooksData', (event, arg) => {});
 
 ipcMain.on('getBookContent', (event, arg = {}) => {
-  log([event, arg], '[event, arg] in : ipcMain.on(getBook)');
+  _log([event, arg], '[event, arg] in : ipcMain.on(getBook)');
   const { url } = arg;
-  log(url, 'url in : ');
+  _log(url, 'url in : ');
   getBookContent(url).then((data) => {
-    log(data, 'data in : ');
+    _log(data, 'data in : ');
     event.reply('getBookContent', data);
   });
   // const books = loadBooks({ keyword });
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
-  log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
+  _log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;
-  const books = loadBooks({ keyword });
-  event.reply('booksLoad', books.slice(0, 10));
+  loadBooks({ keyword }).then((books) => {
+    _log(books, 'books in : ');
+    event.reply('booksLoad', books);
+  });
 });
 
 ipcMain.on('openBookChooserDialog', (event, arg) => {
-  // log([event, arg], '[event, arg] in : ');
+  // _log([event, arg], '[event, arg] in : ');
   dialog
     .showOpenDialog({
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'Epub Files', extensions: ['epub'] }],
     })
     .then((result) => {
-      // log(result, 'result in : ');
+      // _log(result, 'result in : ');
       if (!result.canceled) {
         addBooks(result.filePaths).then((books) => {
-          // log(books, 'books in on openBookChooserDialog: ');
-          sendMessage('addBooksToLibrary', { books });
+          // _log(books, 'books in on openBookChooserDialog: ');
+          // sendMessage('addBooksToLibrary', { books });
         });
       }
     })
     .catch((err) => {
-      console.log(err);
+      _log(err);
     });
 });
 
@@ -124,7 +117,7 @@ const installExtensions = async () => {
       extensions.map((name) => installer[name]),
       forceDownload,
     )
-    .catch(console.log);
+    .catch(log);
 };
 
 const createWindow = async () => {
@@ -214,4 +207,4 @@ app
       if (mainWindow === null) createWindow();
     });
   })
-  .catch(console.log);
+  .catch(log);

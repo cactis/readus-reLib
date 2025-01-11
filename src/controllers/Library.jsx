@@ -155,6 +155,7 @@ export const Library = (props) => {
           onItemClick={({ e, item }) => {
             // alert(item.title);
             log(item, 'item in : ');
+            log(item.url, 'item.url in : ');
             renderComponent(<Reader url={`file://${item.url[0]}`} />);
             stop(e);
           }}
