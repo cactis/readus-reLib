@@ -7,6 +7,7 @@ import {
   dialog,
   ipcRenderer,
 } from 'electron';
+
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';

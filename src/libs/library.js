@@ -24,16 +24,29 @@ export const addBooks = async (files) => {
     _.map(files, (file) =>
       getDataFromEpub(file).then((book) => {
         try {
-          Book.prototype.build(book).then(() => {
-            log('book created', "'book created' in : ");
-            BrowserWindow.getFocusedWindow().webContents.send(
-              'bookAdded',
-              book,
-            );
+          let cond = { sha256: book.sha256 };
+          Book.findAll({ where: cond }).then((sameBooks) => {
+            log(sameBooks, 'sameBooks in : ');
+            if (sameBooks.length > 0) {
+              log('existed!', "'existed!' in : ");
+              let _book = sameBooks[0];
+                 Book.update({url: _.uniq([..._book.url, book.url])}, {where: cond}).then(() => {
+                  return book
+                 }
+            } else {
+              Book.prototype.build(book).then(() => {
+                log('book created', "'book created' in : ");
+                BrowserWindow.getFocusedWindow().webContents.send(
+                  'bookAdded',
+                  book,
+                );
+              });
+            }
           });
-          Book.findAll().then((books) => {
-            log(books, 'books in : ');
-          });
+
+          // Book.findAll().then((books) => {
+          //   log(books, 'books in : ');
+          // });
           // mainWindow.webContents.send('recieveBooks', JSON.stringify(books, null, 2));//Push our data to component once mounted.
         } catch (e) {
           console.log(`Error selecting books ${e}`);
