@@ -4,16 +4,23 @@ import {
   getBookContent,
   loadBooks,
   loadBooksData,
+  userDataPath,
 } from '../libs/library';
+import { log } from '../libs';
 
 // console.log('src/main/preload.ts loaded');
 
 // let _ = require('lodash');
 
+// const userDataPath = () => {
+//   return app.getPath('userData');
+// };
+
 contextBridge.exposeInMainWorld('Library', {
   loadBooks,
   getAppPath,
   loadBooksData,
+  // userDataPath,
 });
 
 export type Channels = 'ipc-example';

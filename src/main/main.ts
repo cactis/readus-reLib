@@ -1,12 +1,7 @@
-import path from 'path';
-import {
-  app,
-  BrowserWindow,
-  shell,
-  ipcMain,
-  dialog,
-  ipcRenderer,
-} from 'electron';
+const fs = require('fs');
+const path = require('path');
+const fse = require('fs-extra');
+import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
@@ -45,9 +40,20 @@ ipcMain.on('addBook', (event, arg = {}) => {
 
 ipcMain.on('deleteBook', (event, data) => {
   Book.destroy({ where: { sha256: data.sha256 } }).then(() => {
+    let { cover } = data;
+    _log(cover, 'cover in : ');
+    fse.remove(cover);
+    // throw new Error('destroy error');
     event.reply('bookDeleted', data);
   });
 });
+
+export const coversPath = () => dataPath() + '/covers';
+export const dataPath = () =>
+  path
+    .resolve(path.join(app.getPath('userData')))
+    .split(path.sep)
+    .join('/');
 
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
@@ -72,6 +78,12 @@ ipcMain.on('getBookContent', (event, arg = {}) => {
 
 ipcMain.on('deleteAllBooks', (event, arg) => {
   Book.truncate();
+  let path = coversPath();
+  _log(path, 'path in deleteAllBooks: ');
+  fse.remove(path);
+
+  // const rimraf = require('rimraf');
+  // rimraf.sync(path);
   event.reply('booksLoaded', []);
 });
 
@@ -79,7 +91,7 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
   _log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;
   loadBooks({ keyword }).then((books) => {
-    _log(books, 'books in : ');
+    // _log(books, 'books in : ');
     event.reply('booksLoaded', books);
   });
 });

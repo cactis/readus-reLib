@@ -49,7 +49,17 @@ Book.init(
     },
     createdAt: DataTypes.DATE,
   },
-  { sequelize },
+  {
+    sequelize,
+    hooks: {
+      afterDestroy: (book, options) => {
+        let { cover } = book;
+        log(cover, 'cover in : ');
+        throw new Error("You can't grant this user an access level above 10!");
+        return book.destroy(options);
+      },
+    },
+  },
 );
 
 // const Book = sequelize.define('books', {

@@ -51,7 +51,7 @@ export const Library = (props) => {
   useEffect(() => {
     loadData();
     wsConnect();
-    peerConnect();
+    // peerConnect();
     onMessage('bookAdded', (book) => {
       // log(book, 'book in bookAdded Library#onMessage: bookAdded ');
       prependItems([book]);
@@ -146,7 +146,7 @@ export const Library = (props) => {
             $if={isDev()}
             name="TbPlugConnected"
             onClick={(e) => {
-              peerConnect();
+              // peerConnect();
             }}
           />
           <Icon

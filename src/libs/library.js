@@ -1,6 +1,7 @@
 import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
 import { isDev, log } from './lib';
 import { Book } from './db/models';
+import { Op } from 'sequelize';
 
 const fs = require('fs');
 const path = require('path');
@@ -99,6 +100,7 @@ export const loadContent = (file) => {
 const getDataFromEpub = async (file) => {
   log(file, 'file in getDataFromEpub: ');
   const coversPath = `${app.getPath('userData')}/covers`;
+  // const _coversPath = coversPath();
   return getSha256(file).then((sha256) => {
     // log(id, 'id in : ');
     try {
@@ -143,15 +145,26 @@ const getDataFromEpub = async (file) => {
 };
 
 export const loadBooksData = (arg = {}) => {
+  let { keyword } = arg;
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
+  let where = keyword
+    ? {
+        [Op.or]: [
+          { title: { [Op.like]: `%${keyword}%` } },
+          { author: { [Op.like]: `%${keyword}%` } },
+        ],
+      }
+    : {};
+
   return Book.findAll({
-    attributes: ['id', 'sha256', 'title', 'author', 'cover', 'url'],
+    attributes: { exclude: ['content'] },
+    where,
   }).then((books) => {
-    log(books[(-1, 1)], 'books[-1,1] in : ');
+    // log(books[(-1, 1)], 'books[-1,1] in : ');
     books = books.map((item, i) => item.dataValues);
-    log(books, 'books in loadBooksData: ');
+    // log(books, 'books in loadBooksData: ');
     return books;
   });
   // let books = getStorage('books') || {};
