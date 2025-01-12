@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "@electron/notarize": "^2.3.2",
+    "better-sqlite3": "^11.7.2",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
     "ebook-convert": "^2.0.1",
@@ -108,6 +109,7 @@
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "node-vibrant": "^4.0.0",
+    "nodejieba": "^3.4.4",
     "peerjs": "^1.5.4",
     "pg-hstore": "^2.3.4",
     "qrcode": "^1.5.4",

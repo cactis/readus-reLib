@@ -43,6 +43,12 @@ ipcMain.on('addBook', (event, arg = {}) => {
   addBooks(arg.url);
 });
 
+ipcMain.on('deleteBook', (event, data) => {
+  Book.destroy({ where: { sha256: data.sha256 } }).then(() => {
+    event.reply('bookDeleted', data);
+  });
+});
+
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
   _log(path, 'path in : ');
@@ -52,8 +58,6 @@ ipcMain.on('getAppPath', (event, arg) => {
   // shell.showItemInFolder(path);
   event.reply('getAppPath', path);
 });
-
-ipcMain.on('loadBooksData', (event, arg) => {});
 
 ipcMain.on('getBookContent', (event, arg = {}) => {
   _log([event, arg], '[event, arg] in : ipcMain.on(getBook)');
@@ -66,12 +70,17 @@ ipcMain.on('getBookContent', (event, arg = {}) => {
   // const books = loadBooks({ keyword });
 });
 
+ipcMain.on('deleteAllBooks', (event, arg) => {
+  Book.truncate();
+  event.reply('booksLoaded', []);
+});
+
 ipcMain.on('loadBooks', (event, arg = {}) => {
   _log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;
   loadBooks({ keyword }).then((books) => {
     _log(books, 'books in : ');
-    event.reply('booksLoad', books);
+    event.reply('booksLoaded', books);
   });
 });
 

@@ -33,6 +33,13 @@ export const List = (props) => {
         <Main></Main>
         <Side className={`r`}>
           <Icon
+            name="MdOutlineDeleteForever"
+            onClick={(e) => {
+              sendMessage('deleteAllBooks');
+              stop(e);
+            }}
+          />
+          <Icon
             name="TfiReload"
             onClick={(e) => {
               setdata([]);

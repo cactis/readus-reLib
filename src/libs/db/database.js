@@ -8,7 +8,7 @@ const { Sequelize } = require('sequelize');
 // console.log(dataPath);
 const dataPath = '.';
 // const sequelize = new Sequelize('sqlite:../storage/relib.db'); //Export this connection to our main and ipcRenderer, export models from index.js in the models folder
-const sequelize = new Sequelize('database', null, null, {
+const sequelize = new Sequelize('database', { raw: false }, null, {
   pool: {
     max: 5,
     min: 0,

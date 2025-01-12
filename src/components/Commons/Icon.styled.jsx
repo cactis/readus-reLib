@@ -22,4 +22,7 @@ export const _Icon = styled(_Flex).attrs((props) => ({ className: 'Icon' }))`
   &:active {
     top: 0.1rem;
   }
+  > * {
+    pointer-events: none;
+  }
 `;

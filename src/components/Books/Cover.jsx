@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Cover.styled.jsx';
-import { isDev, log, randStr, stop } from '../../libs/lib';
+import { decompress, isDev, log, randStr, stop } from '../../libs/lib';
 import { Icon } from '../Commons/Icon.jsx';
 import { sendMessage } from '../../libs/window_lib.js';
+import { popup } from '../Layout/Popup.jsx';
+import { Html } from '../Commons/Html.jsx';
 
 export const Cover = (props) => {
   const root = React.createRef();
@@ -42,12 +44,21 @@ export const Cover = (props) => {
         }}
       />
       <Styled._AddAgain>
-        <Icon name="CiTrash" />
+        <Icon
+          name="CiTrash"
+          onClick={(e) => {
+            log(data.sha256, 'data.sha256 in : ');
+            sendMessage('deleteBook', data);
+            stop(e);
+          }}
+        />
         <Icon
           $if={isDev()}
           name="IoMdBook"
           onClick={(e) => {
-            sendMessage('getBookContent', { url: data.url[0] });
+            log(data, 'data in : ');
+            popup(<Html data={data.content} />);
+            // sendMessage('getBookContent', { url: data.url[0] });
             stop(e);
           }}
         />

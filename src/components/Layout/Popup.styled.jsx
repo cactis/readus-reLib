@@ -17,4 +17,13 @@ export const _Popup = styled(_Float).attrs((props) => ({ className: 'Popup' }))`
     justify-content: flex-end;
     align-items: flex-start;
   }
+  .Float:has(.Icon) {
+    right: 1rem;
+    top: 1rem;
+    color: white;
+    background: #484848ad;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+  }
 `;

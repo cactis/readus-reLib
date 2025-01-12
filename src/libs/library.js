@@ -31,12 +31,22 @@ export const addBooks = async (files) => {
               log('existed!', "'existed!' in : ");
               let _book = sameBooks[0];
               Book.update(
-                { url: _.uniq([..._book.url, book.url]) },
+                { url: _.uniq([..._book.url, book.url]), ...book },
                 { where: cond },
               ).then(() => {
                 return book;
               });
             } else {
+              // Book.create(book).then((book) => {
+              //   book.save().then(() => {
+              //     log('book created', "'book created' in : ");
+              //     BrowserWindow.getFocusedWindow().webContents.send(
+              //       'bookAdded',
+              //       book,
+              //     );
+              //   });
+              // });
+              // log(e, 'e in Book.build: ');
               Book.prototype.build(book).then(() => {
                 log('book created', "'book created' in : ");
                 BrowserWindow.getFocusedWindow().webContents.send(
@@ -68,7 +78,7 @@ export const getAppPath = () => {
   return app.getAppPath();
 };
 
-export const getBookContent = (file) => {
+export const loadContent = (file) => {
   return new Promise((resolve, reject) => {
     Epub.createAsync(file, null, null).then((epub) => {
       // log(epub, 'epub in : ');
@@ -105,19 +115,22 @@ const getDataFromEpub = async (file) => {
           _,
         ]) {
           return fse.outputFile(cover, data, 'binary').then(() => {
-            var book = {
-              sha256,
-              title: epub.metadata.title || 'unknown',
-              author: epub.metadata.creator || 'unknown',
-              cover: cover,
-              url: [file],
-              date: epub.metadata.date,
-              language: epub.metadata.language,
-              publisher: epub.metadata.publisher,
-              createdAt: new Date(),
-            };
-            // log(book, 'book in getDataFromEpub: ');
-            return book;
+            return loadContent(file).then((content) => {
+              var book = {
+                sha256,
+                title: epub.metadata.title || 'unknown',
+                author: epub.metadata.creator || 'unknown',
+                cover: cover,
+                url: [file],
+                content,
+                date: epub.metadata.date,
+                language: epub.metadata.language,
+                publisher: epub.metadata.publisher,
+                createdAt: new Date(),
+              };
+              // log(book, 'book in getDataFromEpub: ');
+              return book;
+            });
           });
         });
       });
@@ -133,7 +146,9 @@ export const loadBooksData = (arg = {}) => {
   // log(process.env.NODE_ENV, 'process.env.NODE_ENV in : ');
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
-  return Book.findAll().then((books) => {
+  return Book.findAll({
+    attributes: ['id', 'sha256', 'title', 'author', 'cover', 'url'],
+  }).then((books) => {
     log(books[(-1, 1)], 'books[-1,1] in : ');
     books = books.map((item, i) => item.dataValues);
     log(books, 'books in loadBooksData: ');

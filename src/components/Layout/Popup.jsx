@@ -3,6 +3,7 @@ import * as Styled from './Popup.styled.jsx';
 import { delayed, log, randStr } from '../../libs/lib.js';
 import { Float } from './Layout.jsx';
 import ReactDOM, { createRoot } from 'react-dom/client';
+import { Icon } from '../Commons/Icon.jsx';
 
 const Popup = (props) => {
   const root = React.createRef();
@@ -10,28 +11,32 @@ const Popup = (props) => {
 
   useEffect(() => {}, []);
 
-  let { position = {}, onClose, children, className = '', ..._props } = props;
+  let { position, onClose, children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
+  const closePopup = (e) => {
+    if ($(e.target).hasClass('Popup') || $(e.target).hasClass('Icon')) {
+      let $t = $(e.target).closest('.unwrappable');
+      $t.fadeOut();
+      delayed(() => {
+        $t.remove();
+      });
+      onClose && onClose();
+    }
+    stop(e);
+  };
   const _return = (
     <Styled._Popup
       id={id}
       ref={root}
       className={`${className}`}
       style={{ ..._props }}
-      onClick={(e) => {
-        if ($(e.target).hasClass('Popup')) {
-          let $t = $(e.target).closest('.unwrappable');
-          $t.fadeOut();
-          delayed(() => {
-            $t.remove();
-          });
-          onClose && onClose();
-        }
-        stop(e);
-      }}
+      onClick={closePopup}
       {...props}
     >
-      <Float style={{ ...position }}>{children}</Float>
+      {position ? <Float style={{ ...position }}>{children}</Float> : children}
+      <Float>
+        <Icon name="IoMdClose" onClick={closePopup} />
+      </Float>
     </Styled._Popup>
   );
 

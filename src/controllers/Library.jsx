@@ -56,16 +56,20 @@ export const Library = (props) => {
       // log(book, 'book in bookAdded Library#onMessage: bookAdded ');
       prependItems([book]);
     });
+    onMessage('bookDeleted', (book) => {
+      log(book, 'book in : bookDeleted');
+      deleteItem(book);
+    });
+    onMessage('booksLoaded', (books) => {
+      // log(books, 'books in Library 222: ');
+      setdata(books);
+      _data = books;
+    });
   }, []);
 
   const loadData = () => {
     runLast(() => {
       sendMessage('loadBooks', { keyword });
-      onMessage('booksLoad', (books) => {
-        // log(books, 'books in Library 222: ');
-        setdata(books);
-        _data = books;
-      });
     });
   };
 
@@ -73,6 +77,10 @@ export const Library = (props) => {
     loadData();
   }, [keyword]);
 
+  const deleteItem = (item) => {
+    _data = _data.filter((_item, i) => _item.id != item.id);
+    setdata(_data);
+  };
   const prependItems = (items) => {
     _data = [...items, ..._data];
     setdata(_data);
@@ -123,7 +131,12 @@ export const Library = (props) => {
                   const file = `${path}/books.json`;
                   log(file, 'file in : ');
                   // copyToClipboard(file);
-                  popup(<Html data={data} />);
+                  popup(
+                    <Html
+                      data={data}
+                      style={{ width: '80%', height: '80%' }}
+                    />,
+                  );
                 }, 100);
               });
               stop(e);

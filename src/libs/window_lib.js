@@ -98,7 +98,7 @@ const peerConnect = (props = {}) => {
     debug: 3,
   });
 
-  onMessage('booksLoad', (books) => {
+  onMessage('booksLoaded', (books) => {
     log(books.length, 'books.length in : ');
     Promise.all(
       books.map((book, i) => {
@@ -112,7 +112,7 @@ const peerConnect = (props = {}) => {
       }),
     ).then((books) => {
       log(books, 'books in Promise.all.then: ');
-      peerSend({ data: books, size: books.length, event: 'booksLoad' });
+      peerSend({ data: books, size: books.length, event: 'booksLoaded' });
     });
   });
 
