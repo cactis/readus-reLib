@@ -13,10 +13,6 @@ class Book extends Model {
       return await book.save();
     } catch (e) {
       log(e, 'e in Book.build: ');
-      // const topLevelError = e.errors;
-      // console.log(
-      //   `Issue creating book {Message: ${topLevelError.message}, Type: ${topLevelError.type}, Value: ${topLevelError.value} already exists}`,
-      // );
     }
     return null;
   }

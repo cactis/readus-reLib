@@ -36,5 +36,5 @@ export const _AddAgain = styled(_Float).attrs((props) => ({
   background-color: #494949;
   color: white;
   padding: 0.3rem 0;
-  justify-content: space-around;
+  justify-content: flex-end;
 `;

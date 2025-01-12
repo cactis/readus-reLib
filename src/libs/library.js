@@ -30,9 +30,12 @@ export const addBooks = async (files) => {
             if (sameBooks.length > 0) {
               log('existed!', "'existed!' in : ");
               let _book = sameBooks[0];
-                 Book.update({url: _.uniq([..._book.url, book.url])}, {where: cond}).then(() => {
-                  return book
-                 }
+              Book.update(
+                { url: _.uniq([..._book.url, book.url]) },
+                { where: cond },
+              ).then(() => {
+                return book;
+              });
             } else {
               Book.prototype.build(book).then(() => {
                 log('book created', "'book created' in : ");
