@@ -3,6 +3,7 @@ import { isDev, log } from './lib';
 import { Book } from './db/models';
 import { Op } from 'sequelize';
 import { coversPath, getDataPath } from './db/database';
+import { insertBookFTS } from './db/createFTS5';
 
 const fs = require('fs');
 const path = require('path');
@@ -28,7 +29,7 @@ export const addBooks = async (files) => {
         try {
           let cond = { sha256: book.sha256 };
           Book.findAll({ where: cond }).then((sameBooks) => {
-            log(sameBooks, 'sameBooks in : ');
+            // log(sameBooks, 'sameBooks in : ');
             if (sameBooks.length > 0) {
               log('existed!', "'existed!' in : ");
               let _book = sameBooks[0];
@@ -49,12 +50,17 @@ export const addBooks = async (files) => {
               //   });
               // });
               // log(e, 'e in Book.build: ');
-              Book.prototype.build(book).then(() => {
+              Book.prototype.build(book).then((book) => {
+                // log(book, 'book in : ');
                 log('book created', "'book created' in : ");
+                let _book = book.dataValues;
+                let { id, content } = _book;
+                log(id, 'id in : ');
                 BrowserWindow.getFocusedWindow().webContents.send(
                   'bookAdded',
-                  book,
+                  _book,
                 );
+                insertBookFTS(id, content.join(''));
               });
             }
           });

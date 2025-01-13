@@ -23,6 +23,16 @@ const stop = (e) => {
   }
 };
 
+const stripTags = (html, ...args) => {
+  // log(html, 'html in : ');
+  log(typeof html, 'typeof html in : ');
+  return html
+    .replace(/<(\/?)(\w+)[^>]*\/?>/g, (_, endMark, tag) => {
+      return args.includes(tag) ? '<' + endMark + tag + '>' : '';
+    })
+    .replace(/<!--.*?-->/g, '');
+};
+
 const broadcast = (status, data = {}, from = '') => {
   // log([status, data], '[status, data] in Lib#broadcast: ');
   let message = { status, data };
@@ -172,4 +182,5 @@ module.exports = {
   compress,
   decompress,
   env,
+  stripTags,
 };

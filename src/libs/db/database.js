@@ -43,7 +43,7 @@ const sequelize = new Sequelize('database', { raw: false }, null, {
   storage: dbStorage,
 });
 
-log('sequelize connected');
+log('sequelize connected ok');
 
 async function authenticatedConnection() {
   let authenticated = false;

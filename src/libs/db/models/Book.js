@@ -8,7 +8,7 @@ class Book extends Model {
   // }
 
   async build(attrs) {
-    log(attrs, 'attrs in Book#build: ');
+    // log(attrs, 'attrs in Book#build: ');
     try {
       const book = await Book.create(attrs);
       return await book.save();

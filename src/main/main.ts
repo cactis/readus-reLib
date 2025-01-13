@@ -12,6 +12,14 @@ import _log from 'electron-log';
 require('../libs/db/index');
 const { Book } = require('../libs/db/models/index');
 import { addBooks, getBookContent, loadBooks } from '../libs/library';
+import { coversPath } from '../libs/db/database';
+import {
+  createFts5Table,
+  deleteAllBooksFTS,
+  deleteBookFTS,
+  dropFts5Table,
+  searchBooksFTS,
+} from '../libs/db/createFTS5';
 
 class AppUpdater {
   constructor() {
@@ -43,6 +51,7 @@ ipcMain.on('deleteBook', (event, data) => {
     let { cover } = data;
     log(cover, 'cover in : ');
     fse.remove(cover);
+    deleteBookFTS(data.id);
     // throw new Error('destroy error');
     event.reply('bookDeleted', data);
   });
@@ -77,10 +86,11 @@ ipcMain.on('getBookContent', (event, arg = {}) => {
 
 ipcMain.on('deleteAllBooks', (event, arg) => {
   Book.truncate();
-  let path = coversPath();
+  let path = coversPath;
   log(path, 'path in deleteAllBooks: ');
   fse.remove(path);
-
+  dropFts5Table();
+  createFts5Table();
   // const rimraf = require('rimraf');
   // rimraf.sync(path);
   event.reply('booksLoaded', []);
@@ -91,6 +101,8 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
   const { keyword } = arg;
   loadBooks({ keyword }).then((books) => {
     // log(books, 'books in : ');
+    let result = searchBooksFTS(keyword);
+    // log(result, 'result in : ');
     event.reply('booksLoaded', books);
   });
 });

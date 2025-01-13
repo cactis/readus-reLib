@@ -4,7 +4,14 @@ import { Header, Main, Side } from '../Layout/Layout.jsx';
 import { BookItem } from '../Books/BookItem.jsx';
 import { sendMessage } from '../../libs/window_lib.js';
 import { Reader } from '../Reader.jsx';
-import { delayed, log, onMessage, randStr, subscribe } from '../../libs/lib.js';
+import {
+  delayed,
+  isDev,
+  log,
+  onMessage,
+  randStr,
+  subscribe,
+} from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';
 
 export const List = (props) => {
@@ -33,6 +40,7 @@ export const List = (props) => {
         <Main></Main>
         <Side className={`r`}>
           <Icon
+            $if={isDev()}
             name="MdOutlineDeleteForever"
             onClick={(e) => {
               sendMessage('deleteAllBooks');
