@@ -6,8 +6,8 @@ import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { log as _log } from '../libs/lib';
-import log from 'electron-log';
+import { log } from '../libs/lib';
+import _log from 'electron-log';
 
 require('../libs/db/index');
 const { Book } = require('../libs/db/models/index');
@@ -15,7 +15,7 @@ import { addBooks, getBookContent, loadBooks } from '../libs/library';
 
 class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info';
+    _log.transports.file.level = 'info';
     autoUpdater.logger = log;
     autoUpdater.checkForUpdatesAndNotify();
   }
@@ -30,7 +30,7 @@ let mainWindow: BrowserWindow | null = null;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  _log(msgTemplate(arg));
+  log(msgTemplate(arg));
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
@@ -41,7 +41,7 @@ ipcMain.on('addBook', (event, arg = {}) => {
 ipcMain.on('deleteBook', (event, data) => {
   Book.destroy({ where: { sha256: data.sha256 } }).then(() => {
     let { cover } = data;
-    _log(cover, 'cover in : ');
+    log(cover, 'cover in : ');
     fse.remove(cover);
     // throw new Error('destroy error');
     event.reply('bookDeleted', data);
@@ -57,20 +57,20 @@ export const dataPath = () =>
 
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
-  _log(path, 'path in : ');
+  log(path, 'path in : ');
   // const file = `file://${path}/books.json`;
-  // _log(file, 'file in : ');
+  // log(file, 'file in : ');
   // shell.openExternal(file);
   // shell.showItemInFolder(path);
   event.reply('getAppPath', path);
 });
 
 ipcMain.on('getBookContent', (event, arg = {}) => {
-  _log([event, arg], '[event, arg] in : ipcMain.on(getBook)');
+  log([event, arg], '[event, arg] in : ipcMain.on(getBook)');
   const { url } = arg;
-  _log(url, 'url in : ');
+  log(url, 'url in : ');
   getBookContent(url).then((data) => {
-    _log(data, 'data in : ');
+    log(data, 'data in : ');
     event.reply('getBookContent', data);
   });
   // const books = loadBooks({ keyword });
@@ -79,7 +79,7 @@ ipcMain.on('getBookContent', (event, arg = {}) => {
 ipcMain.on('deleteAllBooks', (event, arg) => {
   Book.truncate();
   let path = coversPath();
-  _log(path, 'path in deleteAllBooks: ');
+  log(path, 'path in deleteAllBooks: ');
   fse.remove(path);
 
   // const rimraf = require('rimraf');
@@ -88,32 +88,32 @@ ipcMain.on('deleteAllBooks', (event, arg) => {
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
-  _log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
+  log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
   const { keyword } = arg;
   loadBooks({ keyword }).then((books) => {
-    // _log(books, 'books in : ');
+    // log(books, 'books in : ');
     event.reply('booksLoaded', books);
   });
 });
 
 ipcMain.on('openBookChooserDialog', (event, arg) => {
-  // _log([event, arg], '[event, arg] in : ');
+  // log([event, arg], '[event, arg] in : ');
   dialog
     .showOpenDialog({
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'Epub Files', extensions: ['epub'] }],
     })
     .then((result) => {
-      // _log(result, 'result in : ');
+      // log(result, 'result in : ');
       if (!result.canceled) {
         addBooks(result.filePaths).then((books) => {
-          // _log(books, 'books in on openBookChooserDialog: ');
+          // log(books, 'books in on openBookChooserDialog: ');
           // sendMessage('addBooksToLibrary', { books });
         });
       }
     })
     .catch((err) => {
-      _log(err);
+      log(err);
     });
 });
 
