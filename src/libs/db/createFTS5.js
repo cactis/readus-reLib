@@ -1,7 +1,15 @@
 const { log } = require('../lib');
-// const Database = require('better-sqlite3');
+const Database = require('better-sqlite3');
+const path = require('path');
 // log(Database, 'Database in : ');
+
+// const dbPath =
+//   process.env.NODE_ENV === 'development_'
+//     ? './database.sqlite'
+//     : path.join(process.resourcesPath, './Database.sqlite');
+// log(dbPath, 'dbPath in : ');
 // const db = require('better-sqlite3')('./database.sqlite', {});
+// log(db, 'db in -----: ');
 
 // const icu = require('@sqlite.org/icu');
 // const nodejieba = require('nodejieba'); // 使用 jieba 作為自訂分詞
