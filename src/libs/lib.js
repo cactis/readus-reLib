@@ -53,6 +53,10 @@ const isDev = () => {
   return process.env.NODE_ENV == 'development';
 };
 
+const env = () => {
+  return process.env.NODE_ENV.slice(0, 3);
+};
+
 const funcId = (func) => {
   return MD5(String(func)).toString();
 };
@@ -167,4 +171,5 @@ module.exports = {
   getStorage,
   compress,
   decompress,
+  env,
 };

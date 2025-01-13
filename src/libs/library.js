@@ -2,6 +2,7 @@ import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
 import { isDev, log } from './lib';
 import { Book } from './db/models';
 import { Op } from 'sequelize';
+import { coversPath, getDataPath } from './db/database';
 
 const fs = require('fs');
 const path = require('path');
@@ -88,7 +89,7 @@ export const loadContent = (file) => {
       Promise.all(
         contents.map((chapter, i) =>
           epub.getChapterAsync(chapter.id).then((texts) => {
-            log(texts, 'texts in : ');
+            // log(texts, 'texts in : ');
             return texts;
           }),
         ),
@@ -99,8 +100,6 @@ export const loadContent = (file) => {
 
 const getDataFromEpub = async (file) => {
   log(file, 'file in getDataFromEpub: ');
-  const coversPath = `${app.getPath('userData')}/covers`;
-  // const _coversPath = coversPath();
   return getSha256(file).then((sha256) => {
     // log(id, 'id in : ');
     try {
@@ -112,6 +111,7 @@ const getDataFromEpub = async (file) => {
           ? _.last(epub.manifest[epub.metadata.cover]?.href.split('.'))
           : null;
         if (coverExt) cover = `${coversPath}/${sha256}.${coverExt}`;
+        log(coversPath, 'coversPath in : ');
         return epub.getImageAsync(epub.metadata.cover).then(async function ([
           data,
           _,

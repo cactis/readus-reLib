@@ -1,7 +1,8 @@
 const { log } = require('../lib');
 const Database = require('better-sqlite3');
 const path = require('path');
-// log(Database, 'Database in : ');
+const { dbStorage } = require('./database');
+log(Database, 'Database in : ');
 
 // const dbPath =
 //   process.env.NODE_ENV === 'development_'
@@ -14,7 +15,7 @@ const path = require('path');
 // const icu = require('@sqlite.org/icu');
 // const nodejieba = require('nodejieba'); // 使用 jieba 作為自訂分詞
 
-// const db = new Database('./database.sqlite');
+// const db = new Database(dbStorage);
 // log(db, 'db in : ');
 // // db.loadExtension(icu.path);
 // const createFts5Table = () => {

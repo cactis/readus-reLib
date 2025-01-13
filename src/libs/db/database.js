@@ -1,14 +1,10 @@
 const sqlite3 = require('sqlite3').verbose();
 
 const { Sequelize } = require('sequelize');
-const { log } = require('../lib');
+const { log, env } = require('../lib');
 const path = require('path');
-// console.log(app, 'app in : ');
 
-// const { app } = require('electron');
-// console.log(app.getPath('userData'));
-
-function getAppDataPath() {
+function getDataPath() {
   switch (process.platform) {
     case 'darwin': {
       return path.join(
@@ -31,14 +27,9 @@ function getAppDataPath() {
   }
 }
 
-// const dataPath = app.getPath('userData');
-// const dbPath =
-//   process.env.NODE_ENV === 'development'
-//     ? './database.sqlite'
-//     : path.join(process.resourcesPath, './Database.sqlite');
-// log(dbPath, 'dbPath');
-const dbPath = getAppDataPath() + '/database.sqlite';
-log(dbPath, 'dbPath in : ');
+const dbStorage = getDataPath() + `/database-${env()}.sqlite`;
+const coversPath = getDataPath() + `/covers-${env()}`;
+log(dbStorage, 'dbStorage in : ');
 // const sequelize = new Sequelize('sqlite:../storage/relib.db'); //Export this connection to our main and ipcRenderer, export models from index.js in the models folder
 const sequelize = new Sequelize('database', { raw: false }, null, {
   pool: {
@@ -49,7 +40,7 @@ const sequelize = new Sequelize('database', { raw: false }, null, {
   },
   dialectModule: sqlite3,
   dialect: 'sqlite',
-  storage: dbPath,
+  storage: dbStorage,
 });
 
 async function authenticatedConnection() {
@@ -63,6 +54,8 @@ async function authenticatedConnection() {
   }
   return authenticated;
 }
-
+module.exports.getDataPath = getDataPath;
+module.exports.dbStorage = dbStorage;
+module.exports.coversPath = coversPath;
 module.exports.sequelize = sequelize; //Configured sequelize module. Passed to specific models.
 module.exports.authenticatedConnection = authenticatedConnection;

@@ -48,12 +48,11 @@ ipcMain.on('deleteBook', (event, data) => {
   });
 });
 
-export const coversPath = () => dataPath() + '/covers';
-export const dataPath = () =>
-  path
-    .resolve(path.join(app.getPath('userData')))
-    .split(path.sep)
-    .join('/');
+// export const dataPath = () =>
+//   path
+//     .resolve(path.join(app.getPath('userData')))
+//     .split(path.sep)
+//     .join('/');
 
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
