@@ -29,7 +29,7 @@ function getDataPath() {
 
 const dbStorage = getDataPath() + `/database-${env()}.sqlite`;
 const coversPath = getDataPath() + `/covers-${env()}`;
-log(dbStorage, 'dbStorage in : ');
+log(dbStorage, 'dbStorage in');
 // const sequelize = new Sequelize('sqlite:../storage/relib.db'); //Export this connection to our main and ipcRenderer, export models from index.js in the models folder
 const sequelize = new Sequelize('database', { raw: false }, null, {
   pool: {
@@ -42,6 +42,8 @@ const sequelize = new Sequelize('database', { raw: false }, null, {
   dialect: 'sqlite',
   storage: dbStorage,
 });
+
+log('sequelize connected');
 
 async function authenticatedConnection() {
   let authenticated = false;
