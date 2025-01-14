@@ -2,27 +2,36 @@ const { log, stripTags } = require('../lib');
 const path = require('path');
 const { dbStorage } = require('./database');
 
+const _ = require('lodash');
 // const Database = require('better-sqlite3');
 // log(Database, 'Database in : ');
 
 // const icu = require('@sqlite.org/icu');
 const nodejieba = require('nodejieba'); // 使用 jieba 作為自訂分詞
+const { Book } = require('./models/Book');
 log(nodejieba, 'nodejieba in : ');
 
-try {
-  db.loadExtension('/path/to/nodejieba_extension');
-  log('Nodejieba extension loaded successfully');
-} catch (error) {
-  log('Error loading Nodejieba extension:', error);
-}
+// try {
+//   db.loadExtension('/path/to/nodejieba_extension');
+//   log('Nodejieba extension loaded successfully');
+// } catch (error) {
+//   log('Error loading Nodejieba extension:', error);
+// }
 
-log(
-  nodejieba.cut('中文Love測試分詞', true).join(' '),
-  "nodejieba.cut('中文Love測試分詞').join(' ') in : ",
-);
+// log(
+//   nodejieba.cut('中文Love測試分詞', true).join(' '),
+//   "nodejieba.cut('中文Love測試分詞').join(' ') in : ",
+// );
 
 const db = require('better-sqlite3')(dbStorage, { verbose: console.log });
 log(db, 'db in : better-sqlite3 connected ok');
+
+db.exec('PRAGMA auto_vacuum = 1');
+log('execute auto_vacuum');
+// db.commit();
+// db.exec('VACUUM');
+// db.commit();
+
 // const db = new Database(dbStorage);
 // log(db, 'db in : ');
 // db.loadExtension(icu.path);
@@ -71,7 +80,7 @@ const dropFts5Table = () => {
 function segmentText(text) {
   // 使用 Jieba 分詞，也可以選擇其他分詞器
   // log(nodejieba.cut(text).join(' '), "nodejieba.cut(text).join(' ') in : ");
-  return nodejieba.cut(text, true).join(' ');
+  return nodejieba.cut(text, true).join(' ').replace(/\s+/g, ' ');
 }
 
 function deleteAllBooksFTS() {
@@ -104,32 +113,59 @@ function deleteBookFTS(bookId) {
 function searchBooksFTS(query) {
   log(query, 'query in searchBooksFTS: ');
   if (!query) return false;
-  const segmentedQuery = segmentText(query);
-  const rows = db
-    .prepare(
-      `
-        SELECT books.*
-        FROM books
-        JOIN book_fts ON books.id = book_fts.book_id
-        WHERE book_fts MATCH ?
-    `,
-    )
-    .all(segmentedQuery);
+  // const segmentedQuery = segmentText(query);
+  const segmentedQuery = query;
+  // const rows = db
+  //   .prepare(
+  //     `
+  //       SELECT distinct id, snippet(book_fts, 1, '<b>', '</b>', '...', 20) as highlight
+  //       FROM books
+  //       JOIN book_fts ON books.id = book_fts.book_id
+  //       WHERE book_fts MATCH ?
+  //   `,
+  //   )
+  //   .all(segmentedQuery);
 
   let highlights = db
     .prepare(
       `
-      select snippet(book_fts, 1, '<b>', '</b>', '...', 20) as highlight
+      select book_id, snippet(book_fts, 1, '<b>', '</b>', '...', 100) as highlight
       from book_fts
       where book_fts match ?
       `,
     )
     .all(segmentedQuery);
+
   log(highlights, 'highlights in : ');
-  // log(highlights[0].highlight, 'highlights[0].highlight in : ');
-  highlights = highlights.map((item, i) => stripTags(item.highlight));
-  log(highlights, 'highlights in : ');
-  return { rows, highlights };
+  let result = {};
+
+  highlights.forEach(
+    (item, i) =>
+      (result[item.book_id] = _.flatten([
+        ...(result[item.book_id] || []),
+        item.highlight,
+      ])),
+  );
+  let ids = Object.keys(result);
+  log(ids, 'ids in : ');
+
+  if (ids.length == 0)
+    return new Promise((resolve, reject) => {
+      resolve([]);
+    });
+
+  return Book.findAll({
+    attributes: { exclude: ['content'] },
+    where: { id: ids },
+  }).then((rows) => {
+    rows = rows.map((item, i) => item.dataValues);
+    // log(rows, 'rows in : ');
+    rows = rows.map((item, i) => {
+      item.highlights = result[item.id];
+      return item;
+    });
+    return rows;
+  });
 }
 
 module.exports = {
@@ -140,4 +176,5 @@ module.exports = {
   deleteBookFTS,
   deleteAllBooksFTS,
   dropFts5Table,
+  db,
 };

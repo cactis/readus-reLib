@@ -16,7 +16,12 @@ export const Html = (props) => {
       id={id}
       ref={root}
       className={`${className}`}
-      dangerouslySetInnerHTML={{ __html: data }}
+      dangerouslySetInnerHTML={{
+        __html: data
+          .replace(/\\t/g, '')
+          .replace(/\\n/g, '<br/>')
+          .replace(/(<br\ ?\/?>\r*\s*\n*)+/g, '<br/>'),
+      }}
       {..._props}
     ></Styled._Html>
   );

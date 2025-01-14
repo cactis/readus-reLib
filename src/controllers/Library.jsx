@@ -34,6 +34,7 @@ import {
   log,
   newArray,
   randStr,
+  setStorage,
   stop,
   wsClose,
   wsConnect,
@@ -46,7 +47,10 @@ export const Library = (props) => {
   const token = getStorage('token', randStr('readus-relib'));
   let _data = [];
 
-  const [keyword, setkeyword] = useState(props.keyword);
+  const [keyword, setkeyword] = useState(
+    getStorage('keyword') || props.keyword,
+  );
+  const [searchBy, setsearchBy] = useState(getStorage('search-by') || 'title');
 
   useEffect(() => {
     loadData();
@@ -68,14 +72,17 @@ export const Library = (props) => {
   }, []);
 
   const loadData = () => {
+    setdata([]);
     runLast(() => {
-      sendMessage('loadBooks', { keyword });
+      sendMessage('loadBooks', { keyword, searchBy });
     });
   };
 
   useEffect(() => {
     loadData();
-  }, [keyword]);
+    setStorage('search-by', searchBy);
+    setStorage('keyword', keyword);
+  }, [keyword, searchBy]);
 
   const deleteItem = (item) => {
     _data = _data.filter((_item, i) => _item.id != item.id);
@@ -87,7 +94,9 @@ export const Library = (props) => {
   };
   const { children, className = '', ..._props } = props;
   const [data, setdata] = useState([]);
-
+  const toggleSearchBy = (e) => {
+    setsearchBy(searchBy == 'title' ? 'content' : 'title');
+  };
   const onChange = (e) => {
     runLast(() => {
       log(e, 'e in onChange: ');
@@ -108,12 +117,21 @@ export const Library = (props) => {
             <Icon name="CiSearch" />
             <input
               id="search-input"
-              placeholder="Search Book Titles"
+              defaultValue={keyword}
+              placeholder={
+                searchBy == 'title'
+                  ? 'Search Book Titles'
+                  : 'Search Book Contents'
+              }
               onChange={onChange}
+            />
+            <Icon
+              name={searchBy == 'title' ? 'PiBooksLight' : 'RiArchiveStackLine'}
+              id="search-by"
+              onClick={toggleSearchBy}
             />
           </Styled._Search>
         </Main>
-        {/* <List data={newArray(5)} /> */}
         <Side>
           <Icon
             name="FaRegFileLines"
@@ -150,6 +168,17 @@ export const Library = (props) => {
             }}
           />
           <Icon
+            name="PiBooksThin"
+            tip="Download Books from Gutenberg"
+            onClick={(e) => {
+              let link = 'https://www.gutenberg.org/';
+
+              sendMessage('openExternal', { link });
+              // require('electron').shell.openExternal(link);
+            }}
+          />
+          <Icon
+            $if={isDev()}
             name="GoGear"
             id="settings"
             onClick={(e) => {
@@ -165,13 +194,7 @@ export const Library = (props) => {
       </Header>
       <Body>
         <List
-          onItemClick={({ e, item }) => {
-            // alert(item.title);
-            log(item, 'item in : ');
-            log(item.url, 'item.url in : ');
-            renderComponent(<Reader url={`file://${item.url[0]}`} />);
-            stop(e);
-          }}
+          className={!keyword || searchBy == 'title' ? 'grid' : 'list'}
           toolbar={
             <Icon
               className={`button`}

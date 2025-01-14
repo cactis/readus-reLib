@@ -15,6 +15,7 @@ import { addBooks, getBookContent, loadBooks } from '../libs/library';
 import { coversPath } from '../libs/db/database';
 import {
   createFts5Table,
+  db,
   deleteAllBooksFTS,
   deleteBookFTS,
   dropFts5Table,
@@ -63,6 +64,11 @@ ipcMain.on('deleteBook', (event, data) => {
 //     .split(path.sep)
 //     .join('/');
 
+ipcMain.on('openExternal', (event, arg) => {
+  let { link } = arg;
+  if (link) shell.openExternal(link);
+});
+
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
   log(path, 'path in : ');
@@ -91,20 +97,48 @@ ipcMain.on('deleteAllBooks', (event, arg) => {
   fse.remove(path);
   dropFts5Table();
   createFts5Table();
+
+  let row1 = db.prepare('select count(*) from books').all();
+  let row2 = db.prepare('select count(*) from book_fts').all();
+  log([row1, row2], '[row1, row2] in : ');
   // const rimraf = require('rimraf');
   // rimraf.sync(path);
   event.reply('booksLoaded', []);
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
-  log([event, arg], '[event, arg] in : ipcMain.on(loadBooks)');
-  const { keyword } = arg;
-  loadBooks({ keyword }).then((books) => {
-    // log(books, 'books in : ');
-    let result = searchBooksFTS(keyword);
-    // log(result, 'result in : ');
-    event.reply('booksLoaded', books);
-  });
+  let { keyword, searchBy = 'title' } = arg;
+
+  var convertor = require('zh_cn_zh_tw');
+  var zh_cn = convertor.convertToSimplifiedChinese;
+  var zh_tw = convertor.convertToTraditionalChinese;
+
+  log(keyword, 'keyword in : ');
+  if (keyword) {
+    switch (searchBy) {
+      case 'title':
+        keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]);
+        loadBooks({ keyword }).then((books) => {
+          // log(books, 'books in : ');
+          event.reply('booksLoaded', books);
+        });
+        break;
+      default:
+        if (keyword) {
+          keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]).join(' OR ');
+          log([keyword, searchBy], '[keyword, searchBy] in : ');
+          searchBooksFTS(keyword).then((books) => {
+            log(books, 'books in : ');
+            event.reply('booksLoaded', books);
+          });
+        }
+        break;
+    }
+  } else {
+    loadBooks().then((books) => {
+      event.reply('booksLoaded', books);
+    });
+  }
 });
 
 ipcMain.on('openBookChooserDialog', (event, arg) => {
@@ -176,7 +210,8 @@ const createWindow = async () => {
       webviewTag: true,
       webSecurity: false,
       nodeIntegration: true,
-      contextIsolation: true,
+      // contextIsolation: true,
+      // contextIsolation: false,
       // enableRemoteModule: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')

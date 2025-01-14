@@ -156,12 +156,21 @@ export const loadBooksData = (arg = {}) => {
   // log(isDev(), 'isDev() in : ');
   // log(keyword, 'keyword in library.js#loadBooks: ');
   let where = keyword
-    ? {
-        [Op.or]: [
-          { title: { [Op.like]: `%${keyword}%` } },
-          { author: { [Op.like]: `%${keyword}%` } },
-        ],
-      }
+    ? keyword.length == 1
+      ? {
+          [Op.or]: [
+            { title: { [Op.like]: `%${keyword[0]}%` } },
+            { author: { [Op.like]: `%${keyword[0]}%` } },
+          ],
+        }
+      : {
+          [Op.or]: [
+            { title: { [Op.like]: `%${keyword[0]}%` } },
+            { title: { [Op.like]: `%${keyword[1]}%` } },
+            { author: { [Op.like]: `%${keyword[0]}%` } },
+            { author: { [Op.like]: `%${keyword[1]}%` } },
+          ],
+        }
     : {};
 
   return Book.findAll({

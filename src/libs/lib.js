@@ -163,6 +163,33 @@ const decompress = (data) => {
   return LZString.decompressFromUTF16(data);
 };
 
+const detectLanguageRegex = (str) => {
+  const simplifiedRegex = /[\u4E00-\u9FFF]/;
+  const traditionalRegex =
+    /[\u3400-\u4DBF\u20000-\u2A6DF\u2A700-\u2B73F\u2B740-\u2B81F\u2B820-\u2CEAF\uF900-\uFAFF]/;
+  let simplifiedCount = (str.match(simplifiedRegex) || []).length;
+  let traditionalCount = (str.match(traditionalRegex) || []).length;
+  let otherCount = str.length - simplifiedCount - traditionalCount;
+  if (simplifiedCount > traditionalCount && simplifiedCount > otherCount) {
+    return 'Simplified Chinese';
+  } else if (
+    traditionalCount > simplifiedCount &&
+    traditionalCount > otherCount
+  ) {
+    return 'Traditional Chinese';
+  } else if (otherCount > simplifiedCount && otherCount > traditionalCount) {
+    return 'Other Language';
+  } else if (
+    simplifiedCount === 0 &&
+    traditionalCount === 0 &&
+    otherCount > 0
+  ) {
+    return 'Other Language';
+  } else {
+    return 'Mixed/Uncertain';
+  }
+};
+
 module.exports = {
   randStr,
   newArray,

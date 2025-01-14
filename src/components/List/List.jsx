@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './List.styled.jsx';
 import { Header, Main, Side } from '../Layout/Layout.jsx';
-import { BookItem } from '../Books/BookItem.jsx';
 import { sendMessage } from '../../libs/window_lib.js';
 import { Reader } from '../Reader.jsx';
 import {
@@ -13,6 +12,7 @@ import {
   subscribe,
 } from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';
+import { AnyItem, BookItem, BookWithHighlights } from '../Books';
 
 export const List = (props) => {
   const root = React.createRef();
@@ -58,7 +58,7 @@ export const List = (props) => {
             }}
           />
           <Styled._Counts>total: {data.length} items</Styled._Counts>
-          <Icon name="TbLayoutList" />
+          <Icon $if={isDev()} name="TbLayoutList" />
           {/* <Icon name="TbLayoutGrid" /> */}
         </Side>
       </Header>
@@ -68,12 +68,7 @@ export const List = (props) => {
             key={`${item.sha256}-${index}`}
             className={item.new ? 'new' : ''}
           >
-            <BookItem
-              data={item}
-              onClick={(e) => {
-                onItemClick({ item, e });
-              }}
-            />
+            <AnyItem {..._props} data={item} />
           </Styled._ListItem>
         ))}
       </Styled._ListWrapper>

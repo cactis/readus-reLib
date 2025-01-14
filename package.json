@@ -111,6 +111,7 @@
     "lz-string": "^1.5.0",
     "node-vibrant": "^4.0.0",
     "nodejieba": "^3.4.4",
+    "path-browserify": "^1.0.1",
     "peerjs": "^1.5.4",
     "pg-hstore": "^2.3.4",
     "qrcode": "^1.5.4",
@@ -124,7 +125,8 @@
     "semver": "^7.6.3",
     "sequelize": "^6.37.5",
     "styled-components": "^6.1.13",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "zh_cn_zh_tw": "^1.0.7"
   },
   "devDependencies": {
     "@electron/rebuild": "^3.3.0",

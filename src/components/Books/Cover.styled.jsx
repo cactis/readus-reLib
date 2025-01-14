@@ -17,6 +17,10 @@ export const _Cover = styled.div.attrs((props) => ({ className: 'Cover' }))`
   box-shadow: 0 0 15px 0 #aaaaaa;
   border-radius: 0.5rem;
   overflow: hidden;
+  &:hover {
+    transform: scale(0.98);
+    transition: all 0.5s ease-in-out;
+  }
   img {
     width: 100%;
     height: 100%;

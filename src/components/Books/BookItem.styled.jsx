@@ -7,6 +7,8 @@ export const _BookItem = styled(_Col).attrs((props) => ({
   className: 'BookItem',
 }))`
   gap: 0.2rem;
+  &:hover {
+  }
 `;
 
 export const _Title = styled(Ellipsis).attrs((props) => ({

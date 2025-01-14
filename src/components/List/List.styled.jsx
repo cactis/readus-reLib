@@ -31,6 +31,10 @@ export const _ListWrapper = styled.div.attrs((props) => ({
   gap: 1.5rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  ${_List}.list & {
+    display: flex;
+    flex-flow: column;
+  }
 `;
 
 export const _ListItem = styled.div.attrs((props) => ({
@@ -57,12 +61,13 @@ export const _ListItem = styled.div.attrs((props) => ({
   }
   cursor: pointer;
   &:active {
-    transform: scale(0.98);
+    /* transform: scale(0.98); */
   }
 `;
 
 export const _Counts = styled.span.attrs((props) => ({
   className: `Counts`,
 }))`
-  font-size: 1rem;
+  font-size: 0.9rem;
+  color: #666;
 `;

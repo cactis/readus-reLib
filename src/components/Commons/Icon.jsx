@@ -13,15 +13,45 @@ import * as ci from 'react-icons/ci';
 import * as io from 'react-icons/io';
 import * as io5 from 'react-icons/io5';
 import * as cg from 'react-icons/cg';
+import * as im from 'react-icons/im';
+import * as pi from 'react-icons/pi';
+import * as lu from 'react-icons/lu';
+import * as gi from 'react-icons/gi';
+import * as ri from 'react-icons/ri';
 
 export const Icon = (props) => {
   const root = React.createRef();
   const id = randStr('Icon');
   let _Icon;
-  let { $if, label, name, children, className = '', ..._props } = props;
+  let {
+    $if,
+    label,
+    name,
+    tip = label,
+    children,
+    className = '',
+    ..._props
+  } = props;
   if ($if == false) return null;
   if (name) {
-    let modules = [go, md, bi, io, fa6, fa, tf, tb, ci, io5, cg];
+    let modules = [
+      go,
+      md,
+      bi,
+      io,
+      fa6,
+      ri,
+      gi,
+      fa,
+      tf,
+      tb,
+      ci,
+      io5,
+      cg,
+      im,
+      pi,
+      lu,
+    ];
     let module = modules.filter(
       (module, i) => typeof module[name] == 'function',
     )[0];
@@ -30,7 +60,13 @@ export const Icon = (props) => {
   useEffect(() => {}, []);
   const [data, setdata] = useState(props.data || []);
   const _return = (
-    <Styled._Icon id={id} ref={root} className={`${className}`} {..._props}>
+    <Styled._Icon
+      id={id}
+      ref={root}
+      className={`${className}`}
+      {..._props}
+      title={tip}
+    >
       {_Icon}
       {label}
     </Styled._Icon>

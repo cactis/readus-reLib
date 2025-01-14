@@ -57,6 +57,13 @@ export const _Logo = styled.span.attrs((props) => ({ className: `Logo` }))`
 export const _Search = styled(_Flex).attrs((props) => ({
   className: `Search`,
 }))`
+  .Icon {
+    color: #999;
+  }
+  #search-by {
+    color: green;
+    /* font-size: 2rem; */
+  }
   font-size: 1.2rem;
   justify-content: center;
   align-items: center;
