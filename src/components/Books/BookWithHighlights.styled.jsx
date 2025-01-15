@@ -13,12 +13,19 @@ export const _BookWithHighlights = styled(_Row).attrs((props) => ({
   .Main {
     flex: 3;
     flex-flow: column;
+    box-shadow: 0 0 1px 1px #aaa;
+    margin: 0 1rem;
+    border-radius: 5px;
+
     .Html {
-      box-shadow: 0 0 1px 1px #aaa;
+      /* box-shadow: 0 0 1px 1px #aaa; */
       /* margin: 1rem; */
-      padding: 1rem;
+      padding: 0rem 1rem 1rem;
       margin: 0 1rem 1rem 1rem;
-      border-radius: 5px;
+      margin: 1rem;
+      /* border-radius: 5px; */
+      border-bottom: 1px solid #ddd;
+
       b {
         color: #ff6a00;
         font-weight: bold;

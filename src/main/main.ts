@@ -2,14 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const fse = require('fs-extra');
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
+require('../libs/db/index');
+import elog from 'electron-log';
 
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 // import { log } from '../libs/lib';
-import _log from 'electron-log';
 
-require('../libs/db/index');
 const { Book } = require('../libs/db/models/index');
 
 import { addBooks, getBookContent, loadBooks } from '../libs/library';
@@ -17,21 +17,26 @@ import { coversPath } from '../libs/db/database';
 import {
   createFts5Table,
   db,
+  dbStatus,
   deleteBookFTS,
   dropFts5Table,
   searchBooksFTS,
 } from '../libs/db/createFTS5';
-import { env } from '../libs';
 
-const logFile = path.join(app.getPath('userData'), `log-${env}.log`);
+export const log = (msg, title) => {
+  elog.info(msg);
+  elog.info(title);
+};
 
-export function log(message, level = 'INFO') {
-  const timestamp = new Date().toISOString();
-  const logMessage = `[${timestamp}] [${level}] ${message}\n`;
-  fs.appendFile(logFile, logMessage, (err) => {
-    if (err) console.error('Failed to write log:', err);
-  });
-}
+// const logFile = () => path.join(app.getPath('userData'), `log-${env}.log`);
+
+// export function log(message, level = 'INFO') {
+//   const timestamp = new Date().toISOString();
+//   const logMessage = `[${timestamp}] [${level}] ${message}\n`;
+//   fs.appendFile(logFile(), logMessage, (err) => {
+//     if (err) console.error('Failed to write log:', err);
+//   });
+// }
 
 ipcMain.on('log-from-renderer', (event, message, level) => {
   log(`Renderer: ${message}`, level);
@@ -39,12 +44,13 @@ ipcMain.on('log-from-renderer', (event, message, level) => {
 
 class AppUpdater {
   constructor() {
-    _log.initialize();
-    _log.info('Log from the main process');
-    _log.transports.file.level = 'silly';
-    _log.transports.console.format = '{h}:{i}:{s} {text}';
-    _log.transports.file.getFile();
-    autoUpdater.logger = _log;
+    elog.initialize();
+    elog.info('Log from the main process');
+    elog.transports.file.level = 'silly';
+    elog.transports.console.format = '{h}:{i}:{s} {text}';
+    // elog.transports.file.getFile();
+
+    autoUpdater.logger = elog;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
@@ -111,14 +117,9 @@ ipcMain.on('deleteAllBooks', (event, arg) => {
   dropFts5Table();
   createFts5Table();
 
-  let countOfBooks = db.prepare('select count(*) as c from books').all()[0].c;
-  let countOfBookFts = db
-    .prepare('select count(*) as c from book_fts')
-    .all()[0].c;
-  log([countOfBooks, countOfBookFts], '[countOfBooks, countOfBookFts] in : ');
   // const rimraf = require('rimraf');
   // rimraf.sync(path);
-  event.reply('booksLoaded', { data: [], countOfBooks, countOfBookFts });
+  event.reply('booksLoaded', { data: [], ...dbStatus() });
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
@@ -128,48 +129,42 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
   var zh_cn = convertor.convertToSimplifiedChinese;
   var zh_tw = convertor.convertToTraditionalChinese;
 
-  log(keyword, 'keyword in : ');
-  let countOfBooks = db.prepare('select count(*) as c from books').all()[0].c;
-  let countOfBookFts = db
-    .prepare('select count(*) as c from book_fts')
-    .all()[0].c;
-  log([countOfBooks, countOfBookFts], '[countOfBooks, countOfBookFts] in : ');
+  log([keyword, searchBy], '[keyword, searchBy] in : ');
   if (keyword) {
     switch (searchBy) {
       case 'title':
         keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]);
         loadBooks({ keyword }).then((data) => {
-          // log(data, 'data in : ');
-          event.reply('booksLoaded', { data, countOfBooks, countOfBookFts });
+          log(data, 'data in : ');
+          event.reply('booksLoaded', { data, ...dbStatus() });
         });
         break;
       default:
         if (keyword) {
           keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]).join(' OR ');
-          log([keyword, searchBy], '[keyword, searchBy] in : ');
           searchBooksFTS(keyword).then((data) => {
-            // log(data, 'data in : ');
-            event.reply('booksLoaded', { data, countOfBooks, countOfBookFts });
+            log(data, 'data in : ');
+            event.reply('booksLoaded', { data, ...dbStatus() });
           });
         }
         break;
     }
   } else {
     loadBooks().then((data) => {
-      event.reply('booksLoaded', { data, countOfBooks, countOfBookFts });
+      event.reply('booksLoaded', { data, ...dbStatus() });
     });
   }
 });
 
 ipcMain.on('openBookChooserDialog', (event, arg) => {
-  // log([event, arg], '[event, arg] in : ');
+  log([event, arg], '[event, arg] in : ');
   dialog
     .showOpenDialog({
       properties: ['openFile', 'multiSelections'],
       filters: [{ name: 'Epub Files', extensions: ['epub'] }],
     })
     .then((result) => {
-      // log(result, 'result in : ');
+      log(result, 'result in : ');
       if (!result.canceled) {
         addBooks(result.filePaths).then((books) => {
           // log(books, 'books in on openBookChooserDialog: ');
@@ -193,7 +188,9 @@ const isDebug =
 if (isDebug) {
   require('electron-debug')();
 }
+log(process.env.DEBUG_PROD, 'process.env.DEBUG_PROD in : ');
 
+// log(dbStatus(), 'dbStatus() in : ');
 const installExtensions = async () => {
   const installer = require('electron-devtools-installer');
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
@@ -208,9 +205,12 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+  log(isDebug, 'isDebug in : ');
   if (isDebug) {
     await installExtensions();
   }
+
+  app.commandLine.appendSwitch('remote-allow-origins', 'http://localhost:8315');
 
   const RESOURCES_PATH = app.isPackaged
     ? path.join(process.resourcesPath, 'assets')

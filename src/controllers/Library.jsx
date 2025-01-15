@@ -29,6 +29,7 @@ import {
 import {
   broadcast,
   copyToClipboard,
+  env,
   getStorage,
   isDev,
   log,
@@ -48,7 +49,7 @@ export const Library = (props) => {
   let _data = [];
 
   const [keyword, setkeyword] = useState(
-    getStorage('keyword') || props.keyword,
+    getStorage('keyword') || props.keyword || '',
   );
   const [searchBy, setsearchBy] = useState(getStorage('search-by') || 'title');
   const [counts, setcounts] = useState(props.counts);
@@ -108,10 +109,17 @@ export const Library = (props) => {
   };
   const _return = (
     // eslint-disable-next-line react/jsx-pascal-case
-    <Styled._Library id={id} ref={root} className={`${className} `} {..._props}>
+    <Styled._Library
+      id={id}
+      ref={root}
+      className={`${className} ${env} `}
+      {..._props}
+    >
       <Header>
         <Side>
-          <Styled._Logo>reLib</Styled._Logo>
+          <Styled._Logo>
+            reLib<Styled._Env>{env}</Styled._Env>
+          </Styled._Logo>
         </Side>
         <Main>
           <Styled._Search>

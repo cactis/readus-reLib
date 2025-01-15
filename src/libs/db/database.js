@@ -41,6 +41,10 @@ const sequelize = new Sequelize('database', { raw: false }, null, {
   dialectModule: sqlite3,
   dialect: 'sqlite',
   storage: dbStorage,
+  define: {
+    freezeTableName: true,
+  },
+  // models: [Book],
 });
 
 log('sequelize connected ok');

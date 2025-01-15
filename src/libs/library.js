@@ -1,9 +1,10 @@
 import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
-import { isDev, log } from './lib';
+import { env, isDev } from './lib';
 import { Book } from './db/models';
 import { Op } from 'sequelize';
 import { coversPath, getDataPath } from './db/database';
 import { insertBookFTS } from './db/createFTS5';
+import { log } from './log';
 
 const fs = require('fs');
 const path = require('path');
@@ -60,7 +61,6 @@ export const addBooks = async (files) => {
                   'bookAdded',
                   _book,
                 );
-                // insertBookFTS(id, content);
                 content.forEach((texts) => {
                   insertBookFTS(id, texts);
                   // throw new Error('after stripTags');

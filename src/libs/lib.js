@@ -138,8 +138,8 @@ const copyToClipboard = (text) => {
 const setStorage = (key, value) => {
   log([key, value], '[key, value] in Lib#setStorage');
   if (key) {
-    var compressed = compress(JSON.stringify(value));
-    localStorage.setItem(key, compressed);
+    // value = compress(JSON.stringify(value));
+    localStorage.setItem(key, value);
     return getStorage(key);
   }
 };
@@ -147,8 +147,12 @@ const setStorage = (key, value) => {
 const getStorage = (key, value) => {
   let data = localStorage.getItem(key);
   if (data) {
-    var _data = decompress(data);
-    return _data ? JSON.parse(_data) : null;
+    // data = decompress(data);
+    try {
+      return JSON.parse(data);
+    } catch (err) {
+      return data;
+    }
   } else {
     return value ? setStorage(key, value) : null;
   }

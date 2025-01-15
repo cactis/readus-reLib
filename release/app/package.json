@@ -1,6 +1,6 @@
 {
   "name": "readus-relib",
-  "version": "0.14.1",
+  "version": "0.15.0",
   "description": "An Personal Library for desktop",
   "license": "MIT",
   "author": {
@@ -10,12 +10,13 @@
   },
   "main": "./dist/main/main.js",
   "scripts": {
+    "preinstall": "npm i nodejieba --save-optional --ignore-scripts",
     "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
     "postinstall": "npm run rebuild && npm run link-modules",
     "link-modules": "node -r ts-node/registe r ../../.erb/scripts/link-modules.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^11.7.2",
+    "better-sqlite3": "^11.8.0",
     "nodejieba": "^3.4.4",
     "sqlite3": "^5.0.0"
   }

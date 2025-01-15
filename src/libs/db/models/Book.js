@@ -1,14 +1,11 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
 const { sequelize } = require('../database'); //Bring configured db into model for init
+
 const { Database } = require('sqlite3');
 const { log, decompress, compress } = require('../../lib');
-class Book extends Model {
-  // static upperCaseFirstName() {
-  //   return this.firstname.toUpperCase();
-  // }
 
+class Book extends Model {
   async build(attrs) {
-    // log(attrs, 'attrs in Book#build: ');
     try {
       const book = await Book.create(attrs);
       return await book.save();
@@ -51,7 +48,8 @@ Book.init(
   },
   {
     sequelize,
-    // hooks: {
+    modelName: 'Books',
+    // hooks: {rna
     //   afterDestroy: (book, options) => {
     //     let { cover } = book;
     //     log(cover, 'cover in : ');

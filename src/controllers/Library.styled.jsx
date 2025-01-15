@@ -6,6 +6,16 @@ import { _Flex } from '../components/Layout/Layout.styled';
 export const _Library = styled.div.attrs((props) => ({
   className: 'Library',
 }))`
+  /* &.dev {
+    .Logo {
+      color: #03a9f4;
+    }
+  }
+  &.pro {
+    .Logo {
+      color: red;
+    }
+  } */
   /* background-color: #333;
   color: white; */
   color: #0c0b0b;
@@ -52,6 +62,11 @@ export const _Library = styled.div.attrs((props) => ({
 export const _Logo = styled.span.attrs((props) => ({ className: `Logo` }))`
   font-size: 2rem;
   font-family: Rye;
+`;
+
+export const _Env = styled.span.attrs((props) => ({ className: `Env` }))`
+  font-size: 0.8rem;
+  color: #aaa;
 `;
 
 export const _Search = styled(_Flex).attrs((props) => ({

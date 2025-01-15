@@ -1,7 +1,7 @@
-const { log, stripTags, removeSpace } = require('../lib');
+const { stripTags, removeSpace, log } = require('../lib');
 const path = require('path');
 const { dbStorage } = require('./database');
-
+let _db;
 const _ = require('lodash');
 // const Database = require('better-sqlite3');
 // log(Database, 'Database in : ');
@@ -12,7 +12,7 @@ const { Book } = require('./models/Book');
 log(nodejieba, 'nodejieba in : ');
 
 // try {
-//   db.loadExtension('/path/to/nodejieba_extension');
+//   _db.loadExtension('/path/to/nodejieba_extension');
 //   log('Nodejieba extension loaded successfully');
 // } catch (error) {
 //   log('Error loading Nodejieba extension:', error);
@@ -23,61 +23,70 @@ log(nodejieba, 'nodejieba in : ');
 //   "nodejieba.cut('中文Love測試分詞').join(' ') in : ",
 // );
 
-const db = require('better-sqlite3')(dbStorage, {
-  verbose: console.log,
-  // fileMustExist: true,
-});
-log(db, 'db in : better-sqlite3 connected ok');
+const loadDb = () => {
+  log(dbStorage, 'dbStorage in createFTS5: ');
+  _db = require('better-sqlite3')(dbStorage, {
+    verbose: console.log,
+    fileMustExist: true,
+  });
+  _db.pragma('journal_mode = WAL');
 
-// db.exec('PRAGMA auto_vacuum = 1');
-log('execute auto_vacuum');
-// db.commit();
-// db.exec('VACUUM');
-// db.commit();
+  // log(db, 'db in : better-sqlite3 connected ok');
+  return _db;
+};
+
+// const db = () => {
+//   return _db || loadDb();
+// };
+
+// _db.exec('PRAGMA auto_vacuum = 0');
+// log('execute auto_vacuum');
+// _db.commit();
+// _db.exec('VACUUM');
+// _db.commit();
 
 // const db = new Database(dbStorage);
 // log(db, 'db in : ');
-// db.loadExtension(icu.path);
+// _db.loadExtension(icu.path);
 
 const createFts5Table = (tokenizer = 'unicode61') => {
   log('createFts5Table run');
-
-  db.exec(`
-    CREATE VIRTUAL TABLE IF NOT EXISTS book_fts USING fts5(
+  if (!_db) _db = loadDb();
+  _db.exec(`
+    CREATE VIRTUAL TABLE IF NOT EXISTS Books_fts USING fts5(
       book_id UNINDEXED,
       content,
       tokenize = "${tokenizer}"
-      );
+    );
 
-
-      CREATE TRIGGER IF NOT EXISTS books_after_update
+    CREATE TRIGGER IF NOT EXISTS books_after_update
       AFTER UPDATE ON books
       BEGIN
-      UPDATE book_fts SET content = NEW.content WHERE book_id = NEW.id;
-      END;
+      UPDATE Books_fts SET content = NEW.content WHERE book_id = NEW.id;
+    END;
 
-      CREATE TRIGGER IF NOT EXISTS books_after_delete
+    CREATE TRIGGER IF NOT EXISTS books_after_delete
       AFTER DELETE ON books
       BEGIN
-      DELETE FROM book_fts WHERE book_id = OLD.id;
-      END;
+      DELETE FROM Books_fts WHERE book_id = OLD.id;
+    END;
       `);
 
-  log('createFts5Table run doen');
+  log('createFts5Table run done');
 };
 
 // CREATE TRIGGER IF NOT EXISTS books_after_insert
 // AFTER INSERT ON books
 // BEGIN
-// INSERT INTO book_fts (book_id, content)
+// INSERT INTO Books_fts (book_id, content)
 // VALUES (NEW.id, NEW.content);
 // END;
 
 const dropFts5Table = () => {
   log('dropFts5Table run');
-
-  db.exec(`
-    DROP TABLE IF EXISTS book_fts;
+  if (!_db) _db = loadDb();
+  _db.exec(`
+    DROP TABLE IF EXISTS Books_fts;
   `);
 };
 
@@ -86,40 +95,45 @@ function segmentText(text) {
   // log(nodejieba.cut(text).join(' '), "nodejieba.cut(text).join(' ') in : ");
   text = stripTags(text);
   log(text, 'text in : ');
-  let data = nodejieba.cut(text, true).join(' ');
+  // log(text, 'text in : ');
+  // text = nodejieba.cut(text, true).join(' ');
   // data = removeSpace(data);
-  log(data, 'data in setmentText: ');
+  // log(data, 'data in setmentText: ');
 
-  return data;
+  return text;
 }
 
 function deleteAllBooksFTS() {
-  db.exec('DELETE FROM book_fts');
+  if (!_db) _db = loadDb();
+  _db.exec('DELETE FROM Books_fts');
 }
 
 function insertBookFTS(bookId, content) {
+  if (!_db) _db = loadDb();
   log(bookId, 'bookId in insertBookFTS: ');
   // log(segmentedContent, 'segmentedContent in : ');
   const segmentedContent = segmentText(content);
 
   // const segmentedContent = content;
-  const prepare = db.prepare(
-    'INSERT INTO book_fts (book_id, content) VALUES (@bookId, @segmentedContent)',
+  const prepare = _db.prepare(
+    'INSERT INTO Books_fts (book_id, content) VALUES (@bookId, @segmentedContent)',
   );
   prepare.run({ bookId, segmentedContent });
 }
 
 function updateBookFTS(bookId, content) {
+  if (!_db) _db = loadDb();
   const segmentedContent = segmentText(content);
-  db.exec('UPDATE book_fts SET content = ? WHERE book_id = ?', [
+  _db.exec('UPDATE Books_fts SET content = ? WHERE book_id = ?', [
     segmentedContent,
     bookId,
   ]);
 }
 
 function deleteBookFTS(bookId) {
+  if (!_db) _db = loadDb();
   log(bookId, 'bookId in deleteBookFTS: ');
-  const prepare = db.prepare(`DELETE FROM book_fts WHERE book_id = @bookId`);
+  const prepare = _db.prepare(`DELETE FROM Books_fts WHERE book_id = @bookId`);
   prepare.run({ bookId });
 }
 
@@ -131,20 +145,20 @@ function searchBooksFTS(query) {
   // const rows = db
   //   .prepare(
   //     `
-  //       SELECT distinct id, snippet(book_fts, 1, '<b>', '</b>', '...', 20) as highlight
+  //       SELECT distinct id, snippet(Books_fts, 1, '<b>', '</b>', '...', 20) as highlight
   //       FROM books
-  //       JOIN book_fts ON books.id = book_fts.book_id
-  //       WHERE book_fts MATCH ?
+  //       JOIN Books_fts ON books.id = Books_fts.book_id
+  //       WHERE Books_fts MATCH ?
   //   `,
   //   )
   //   .all(segmentedQuery);
-
-  let highlights = db
+  if (!_db) _db = loadDb();
+  let highlights = _db
     .prepare(
       `
-      select book_id, snippet(book_fts, 1, '<b>', '</b>', '...', 64) as highlight
-      from book_fts
-      where book_fts match ?
+      select book_id, snippet(Books_fts, 1, '<b>', '</b>', '...', 60) as highlight
+      from Books_fts
+      where Books_fts match ?
       `,
     )
     .all(segmentedQuery);
@@ -181,6 +195,17 @@ function searchBooksFTS(query) {
   });
 }
 
+const dbStatus = () => {
+  if (!_db) _db = loadDb();
+  // return { countOfBooks: 999, countOfBookFts: 999 };
+  let countOfBooks = _db.prepare('select count(*) as c from books').all()[0].c;
+  let countOfBookFts = _db
+    .prepare('select count(*) as c from Books_fts')
+    .all()[0].c;
+  log([countOfBooks, countOfBookFts], '[countOfBooks, countOfBookFts] in : ');
+  return { countOfBooks, countOfBookFts };
+};
+
 module.exports = {
   createFts5Table,
   searchBooksFTS,
@@ -189,5 +214,5 @@ module.exports = {
   deleteBookFTS,
   deleteAllBooksFTS,
   dropFts5Table,
-  db,
+  dbStatus,
 };
