@@ -6,7 +6,25 @@ import {
   loadBooksData,
   userDataPath,
 } from '../libs/library';
-import { log } from '../libs';
+// import { log } from '../libs';
+
+function log(message, level = 'INFO') {
+  ipcRenderer.send('log-from-renderer', message, level);
+}
+
+console.log = function (message) {
+  log(message, 'INFO');
+  // do not replace the actual console.log
+  if (arguments.length > 1) console.__proto__.log.apply(this, arguments);
+  else console.__proto__.log(message);
+};
+
+console.error = function (message) {
+  log(message, 'ERROR');
+  // do not replace the actual console.error
+  if (arguments.length > 1) console.__proto__.error.apply(this, arguments);
+  else console.__proto__.error(message);
+};
 
 // console.log('src/main/preload.ts loaded');
 

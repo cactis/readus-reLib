@@ -63,9 +63,7 @@ const isDev = () => {
   return process.env.NODE_ENV == 'development';
 };
 
-const env = () => {
-  return process.env.NODE_ENV.slice(0, 3);
-};
+const env = process.env.NODE_ENV.slice(0, 3);
 
 const funcId = (func) => {
   return MD5(String(func)).toString();
@@ -190,7 +188,32 @@ const detectLanguageRegex = (str) => {
   }
 };
 
+function removeSpace(str) {
+  // let str = str;
+  str = str.replace(/\s+/g, ' ');
+  // let regex = /([\u4e00-\u9fa5])\s+([\u4e00-\u9fa5])/g;
+  // let match;
+  // while ((match = regex.exec(result)) !== null) {
+  //   result = result.replace(match[0], match[1] + match[2]);
+  //   regex.lastIndex = 0; // Reset lastIndex to ensure that it will start at beginning next time
+  // }
+  // return result.replace(
+  //   /([\u4e00-\u9fa5\u3002\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\uff01])\s+([\u4e00-\u9fa5\u3002\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\uff01])/g,
+  //   '$1$2',
+  // );
+
+  const chineseChars =
+    '[\u4e00-\u9fa5\u3002\uff0c\uff1a\u201c\u201d\uff08\uff09\u3001\uff1f\uff01\u3010\u3011\u3008\u3009]';
+  const regex = new RegExp(
+    `(${chineseChars}|[<>])\\s+(?=(${chineseChars}|[<>]))`,
+    'g',
+  );
+  return str.replace(regex, '$1');
+  // return result;
+}
+
 module.exports = {
+  removeSpace,
   randStr,
   newArray,
   log,

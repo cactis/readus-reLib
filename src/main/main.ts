@@ -6,26 +6,45 @@ import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { log } from '../libs/lib';
+// import { log } from '../libs/lib';
 import _log from 'electron-log';
 
 require('../libs/db/index');
 const { Book } = require('../libs/db/models/index');
+
 import { addBooks, getBookContent, loadBooks } from '../libs/library';
 import { coversPath } from '../libs/db/database';
 import {
   createFts5Table,
   db,
-  deleteAllBooksFTS,
   deleteBookFTS,
   dropFts5Table,
   searchBooksFTS,
 } from '../libs/db/createFTS5';
+import { env } from '../libs';
+
+const logFile = path.join(app.getPath('userData'), `log-${env}.log`);
+
+export function log(message, level = 'INFO') {
+  const timestamp = new Date().toISOString();
+  const logMessage = `[${timestamp}] [${level}] ${message}\n`;
+  fs.appendFile(logFile, logMessage, (err) => {
+    if (err) console.error('Failed to write log:', err);
+  });
+}
+
+ipcMain.on('log-from-renderer', (event, message, level) => {
+  log(`Renderer: ${message}`, level);
+});
 
 class AppUpdater {
   constructor() {
-    _log.transports.file.level = 'info';
-    autoUpdater.logger = log;
+    _log.initialize();
+    _log.info('Log from the main process');
+    _log.transports.file.level = 'silly';
+    _log.transports.console.format = '{h}:{i}:{s} {text}';
+    _log.transports.file.getFile();
+    autoUpdater.logger = _log;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
@@ -57,12 +76,6 @@ ipcMain.on('deleteBook', (event, data) => {
     event.reply('bookDeleted', data);
   });
 });
-
-// export const dataPath = () =>
-//   path
-//     .resolve(path.join(app.getPath('userData')))
-//     .split(path.sep)
-//     .join('/');
 
 ipcMain.on('openExternal', (event, arg) => {
   let { link } = arg;
@@ -98,12 +111,14 @@ ipcMain.on('deleteAllBooks', (event, arg) => {
   dropFts5Table();
   createFts5Table();
 
-  let row1 = db.prepare('select count(*) from books').all();
-  let row2 = db.prepare('select count(*) from book_fts').all();
-  log([row1, row2], '[row1, row2] in : ');
+  let countOfBooks = db.prepare('select count(*) as c from books').all()[0].c;
+  let countOfBookFts = db
+    .prepare('select count(*) as c from book_fts')
+    .all()[0].c;
+  log([countOfBooks, countOfBookFts], '[countOfBooks, countOfBookFts] in : ');
   // const rimraf = require('rimraf');
   // rimraf.sync(path);
-  event.reply('booksLoaded', []);
+  event.reply('booksLoaded', { data: [], countOfBooks, countOfBookFts });
 });
 
 ipcMain.on('loadBooks', (event, arg = {}) => {
@@ -114,29 +129,34 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
   var zh_tw = convertor.convertToTraditionalChinese;
 
   log(keyword, 'keyword in : ');
+  let countOfBooks = db.prepare('select count(*) as c from books').all()[0].c;
+  let countOfBookFts = db
+    .prepare('select count(*) as c from book_fts')
+    .all()[0].c;
+  log([countOfBooks, countOfBookFts], '[countOfBooks, countOfBookFts] in : ');
   if (keyword) {
     switch (searchBy) {
       case 'title':
         keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]);
-        loadBooks({ keyword }).then((books) => {
-          // log(books, 'books in : ');
-          event.reply('booksLoaded', books);
+        loadBooks({ keyword }).then((data) => {
+          // log(data, 'data in : ');
+          event.reply('booksLoaded', { data, countOfBooks, countOfBookFts });
         });
         break;
       default:
         if (keyword) {
           keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]).join(' OR ');
           log([keyword, searchBy], '[keyword, searchBy] in : ');
-          searchBooksFTS(keyword).then((books) => {
-            log(books, 'books in : ');
-            event.reply('booksLoaded', books);
+          searchBooksFTS(keyword).then((data) => {
+            // log(data, 'data in : ');
+            event.reply('booksLoaded', { data, countOfBooks, countOfBookFts });
           });
         }
         break;
     }
   } else {
-    loadBooks().then((books) => {
-      event.reply('booksLoaded', books);
+    loadBooks().then((data) => {
+      event.reply('booksLoaded', { data, countOfBooks, countOfBookFts });
     });
   }
 });

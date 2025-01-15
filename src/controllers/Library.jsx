@@ -51,7 +51,7 @@ export const Library = (props) => {
     getStorage('keyword') || props.keyword,
   );
   const [searchBy, setsearchBy] = useState(getStorage('search-by') || 'title');
-
+  const [counts, setcounts] = useState(props.counts);
   useEffect(() => {
     loadData();
     wsConnect();
@@ -64,10 +64,11 @@ export const Library = (props) => {
       log(book, 'book in : bookDeleted');
       deleteItem(book);
     });
-    onMessage('booksLoaded', (books) => {
-      // log(books, 'books in Library 222: ');
-      setdata(books);
-      _data = books;
+    onMessage('booksLoaded', ({ data, countOfBooks, countOfBookFts }) => {
+      // log(data, 'data in Library 222: ');
+      setcounts(`${countOfBooks}/${countOfBookFts}`);
+      setdata(data);
+      _data = data;
     });
   }, []);
 
@@ -114,7 +115,11 @@ export const Library = (props) => {
         </Side>
         <Main>
           <Styled._Search>
-            <Icon name="CiSearch" />
+            <Icon
+              name={searchBy == 'title' ? 'PiBooksLight' : 'RiArchiveStackLine'}
+              id="search-by"
+              onClick={toggleSearchBy}
+            />
             <input
               id="search-input"
               defaultValue={keyword}
@@ -126,10 +131,12 @@ export const Library = (props) => {
               onChange={onChange}
             />
             <Icon
-              name={searchBy == 'title' ? 'PiBooksLight' : 'RiArchiveStackLine'}
-              id="search-by"
-              onClick={toggleSearchBy}
+              name="CiSearch"
+              onClick={(e) => {
+                setkeyword(keyword);
+              }}
             />
+            <Icon label={counts} />
           </Styled._Search>
         </Main>
         <Side>

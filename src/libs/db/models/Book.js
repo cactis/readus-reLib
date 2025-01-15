@@ -39,10 +39,10 @@ Book.init(
     content: {
       type: Sequelize.JSON,
       // allowNull: false,
-      get: function () {
-        // return JSON.parse(decompress(this.getDataValue('content')));
-        return this.getDataValue('content').join('');
-      },
+      // get: function () {
+      //   // return JSON.parse(decompress(this.getDataValue('content')));
+      //   return this.getDataValue('content').join('');
+      // },
       // set(val) {
       //   this.setDataValue('content', compress(JSON.stringify(val)));
       // },
@@ -51,14 +51,14 @@ Book.init(
   },
   {
     sequelize,
-    hooks: {
-      afterDestroy: (book, options) => {
-        let { cover } = book;
-        log(cover, 'cover in : ');
-        throw new Error("You can't grant this user an access level above 10!");
-        return book.destroy(options);
-      },
-    },
+    // hooks: {
+    //   afterDestroy: (book, options) => {
+    //     let { cover } = book;
+    //     log(cover, 'cover in : ');
+    //     throw new Error("You can't grant this user an access level above 10!");
+    //     return book.destroy(options);
+    //   },
+    // },
   },
 );
 

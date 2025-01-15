@@ -40,7 +40,6 @@ export const List = (props) => {
         <Main></Main>
         <Side className={`r`}>
           <Icon
-            $if={isDev()}
             name="MdOutlineDeleteForever"
             onClick={(e) => {
               sendMessage('deleteAllBooks');

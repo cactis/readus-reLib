@@ -1,4 +1,4 @@
-const { log, stripTags } = require('../lib');
+const { log, stripTags, removeSpace } = require('../lib');
 const path = require('path');
 const { dbStorage } = require('./database');
 
@@ -23,10 +23,13 @@ log(nodejieba, 'nodejieba in : ');
 //   "nodejieba.cut('中文Love測試分詞').join(' ') in : ",
 // );
 
-const db = require('better-sqlite3')(dbStorage, { verbose: console.log });
+const db = require('better-sqlite3')(dbStorage, {
+  verbose: console.log,
+  // fileMustExist: true,
+});
 log(db, 'db in : better-sqlite3 connected ok');
 
-db.exec('PRAGMA auto_vacuum = 1');
+// db.exec('PRAGMA auto_vacuum = 1');
 log('execute auto_vacuum');
 // db.commit();
 // db.exec('VACUUM');
@@ -46,12 +49,6 @@ const createFts5Table = (tokenizer = 'unicode61') => {
       tokenize = "${tokenizer}"
       );
 
-      CREATE TRIGGER IF NOT EXISTS books_after_insert
-      AFTER INSERT ON books
-      BEGIN
-      INSERT INTO book_fts (book_id, content)
-      VALUES (NEW.id, NEW.content);
-      END;
 
       CREATE TRIGGER IF NOT EXISTS books_after_update
       AFTER UPDATE ON books
@@ -69,6 +66,13 @@ const createFts5Table = (tokenizer = 'unicode61') => {
   log('createFts5Table run doen');
 };
 
+// CREATE TRIGGER IF NOT EXISTS books_after_insert
+// AFTER INSERT ON books
+// BEGIN
+// INSERT INTO book_fts (book_id, content)
+// VALUES (NEW.id, NEW.content);
+// END;
+
 const dropFts5Table = () => {
   log('dropFts5Table run');
 
@@ -80,7 +84,13 @@ const dropFts5Table = () => {
 function segmentText(text) {
   // 使用 Jieba 分詞，也可以選擇其他分詞器
   // log(nodejieba.cut(text).join(' '), "nodejieba.cut(text).join(' ') in : ");
-  return nodejieba.cut(text, true).join(' ').replace(/\s+/g, ' ');
+  text = stripTags(text);
+  log(text, 'text in : ');
+  let data = nodejieba.cut(text, true).join(' ');
+  // data = removeSpace(data);
+  log(data, 'data in setmentText: ');
+
+  return data;
 }
 
 function deleteAllBooksFTS() {
@@ -89,12 +99,14 @@ function deleteAllBooksFTS() {
 
 function insertBookFTS(bookId, content) {
   log(bookId, 'bookId in insertBookFTS: ');
-  const segmentedContent = segmentText(content);
   // log(segmentedContent, 'segmentedContent in : ');
-  const insert = db.prepare(
-    'INSERT INTO book_fts (book_id, content) VALUES (@bookId, @content)',
+  const segmentedContent = segmentText(content);
+
+  // const segmentedContent = content;
+  const prepare = db.prepare(
+    'INSERT INTO book_fts (book_id, content) VALUES (@bookId, @segmentedContent)',
   );
-  insert.run({ bookId, content });
+  prepare.run({ bookId, segmentedContent });
 }
 
 function updateBookFTS(bookId, content) {
@@ -107,7 +119,8 @@ function updateBookFTS(bookId, content) {
 
 function deleteBookFTS(bookId) {
   log(bookId, 'bookId in deleteBookFTS: ');
-  db.exec('DELETE FROM book_fts WHERE book_id = ?', [bookId]);
+  const prepare = db.prepare(`DELETE FROM book_fts WHERE book_id = @bookId`);
+  prepare.run({ bookId });
 }
 
 function searchBooksFTS(query) {
@@ -129,7 +142,7 @@ function searchBooksFTS(query) {
   let highlights = db
     .prepare(
       `
-      select book_id, snippet(book_fts, 1, '<b>', '</b>', '...', 100) as highlight
+      select book_id, snippet(book_fts, 1, '<b>', '</b>', '...', 64) as highlight
       from book_fts
       where book_fts match ?
       `,
@@ -143,11 +156,11 @@ function searchBooksFTS(query) {
     (item, i) =>
       (result[item.book_id] = _.flatten([
         ...(result[item.book_id] || []),
-        item.highlight,
+        removeSpace(item.highlight),
       ])),
   );
   let ids = Object.keys(result);
-  log(ids, 'ids in : ');
+  // log(ids, 'ids in : ');
 
   if (ids.length == 0)
     return new Promise((resolve, reject) => {

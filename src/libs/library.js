@@ -60,7 +60,11 @@ export const addBooks = async (files) => {
                   'bookAdded',
                   _book,
                 );
-                insertBookFTS(id, content.join(''));
+                // insertBookFTS(id, content);
+                content.forEach((texts) => {
+                  insertBookFTS(id, texts);
+                  // throw new Error('after stripTags');
+                });
               });
             }
           });
