@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { ReaderCss } from './ReaderCss.js';
-import { _Flex, _Footer, _Main } from './Layout/Layout.styled.jsx';
+import { _Col, _Flex, _Footer, _Main } from './Layout/Layout.styled.jsx';
 import { Footer } from './Layout/Layout.jsx';
 
 export const _Reader = styled(_Flex).attrs((props) => ({
@@ -53,9 +53,9 @@ export const _Reader = styled(_Flex).attrs((props) => ({
 export const _TitleBar = styled(_Flex).attrs((props) => ({
   className: `TitleBar`,
 }))`
-  color: #888;
+  color: #333;
   flex-flow: row;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   .Main {
     align-items: center;
     justify-content: space-between;
@@ -79,11 +79,11 @@ export const _MainL = styled(_Flex).attrs((props) => ({
   flex: 1;
 `;
 
-export const _MainR = styled(_Flex).attrs((props) => ({
+export const _MainR = styled(_Col).attrs((props) => ({
   className: `MainR`,
 }))`
   flex: 1;
-  justify-content: flex-end;
+  align-items: flex-end;
 `;
 
 export const _FooterL = styled(_Flex).attrs((props) => ({
@@ -130,5 +130,5 @@ export const _FooterR = styled(_Flex).attrs((props) => ({
 export const _PageSlider = styled(_Footer).attrs((props) => ({
   className: `PageSlider`,
 }))`
-  margin: 3rem 10% -1rem;
+  margin: 3rem 10% 1rem;
 `;

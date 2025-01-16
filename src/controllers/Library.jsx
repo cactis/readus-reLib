@@ -163,7 +163,7 @@ export const Library = (props) => {
         </Main>
         <Side>
           <Icon
-            name="FaRegFileLines"
+            name="BsVectorPen"
             $if={isDev()}
             onClick={(e) => {
               let json = window.Library.loadBooksData();

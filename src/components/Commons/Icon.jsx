@@ -18,6 +18,7 @@ import * as pi from 'react-icons/pi';
 import * as lu from 'react-icons/lu';
 import * as gi from 'react-icons/gi';
 import * as ri from 'react-icons/ri';
+import * as bs from 'react-icons/bs';
 
 export const Icon = (props) => {
   const root = React.createRef();
@@ -49,6 +50,7 @@ export const Icon = (props) => {
       io5,
       cg,
       im,
+      bs,
       pi,
       lu,
     ];

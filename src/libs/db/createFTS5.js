@@ -102,7 +102,7 @@ function segmentText(text) {
   // 使用 Jieba 分詞，也可以選擇其他分詞器
   // log(nodejieba.cut(text).join(' '), "nodejieba.cut(text).join(' ') in : ");
   text = stripTags(text);
-  log(text, 'text in : ');
+  // log(text, 'text in : ');
   // log(text, 'text in : ');
   text = nodejieba.cut(text, true).join(' ');
   // data = removeSpace(data);
@@ -118,7 +118,7 @@ function deleteAllBooksFTS() {
 
 function insertBookFTS(bookId, content) {
   if (!_db) _db = loadDb();
-  log(bookId, 'bookId in insertBookFTS: ');
+  // log(bookId, 'bookId in insertBookFTS: ');
   // log(segmentedContent, 'segmentedContent in : ');
   const segmentedContent = segmentText(content);
 
@@ -140,7 +140,7 @@ function updateBookFTS(bookId, content) {
 
 function deleteBookFTS(bookId) {
   if (!_db) _db = loadDb();
-  log(bookId, 'bookId in deleteBookFTS: ');
+  // log(bookId, 'bookId in deleteBookFTS: ');
   const prepare = _db.prepare(`DELETE FROM Books_fts WHERE book_id = @bookId`);
   prepare.run({ bookId });
 }

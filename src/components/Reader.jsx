@@ -388,11 +388,16 @@ export const Reader = (props) => {
               <Styled._MainL>
                 <div id="metainfo">
                   <span id="book-title"></span>
+                  <Styled._FooterL id="chapter-title"></Styled._FooterL>
                   {/* <span id="title-seperator">&nbsp;&nbsp;–&nbsp;&nbsp;</span> */}
                   {/* <span id="chapter-title__"></span> */}
                 </div>
               </Styled._MainL>
-              <Styled._MainR id="chapter-label"></Styled._MainR>
+              <Styled._MainR>
+                <div id="chapter-label"></div>
+                {/* <Styled._FooterR id="page-number"></Styled._FooterR> */}
+                <div id="page-number"></div>
+              </Styled._MainR>
             </Main>
             <Side>
               <div id="title-controls">
@@ -445,10 +450,10 @@ export const Reader = (props) => {
           </div>
         </Styled._FooterM>
       </Styled._PageSlider>
-      <Footer className={`__`}>
+      {/* <Footer className={`__`}>
         <Styled._FooterL id="chapter-title">作者名稱</Styled._FooterL>
         <Styled._FooterR id="page-number"></Styled._FooterR>
-      </Footer>
+      </Footer> */}
     </Styled._Reader>
   );
 

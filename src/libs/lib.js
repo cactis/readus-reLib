@@ -25,7 +25,7 @@ const stop = (e) => {
 
 const stripTags = (html, ...args) => {
   // log(html, 'html in : ');
-  log(typeof html, 'typeof html in : ');
+  // log(typeof html, 'typeof html in : ');
   return html
     .replace(/<(\/?)(\w+)[^>]*\/?>/g, (_, endMark, tag) => {
       return args.includes(tag) ? '<' + endMark + tag + '>' : '';
