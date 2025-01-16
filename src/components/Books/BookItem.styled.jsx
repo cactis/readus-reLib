@@ -6,6 +6,7 @@ import { _Col, _Flex } from '../Layout/Layout.styled';
 export const _BookItem = styled(_Col).attrs((props) => ({
   className: 'BookItem',
 }))`
+  /* max-width: 200px; */
   gap: 0.2rem;
   &:hover {
   }

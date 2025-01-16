@@ -51,11 +51,14 @@ export const addBooks = async (files) => {
               //   });
               // });
               // log(e, 'e in Book.build: ');
-              Book.prototype.build(book).then((book) => {
+
+              let { content } = book;
+              delete book['content'];
+              Book.prototype.build(book).then(({ dataValues }) => {
                 // log(book, 'book in : ');
                 log('book created', "'book created' in : ");
-                let _book = book.dataValues;
-                let { id, content } = _book;
+                let _book = dataValues;
+                let { id } = _book;
                 log(id, 'id in : ');
                 BrowserWindow.getFocusedWindow().webContents.send(
                   'bookAdded',

@@ -30,11 +30,20 @@ const loadDb = () => {
     fileMustExist: true,
   });
   _db.pragma('journal_mode = WAL');
-
-  // log(db, 'db in : better-sqlite3 connected ok');
   return _db;
 };
 
+function vacuumDatabase() {
+  if (!_db) _db = loadDb();
+  log('開始 VACUUM 資料庫...');
+  _db.exec('VACUUM', function (err) {
+    if (err) {
+      log('VACUUM 執行錯誤:', err);
+    } else {
+      log('VACUUM 完成。');
+    }
+  });
+}
 // const db = () => {
 //   return _db || loadDb();
 // };
@@ -42,7 +51,6 @@ const loadDb = () => {
 // _db.exec('PRAGMA auto_vacuum = 0');
 // log('execute auto_vacuum');
 // _db.commit();
-// _db.exec('VACUUM');
 // _db.commit();
 
 // const db = new Database(dbStorage);
@@ -96,7 +104,7 @@ function segmentText(text) {
   text = stripTags(text);
   log(text, 'text in : ');
   // log(text, 'text in : ');
-  // text = nodejieba.cut(text, true).join(' ');
+  text = nodejieba.cut(text, true).join(' ');
   // data = removeSpace(data);
   // log(data, 'data in setmentText: ');
 
@@ -215,4 +223,5 @@ module.exports = {
   deleteAllBooksFTS,
   dropFts5Table,
   dbStatus,
+  vacuumDatabase,
 };

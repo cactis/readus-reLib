@@ -47,7 +47,7 @@ export const Cover = (props) => {
         <Icon
           name="CiTrash"
           onClick={(e) => {
-            log(data.sha256, 'data.sha256 in : ');
+            // log(data.sha256, 'data.sha256 in : ');
             sendMessage('deleteBook', data);
             stop(e);
           }}
@@ -56,7 +56,7 @@ export const Cover = (props) => {
           $if={isDev()}
           name="IoMdBook"
           onClick={(e) => {
-            log(data, 'data in : ');
+            // log(data, 'data in : ');
             popup(<Html data={data.content} />);
             // sendMessage('getBookContent', { url: data.url[0] });
             stop(e);

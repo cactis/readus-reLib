@@ -82,19 +82,23 @@ export const _Search = styled(_Flex).attrs((props) => ({
   font-size: 1.2rem;
   justify-content: center;
   align-items: center;
-  gap: 0.5rem;
+  /* gap: 0.5rem; */
   border-radius: 10px;
   border: 1px solid #aaa;
   padding: 0.5rem 1rem;
   input {
     &::placeholder {
       color: #aaa;
-      /* font-size: 0.9rem; */
+      font-size: 0.9rem;
     }
     font-size: 1.2rem;
     color: #666;
     border: none;
     outline: none;
+  }
+  #reset-search,
+  #count-of-dbstatus {
+    font-size: 0.8rem;
   }
 `;
 

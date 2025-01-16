@@ -40,6 +40,8 @@ import {
   wsClose,
   wsConnect,
 } from '../libs/lib.js';
+import { MdVisibility } from 'react-icons/md';
+import { load } from 'nodejieba';
 
 export const Library = (props) => {
   const root = React.createRef();
@@ -107,6 +109,10 @@ export const Library = (props) => {
       setkeyword(keyword);
     });
   };
+  const resetSearch = (e) => {
+    setkeyword('');
+    $('#search-input').val('');
+  };
   const _return = (
     // eslint-disable-next-line react/jsx-pascal-case
     <Styled._Library
@@ -133,18 +139,26 @@ export const Library = (props) => {
               defaultValue={keyword}
               placeholder={
                 searchBy == 'title'
-                  ? 'Search Book Titles'
-                  : 'Search Book Contents'
+                  ? 'Search by Title and Author'
+                  : 'Search by Content'
               }
               onChange={onChange}
+            />
+            <Icon
+              // $if={keyword.length > 0}
+              style={{ visibility: keyword.length > 0 ? 'unset' : 'hidden' }}
+              name="IoMdClose"
+              id="reset-search"
+              onClick={resetSearch}
             />
             <Icon
               name="CiSearch"
               onClick={(e) => {
                 setkeyword(keyword);
+                loadData();
               }}
             />
-            <Icon label={counts} />
+            <Icon label={counts} $if={isDev()} id="count-of-dbstatus" />
           </Styled._Search>
         </Main>
         <Side>
@@ -154,9 +168,9 @@ export const Library = (props) => {
             onClick={(e) => {
               let json = window.Library.loadBooksData();
 
-              log(json, 'json in : ');
+              // log(json, 'json in : ');
               let data = `<pre>${JSON.stringify(json)}</pre>`;
-              log(data, 'data in : ');
+              // log(data, 'data in : ');
 
               sendMessage('getAppPath');
               onMessage('getAppPath', (path) => {
@@ -209,7 +223,8 @@ export const Library = (props) => {
       </Header>
       <Body>
         <List
-          className={!keyword || searchBy == 'title' ? 'grid' : 'list'}
+          // className={!keyword || searchBy == 'title' ? 'grid' : 'list'}
+
           toolbar={
             <Icon
               className={`button`}

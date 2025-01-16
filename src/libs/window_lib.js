@@ -62,7 +62,7 @@ const getEventPos = (e) => {
 };
 
 const peerSend = (data) => {
-  log(data, 'data in peerSend: ');
+  // log(data, 'data in peerSend: ');
   if (window?.conn) {
     window?.conn.send(JSON.stringify(data));
   }

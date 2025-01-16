@@ -20,8 +20,8 @@ export const BookItem = (props) => {
       ref={root}
       className={`${className}`}
       onClick={(e) => {
-        log(data, 'data in : ');
-        log(data.url, 'data.url in : ');
+        // log(data, 'data in : ');
+        // log(data.url, 'data.url in : ');
         renderComponent(<Reader url={`file://${data.url[0]}`} />);
         stop(e);
       }}

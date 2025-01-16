@@ -21,6 +21,7 @@ import {
   deleteBookFTS,
   dropFts5Table,
   searchBooksFTS,
+  vacuumDatabase,
 } from '../libs/db/createFTS5';
 
 export const log = (msg, title) => {
@@ -103,7 +104,7 @@ ipcMain.on('getBookContent', (event, arg = {}) => {
   const { url } = arg;
   log(url, 'url in : ');
   getBookContent(url).then((data) => {
-    log(data, 'data in : ');
+    // log(data, 'data in : ');
     event.reply('getBookContent', data);
   });
   // const books = loadBooks({ keyword });
@@ -256,6 +257,7 @@ const createWindow = async () => {
   });
 
   mainWindow.on('closed', () => {
+    vacuumDatabase();
     mainWindow = null;
   });
 

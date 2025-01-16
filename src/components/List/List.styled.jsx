@@ -30,6 +30,9 @@ export const _ListWrapper = styled.div.attrs((props) => ({
 }))`
   gap: 1.5rem;
   display: grid;
+  &:has(.BookWithHighlights) {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+  }
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   ${_List}.list & {
     display: flex;
