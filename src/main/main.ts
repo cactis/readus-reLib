@@ -8,7 +8,6 @@ import elog from 'electron-log';
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-// import { log } from '../libs/lib';
 
 const { Book } = require('../libs/db/models/index');
 
@@ -16,10 +15,10 @@ import { addBooks, getBookContent, loadBooks } from '../libs/library';
 import { coversPath } from '../libs/db/database';
 import {
   createFts5Table,
-  db,
   dbStatus,
   deleteBookFTS,
   dropFts5Table,
+  initJiebaFromAsar,
   searchBooksFTS,
   vacuumDatabase,
 } from '../libs/db/createFTS5';
@@ -45,7 +44,7 @@ ipcMain.on('log-from-renderer', (event, message, level) => {
 
 class AppUpdater {
   constructor() {
-    elog.initialize();
+    // elog.initialize();
     elog.info('Log from the main process');
     elog.transports.file.level = 'silly';
     elog.transports.console.format = '{h}:{i}:{s} {text}';
@@ -291,6 +290,7 @@ app
   .whenReady()
   .then(() => {
     createWindow();
+    // initJiebaFromAsar();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.

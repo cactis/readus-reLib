@@ -31,16 +31,16 @@
     "build:dll": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
+    "postinstall": "chmod -R a+x node_modules/cross-env node_modules/ts-node node_modules/electronmon node_modules/@electron && ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && npm run build:dll",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "lint:fix": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "package": "electron-rebuild -f -w better-sqlite3 && ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
-    "rebuild": "electron-rebuild -f -w better-sqlite3 && electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
-    "postinstall": "chmod -R a+x node_modules/cross-env node_modules/ts-node node_modules/electronmon node_modules/@electron && ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && npm run build:dll",
-    "prestart": "electron-rebuild -f -w better-sqlite3 && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.dev.ts && ./node_modules/.bin/electron-rebuild",
+    "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
+    "prestart": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.dev.ts",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run prestart && npm run start:renderer",
     "start:main": "concurrently -k \"cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --watch --config ./.erb/configs/webpack.config.main.dev.ts\" \"electronmon .\"",
     "start:preload": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.preload.dev.ts",
-    "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
+    "start:renderer": "npm run build:dll && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest"
   },
   "browserslist": [
@@ -94,7 +94,6 @@
   },
   "dependencies": {
     "@electron/notarize": "^2.3.2",
-    "better-sqlite3": "^11.8.0",
     "bindings": "^1.5.0",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
@@ -110,7 +109,6 @@
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "node-vibrant": "^4.0.0",
-    "nodejieba": "^3.4.4",
     "path-browserify": "^1.0.1",
     "peerjs": "^1.5.4",
     "pg-hstore": "^2.3.4",
@@ -195,7 +193,7 @@
   "build": {
     "productName": "Readus-reLib",
     "appId": "org.readus.reLib",
-    "asar": true,
+    "asar": false,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
       "dist",

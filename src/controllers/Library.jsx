@@ -40,8 +40,6 @@ import {
   wsClose,
   wsConnect,
 } from '../libs/lib.js';
-import { MdVisibility } from 'react-icons/md';
-import { load } from 'nodejieba';
 
 export const Library = (props) => {
   const root = React.createRef();

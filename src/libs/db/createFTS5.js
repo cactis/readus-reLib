@@ -1,5 +1,7 @@
 const { stripTags, removeSpace, log } = require('../lib');
+const fs = require('fs');
 const path = require('path');
+// const fs = require('fs');
 const { dbStorage } = require('./database');
 let _db;
 const _ = require('lodash');
@@ -9,7 +11,65 @@ const _ = require('lodash');
 // const icu = require('@sqlite.org/icu');
 const nodejieba = require('nodejieba'); // 使用 jieba 作為自訂分詞
 const { Book } = require('./models/Book');
+
+let options = {
+  dict: path
+    .join(__dirname, '../../assets/dict/jieba.dict.utf8')
+    .replace('/app', ''),
+  hmmDict: path
+    .join(__dirname, '../../assets/dict/hmm_model.utf8')
+    .replace('/app', ''),
+  userDict: path
+    .join(__dirname, '../../assets/dict/user.dict.utf8')
+    .replace('/app', ''),
+  idfDict: path
+    .join(__dirname, '../../assets/dict/idf.utf8')
+    .replace('/app', ''),
+  stopWordDict: path
+    .join(__dirname, '../../assets/dict/stop_words.utf8')
+    .replace('/app', ''),
+};
+
+// log(options, 'options in : ');
+// nodejieba.load(options);
+nodejieba.DEFAULT_DICT = options.dict;
+nodejieba.DEFAULT_HMM_DICT = options.hmmDict;
+nodejieba.DEFAULT_USER_DICT = options.userDict;
+nodejieba.DEFAULT_IDF_DICT = options.idfDict;
+nodejieba.DEFAULT_STOP_WORD_DICT = options.stopWordDict;
+
 log(nodejieba, 'nodejieba in : ');
+
+// const initJiebaFromAsar = () => {
+//   log('initJiebaFromAsar');
+//   const dictPath = path.join(
+//     process.resourcesPath,
+//     'app.asar',
+//     'jieba.dict.utf8',
+//   );
+//   const hmmPath = path.join(
+//     process.resourcesPath,
+//     'app.asar',
+//     'hmm_model.utf8',
+//   );
+
+//   let dictData, hmmData;
+//   try {
+//     dictData = fs.readFileSync(dictPath, 'utf-8');
+//     hmmData = fs.readFileSync(hmmPath, 'utf-8');
+//   } catch (err) {
+//     console.error('Failed to load jieba dict:', err);
+//     //Fallback to default path
+//     return;
+//   }
+
+//   let opts = {
+//     dict: dictData,
+//     hmm: hmmData,
+//   };
+//   nodejieba.load(otps);
+//   log([opts, nodejieba], '[opts, nodejieba] in : ');
+// };
 
 // try {
 //   _db.loadExtension('/path/to/nodejieba_extension');
@@ -104,6 +164,7 @@ function segmentText(text) {
   text = stripTags(text);
   // log(text, 'text in : ');
   // log(text, 'text in : ');
+  // log(nodejieba, 'nodejieba in : ');
   text = nodejieba.cut(text, true).join(' ');
   // data = removeSpace(data);
   // log(data, 'data in setmentText: ');
@@ -224,4 +285,5 @@ module.exports = {
   dropFts5Table,
   dbStatus,
   vacuumDatabase,
+  // initJiebaFromAsar,
 };
