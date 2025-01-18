@@ -1,9 +1,8 @@
-import { app, BrowserWindow, contextBridge, ipcMain } from 'electron';
-import { env, isDev } from './lib';
-import { Book } from './db/models';
+import { app, BrowserWindow } from 'electron';
 import { Op } from 'sequelize';
-import { coversPath, getDataPath } from './db/database';
 import { insertBookFTS } from './db/createFTS5';
+import { coversPath } from './db/database';
+import { Book } from './db/models';
 import { log } from './log';
 
 const fs = require('fs');

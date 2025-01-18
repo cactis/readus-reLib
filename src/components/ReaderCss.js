@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import { css } from 'styled-components';
 export const ReaderCss = css`
   body {
     background: #4e4e4e;
@@ -76,8 +76,8 @@ export const ReaderCss = css`
   }
 
   #viewer {
-    width: 90%;
-    height: 80%;
+    width: 80%;
+    height: 75%;
     /* margin-left: 10%; */
     margin: 0 auto;
     max-width: 1250px;
@@ -89,7 +89,10 @@ export const ReaderCss = css`
   #viewer iframe {
     border: none;
   }
-
+  #prev,
+  #next {
+    z-index: 1000;
+  }
   #prev {
     left: 40px;
   }

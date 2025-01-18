@@ -1,20 +1,17 @@
-import React from 'react';
 import styled from 'styled-components';
+import { _Col, _Flex, _Footer } from './Layout/Layout.styled.jsx';
 import { ReaderCss } from './ReaderCss.js';
-import { _Col, _Flex, _Footer, _Main } from './Layout/Layout.styled.jsx';
-import { Footer } from './Layout/Layout.jsx';
 
 export const _Reader = styled(_Flex).attrs((props) => ({
   className: 'Reader',
 }))`
   flex-flow: column;
-  z-index: 100;
   left: 0;
   top: 0;
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
+  position: relative;
   /* background-color: white; */
 
   ${ReaderCss}
@@ -130,5 +127,5 @@ export const _FooterR = styled(_Flex).attrs((props) => ({
 export const _PageSlider = styled(_Footer).attrs((props) => ({
   className: `PageSlider`,
 }))`
-  margin: 3rem 10% 1rem;
+  margin: 3rem 10% 0rem;
 `;

@@ -1,46 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './Library.styled.jsx';
+import React, { useEffect, useState } from 'react';
 import {
-  Button,
-  FileInput,
+  Body,
   Footer,
   Header,
-  Html,
   Icon,
   List,
   Main,
-  Popup,
   popup,
-  QRCode,
-  Reader,
   Settings,
-  Body,
   Side,
-  Flex,
+  Window,
+  Write,
 } from '../components';
+import * as Styled from './Library.styled.jsx';
 
 import {
-  getEventPos,
-  onMessage,
-  peerConnect,
-  renderComponent,
-  runLast,
-  sendMessage,
-} from '../libs/window_lib.js';
-import {
-  broadcast,
-  copyToClipboard,
   env,
   getStorage,
   isDev,
   log,
-  newArray,
   randStr,
   setStorage,
   stop,
   wsClose,
   wsConnect,
 } from '../libs/lib.js';
+import {
+  getEventPos,
+  onMessage,
+  renderComponent,
+  runLast,
+  sendMessage,
+} from '../libs/window_lib.js';
 
 export const Library = (props) => {
   const root = React.createRef();
@@ -165,26 +156,11 @@ export const Library = (props) => {
             name="BsVectorPen"
             $if={isDev()}
             onClick={(e) => {
-              let json = window.Library.loadBooksData();
-
-              // log(json, 'json in : ');
-              let data = `<pre>${JSON.stringify(json)}</pre>`;
-              // log(data, 'data in : ');
-
-              sendMessage('getAppPath');
-              onMessage('getAppPath', (path) => {
-                runLast(() => {
-                  const file = `${path}/books.json`;
-                  log(file, 'file in : ');
-                  // copyToClipboard(file);
-                  popup(
-                    <Html
-                      data={data}
-                      style={{ width: '80%', height: '80%' }}
-                    />,
-                  );
-                }, 100);
-              });
+              renderComponent(
+                <Window title={randStr('write')} sideData={data[0]}>
+                  <Write />
+                </Window>,
+              );
               stop(e);
             }}
           />

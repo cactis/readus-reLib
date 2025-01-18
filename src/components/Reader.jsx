@@ -1,18 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './Reader.styled.jsx';
-import { Body, Button, Footer, Header, Main, Side } from './Layout/Layout.jsx';
-import { log, randStr, stop } from '../libs/lib.js';
-import {
-  EpubReaderContentCss,
-  EpubReaderCss,
-} from './EpubReaderContentCss.styled.jsx';
-import { Icon } from './Commons/Icon.jsx';
+import React, { useEffect, useState } from 'react';
+import { jId, log, randStr } from '../libs/lib.js';
 import { runLast } from '../libs/window_lib.js';
+import { Icon } from './Commons/Icon.jsx';
+import { EpubReaderCss } from './EpubReaderContentCss.styled.jsx';
+import { Body, Footer, Main, Side } from './Layout/Layout.jsx';
+import * as Styled from './Reader.styled.jsx';
 const _ = require('lodash');
+
+// require('../renderer/vendors/jszip.min.js');
+// require('../renderer/vendors/epub.js');
+// const ePubReader = require('../renderer/vendors/reader.js');
 
 export const Reader = (props) => {
   const root = React.createRef();
   const id = randStr('Reader');
+  const token = randStr('reader-token');
+  log(token, 'token in : ');
+  let $reader;
+  let $root;
 
   const defaultDocumentTitle = document.title;
   const [url, seturl] = useState(props.url);
@@ -32,8 +37,23 @@ export const Reader = (props) => {
   var mouseDown = false;
 
   useEffect(() => {
-    controls = document.getElementById('controls');
-    slider = document.getElementById('current-percent');
+    $root = $(jId(id));
+    $reader = $(`.Reader.${token}`);
+    log($reader, '$reader in : Reader#useEffect');
+
+    controls = $reader.find('#controls')[0];
+    slider = $reader.find('#current-percent')[0];
+    log([controls, slider], '[controls, slider] in : ');
+
+    function onRootResize(e) {
+      let width = $root[0].offsetWidth;
+      let height = $root[0].offsetHeight;
+      log([width, height], '[width, height] in : ');
+      log(e, 'e in Reader resize: ');
+      $(slider).trigger('change');
+    }
+
+    new ResizeObserver(onRootResize).observe($root[0]);
   }, []);
 
   useEffect(() => {
@@ -44,14 +64,18 @@ export const Reader = (props) => {
   let _reader;
   const loadEpub = async () => {
     log(url, 'url in : ');
-    log(window.ePubReader, 'window.ePubReader in : ');
-    _reader = window.ePubReader(url, {
-      restore: true,
-      contained: true,
-      styles: EpubReaderCss,
-      // generatePagination: true,
-      history: true,
-    });
+    // log(window.ePubReader, 'window.ePubReader in : ');
+    _reader = ePubReader(
+      url,
+      {
+        restore: true,
+        contained: true,
+        styles: EpubReaderCss,
+        // generatePagination: true,
+        history: true,
+      },
+      token,
+    );
 
     book = epub = _reader.book;
     rendition = _reader.rendition;
@@ -75,7 +99,7 @@ export const Reader = (props) => {
         }
       })
       .then(function (locations) {
-        log([controls, slider], '[controls, slider] in : ');
+        if (!slider) return false;
         slider.setAttribute('type', 'range');
         slider.setAttribute('min', 0);
         slider.setAttribute('max', 100);
@@ -327,7 +351,7 @@ export const Reader = (props) => {
     <Styled._Reader
       id={id}
       ref={root}
-      className={`${className} __`}
+      className={`${className} ${token}`}
       {..._props}
     >
       <Icon
@@ -375,7 +399,7 @@ export const Reader = (props) => {
             <ol id="notes"></ol>
           </div>
         </div>
-        <div id="main">
+        <div id={`main`}>
           <Styled._TitleBar id="titlebar" className={`__`}>
             <Side>
               <div id="opener">
@@ -388,7 +412,7 @@ export const Reader = (props) => {
               <Styled._MainL>
                 <div id="metainfo">
                   <span id="book-title"></span>
-                  <Styled._FooterL id="chapter-title"></Styled._FooterL>
+                  {/* <Styled._FooterL id="chapter-title"></Styled._FooterL> */}
                   {/* <span id="title-seperator">&nbsp;&nbsp;–&nbsp;&nbsp;</span> */}
                   {/* <span id="chapter-title__"></span> */}
                 </div>
@@ -396,7 +420,7 @@ export const Reader = (props) => {
               <Styled._MainR>
                 <div id="chapter-label"></div>
                 {/* <Styled._FooterR id="page-number"></Styled._FooterR> */}
-                <div id="page-number"></div>
+                {/* <div id="page-number"></div> */}
               </Styled._MainR>
             </Main>
             <Side>
@@ -418,7 +442,7 @@ export const Reader = (props) => {
           <div id="prev" className="arrow">
             ‹
           </div>
-          <div id="viewer"></div>
+          <div id={`viewer`}></div>
           <div id="next" className="arrow">
             ›
           </div>
@@ -450,10 +474,10 @@ export const Reader = (props) => {
           </div>
         </Styled._FooterM>
       </Styled._PageSlider>
-      {/* <Footer className={`__`}>
+      <Footer className={`__`}>
         <Styled._FooterL id="chapter-title">作者名稱</Styled._FooterL>
         <Styled._FooterR id="page-number"></Styled._FooterR>
-      </Footer> */}
+      </Footer>
     </Styled._Reader>
   );
 

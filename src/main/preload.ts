@@ -1,12 +1,27 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import {
-  getAppPath,
-  getBookContent,
-  loadBooks,
-  loadBooksData,
-  userDataPath,
-} from '../libs/library';
+import { getAppPath, loadBooks, loadBooksData } from '../libs/library';
+
+declare global {
+  interface Window {
+    jQuery: any;
+    $: any;
+    ePubCFI: any;
+    ePubReader: any;
+  }
+}
 // import { log } from '../libs';
+
+window.addEventListener('load', () => {
+  //inject jquery to page
+  // window.$ = window.jQuery = require('../renderer/vendors/jquery.min.js');
+  // require('../renderer/vendors/jszip.min.js');
+  // require('../renderer/vendors/epub.js');
+  // window.ePubCFI = require('../renderer/vendors/epub.js');
+  // window.ePubReader = require('../renderer/vendors/reader.js');
+  // window.$ = window.jQuery = require(
+  //   path.join(__dirname, '/jquery-3.2.1.slim.min.js'),
+  // );
+});
 
 function log(message, level = 'INFO') {
   ipcRenderer.send('log-from-renderer', message, level);

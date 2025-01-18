@@ -3338,15 +3338,15 @@ EPUBJS.core.cleanStringForXpath = function (str) {
   var parts = str.match(/[^'"]+|['"]/g);
   parts = parts.map(function (part) {
     if (part === "'") {
-      return '"\'"'; // output "'"
+      return '\"\'\"'; // output "'"
     }
 
     if (part === '"') {
-      return "'\"'"; // output '"'
+      return "\'\"\'"; // output '"'
     }
-    return "'" + part + "'";
+    return "\'" + part + "\'";
   });
-  return "concat(''," + parts.join(',') + ')';
+  return "concat(\'\'," + parts.join(',') + ')';
 };
 
 EPUBJS.core.indexOfTextNode = function (textNode) {

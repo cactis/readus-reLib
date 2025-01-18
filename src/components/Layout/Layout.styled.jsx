@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components';
 
 export const _Layout = styled.div.attrs((props) => ({ className: 'Layout' }))``;

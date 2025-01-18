@@ -3,11 +3,15 @@ const MD5 = require('crypto-js/md5');
 
 const randStr = (pre) => {
   let _pre = pre ? `${pre}-` : '';
-  return _pre + (Math.random() + 1).toString(36).substring(4);
+  return (_pre + (Math.random() + 1).toString(36).substring(4)).trim();
 };
 
 const newArray = (number) => {
   return Array.from(Array(number).keys());
+};
+
+const jId = (id) => {
+  return /^#/.test(id) ? id : `#${id}`;
 };
 
 const log = (msg, title = '') => {
@@ -237,4 +241,5 @@ module.exports = {
   decompress,
   env,
   stripTags,
+  jId,
 };

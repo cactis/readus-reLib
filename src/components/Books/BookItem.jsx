@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './BookItem.styled.jsx';
-import { log, randStr } from '../../libs/lib.js';
-import { Cover } from './Cover.jsx';
+import React, { useEffect, useState } from 'react';
+import { randStr } from '../../libs/lib.js';
 import { renderComponent } from '../../libs/window_lib.js';
+import { Window } from '../Layout/Window.jsx';
 import { Reader } from '../Reader.jsx';
+import * as Styled from './BookItem.styled.jsx';
+import { Cover } from './Cover.jsx';
 
 export const BookItem = (props) => {
   const root = React.createRef();
@@ -22,7 +23,11 @@ export const BookItem = (props) => {
       onClick={(e) => {
         // log(data, 'data in : ');
         // log(data.url, 'data.url in : ');
-        renderComponent(<Reader url={`file://${data.url[0]}`} />);
+        renderComponent(
+          <Window title={`${data.author} - ${data.title}`}>
+            <Reader url={`file://${data.url[0]}`} />
+          </Window>,
+        );
         stop(e);
       }}
       {..._props}

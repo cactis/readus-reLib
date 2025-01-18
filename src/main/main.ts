@@ -1,9 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const fse = require('fs-extra');
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron';
 require('../libs/db/index');
-// import elog from 'electron-log';
 
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
@@ -11,33 +10,17 @@ import { resolveHtmlPath } from './util';
 
 const { Book } = require('../libs/db/models/index');
 
-import { addBooks, getBookContent, loadBooks } from '../libs/library';
-import { coversPath } from '../libs/db/database';
+import { log } from '../libs';
 import {
   createFts5Table,
   dbStatus,
   deleteBookFTS,
   dropFts5Table,
-  // initJiebaFromAsar,
   searchBooksFTS,
   vacuumDatabase,
 } from '../libs/db/createFTS5';
-import { log } from '../libs';
-
-// export const log = (msg, title) => {
-//   elog.info(msg);
-//   elog.info(title);
-// };
-
-// const logFile = () => path.join(app.getPath('userData'), `log-${env}.log`);
-
-// export function log(message, level = 'INFO') {
-//   const timestamp = new Date().toISOString();
-//   const logMessage = `[${timestamp}] [${level}] ${message}\n`;
-//   fs.appendFile(logFile(), logMessage, (err) => {
-//     if (err) console.error('Failed to write log:', err);
-//   });
-// }
+import { coversPath } from '../libs/db/database';
+import { addBooks, getBookContent, loadBooks } from '../libs/library';
 
 ipcMain.on('log-from-renderer', (event, message, level) => {
   log(`Renderer: ${message}`, level);
@@ -45,22 +28,11 @@ ipcMain.on('log-from-renderer', (event, message, level) => {
 
 class AppUpdater {
   constructor() {
-    // elog.info('Log from the main process');
-    // elog.transports.file.level = 'silly';
-    // elog.transports.console.format = '{h}:{i}:{s} {text}';
-    // elog.transports.file.getFile();
-
-    // autoUpdater.logger = elog;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-// ipcMain.handle('read-user-data', async (event, fileName) => {
-//   const path = app.getPath('userData');
-//   return path;
-// });
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -227,7 +199,6 @@ const createWindow = async () => {
       webSecurity: false,
       nodeIntegration: true,
       // contextIsolation: true,
-      // contextIsolation: false,
       // enableRemoteModule: false,
       preload: app.isPackaged
         ? path.join(__dirname, 'preload.js')

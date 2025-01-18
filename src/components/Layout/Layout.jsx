@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as Styled from './Layout.styled.jsx';
 
 const Flex = (props) => {
@@ -53,16 +53,16 @@ const Float = (props) => {
 };
 
 export {
-  Flex,
-  Col,
-  Row,
-  Header,
   Body,
-  Footer,
-  Side,
-  Main,
   Button,
+  Col,
   Ellipsis,
   FileInput,
+  Flex,
   Float,
+  Footer,
+  Header,
+  Main,
+  Row,
+  Side,
 };
