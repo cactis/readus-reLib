@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Styled from './Library.styled.jsx';
 import {
-  Body,
   Button,
   FileInput,
   Footer,
@@ -15,7 +14,9 @@ import {
   QRCode,
   Reader,
   Settings,
+  Body,
   Side,
+  Flex,
 } from '../components';
 
 import {
@@ -122,7 +123,7 @@ export const Library = (props) => {
       <Header>
         <Side>
           <Styled._Logo>
-            reLib<Styled._Env>{env}</Styled._Env>
+            reLib<Styled._Env $if={isDev()}>{env}</Styled._Env>
           </Styled._Logo>
         </Side>
         <Main>

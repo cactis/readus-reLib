@@ -3,16 +3,28 @@
     "incremental": true,
     "target": "es2022",
     "module": "commonjs",
-    "lib": ["dom", "es2022"],
-    "jsx": "react-jsx",
+    "lib": [
+      "dom",
+      "es2022",
+      "esnext",
+      "dom.iterable"
+    ],
+    "jsx": "react",
     "strict": true,
     "sourceMap": true,
+    "isolatedModules": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "allowJs": true,
     "outDir": ".erb/dll"
   },
-  "exclude": ["test", "release/build", "release/app/dist", ".erb/dll"]
+  "exclude": [
+    "test",
+    "release/build",
+    "release/app/dist",
+    ".erb/dll"
+  ]
 }

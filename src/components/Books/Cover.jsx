@@ -36,7 +36,7 @@ export const Cover = (props) => {
     >
       <img
         src={_src}
-        onError_={(e) => {
+        onError={(e) => {
           $(e.target).attr(
             'src',
             'file:///Users/cactis/www/readus-reLib/assets/images/cover-not-available.jpg',

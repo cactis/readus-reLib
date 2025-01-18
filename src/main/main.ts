@@ -3,7 +3,7 @@ const path = require('path');
 const fse = require('fs-extra');
 import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron';
 require('../libs/db/index');
-import elog from 'electron-log';
+// import elog from 'electron-log';
 
 import { autoUpdater } from 'electron-updater';
 import MenuBuilder from './menu';
@@ -18,15 +18,16 @@ import {
   dbStatus,
   deleteBookFTS,
   dropFts5Table,
-  initJiebaFromAsar,
+  // initJiebaFromAsar,
   searchBooksFTS,
   vacuumDatabase,
 } from '../libs/db/createFTS5';
+import { log } from '../libs';
 
-export const log = (msg, title) => {
-  elog.info(msg);
-  elog.info(title);
-};
+// export const log = (msg, title) => {
+//   elog.info(msg);
+//   elog.info(title);
+// };
 
 // const logFile = () => path.join(app.getPath('userData'), `log-${env}.log`);
 
@@ -44,13 +45,12 @@ ipcMain.on('log-from-renderer', (event, message, level) => {
 
 class AppUpdater {
   constructor() {
-    // elog.initialize();
-    elog.info('Log from the main process');
-    elog.transports.file.level = 'silly';
-    elog.transports.console.format = '{h}:{i}:{s} {text}';
+    // elog.info('Log from the main process');
+    // elog.transports.file.level = 'silly';
+    // elog.transports.console.format = '{h}:{i}:{s} {text}';
     // elog.transports.file.getFile();
 
-    autoUpdater.logger = elog;
+    // autoUpdater.logger = elog;
     autoUpdater.checkForUpdatesAndNotify();
   }
 }
@@ -91,10 +91,6 @@ ipcMain.on('openExternal', (event, arg) => {
 ipcMain.on('getAppPath', (event, arg) => {
   const path = app.getAppPath();
   log(path, 'path in : ');
-  // const file = `file://${path}/books.json`;
-  // log(file, 'file in : ');
-  // shell.openExternal(file);
-  // shell.showItemInFolder(path);
   event.reply('getAppPath', path);
 });
 
@@ -290,7 +286,7 @@ app
   .whenReady()
   .then(() => {
     createWindow();
-    // initJiebaFromAsar();
+    initJiebaFromAsar();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
