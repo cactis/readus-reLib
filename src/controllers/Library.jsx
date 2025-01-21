@@ -7,10 +7,11 @@ import {
   List,
   Main,
   popup,
+  Reader,
+  ReaderKit,
   Settings,
   Side,
   Window,
-  Write,
 } from '../components';
 import * as Styled from './Library.styled.jsx';
 
@@ -34,7 +35,6 @@ import {
 } from '../libs/window_lib.js';
 
 export const Library = (props) => {
-  const root = React.createRef();
   const id = 'Library';
   const formId = 'file-input';
   const token = getStorage('token', randStr('readus-relib'));
@@ -105,12 +105,7 @@ export const Library = (props) => {
   };
   const _return = (
     // eslint-disable-next-line react/jsx-pascal-case
-    <Styled._Library
-      id={id}
-      ref={root}
-      className={`${className} ${env} `}
-      {..._props}
-    >
+    <Styled._Library id={id} className={`${className} ${env} `} {..._props}>
       <Header>
         <Side>
           <Styled._Logo>
@@ -157,8 +152,8 @@ export const Library = (props) => {
             $if={isDev()}
             onClick={(e) => {
               renderComponent(
-                <Window title={randStr('write')} sideData={data[0]}>
-                  <Write />
+                <Window title={randStr('write')} side={<ReaderKit />}>
+                  <Reader url={`file://${data[0].url[0]}`} />
                 </Window>,
               );
               stop(e);
@@ -186,7 +181,7 @@ export const Library = (props) => {
             name="GoGear"
             id="settings"
             onClick={(e) => {
-              wsConnect({ token });
+              // wsConnect({ token });
               popup(<Settings token={token} />, {
                 className: 'Dropdown',
                 onClose: wsClose,

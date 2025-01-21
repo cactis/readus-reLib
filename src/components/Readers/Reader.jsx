@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { jId, log, randStr } from '../libs/lib.js';
-import { runLast } from '../libs/window_lib.js';
-import { Icon } from './Commons/Icon.jsx';
-import { EpubReaderCss } from './EpubReaderContentCss.styled.jsx';
-import { Body, Footer, Main, Side } from './Layout/Layout.jsx';
+import { delayed, jId, log, randStr } from '../../libs';
+import { runLast } from '../../libs/window_lib.js';
+import { Icon } from '../Commons';
+import { EpubReaderCss } from '../EpubReaderContentCss.styled';
+import { Body, Footer, Main, Side } from '../Layout';
 import * as Styled from './Reader.styled.jsx';
+
 const _ = require('lodash');
 
 // require('../renderer/vendors/jszip.min.js');
@@ -12,7 +13,6 @@ const _ = require('lodash');
 // const ePubReader = require('../renderer/vendors/reader.js');
 
 export const Reader = (props) => {
-  const root = React.createRef();
   const id = randStr('Reader');
   const token = randStr('reader-token');
   log(token, 'token in : ');
@@ -28,9 +28,9 @@ export const Reader = (props) => {
   var slide = function () {
     runLast(() => {
       let percent = slider.value / 100;
-      log(percent, 'percent in : ');
+      // log(percent, 'percent in : ');
       var cfi = book.locations.cfiFromPercentage(percent);
-      log(cfi, 'cfi in slide: ');
+      // log(cfi, 'cfi in slide: ');
       rendition.display(cfi);
     }, 300);
   };
@@ -39,21 +39,15 @@ export const Reader = (props) => {
   useEffect(() => {
     $root = $(jId(id));
     $reader = $(`.Reader.${token}`);
-    log($reader, '$reader in : Reader#useEffect');
+    // log($reader, '$reader in : Reader#useEffect');
 
     controls = $reader.find('#controls')[0];
     slider = $reader.find('#current-percent')[0];
-    log([controls, slider], '[controls, slider] in : ');
+    // log([controls, slider], '[controls, slider] in : ');
 
-    function onRootResize(e) {
-      let width = $root[0].offsetWidth;
-      let height = $root[0].offsetHeight;
-      log([width, height], '[width, height] in : ');
-      log(e, 'e in Reader resize: ');
-      $(slider).trigger('change');
-    }
-
-    new ResizeObserver(onRootResize).observe($root[0]);
+    delayed(() => {
+      observeResize();
+    });
   }, []);
 
   useEffect(() => {
@@ -164,11 +158,11 @@ export const Reader = (props) => {
     // });
     _reader.rendition.on('locationChanged', async (location) => {
       runLast(() => {
-        log(location, 'location in locationChanged: ');
+        // log(location, 'location in locationChanged: ');
         let cfi = location.start;
-        log(cfi, 'cfi in locationChanged: ');
+        // log(cfi, 'cfi in locationChanged: ');
         let percent = book.locations.percentageFromCfi(cfi);
-        log(percent, 'percent in locationChanged: ');
+        // log(percent, 'percent in locationChanged: ');
         updateSlider({ percent });
 
         const spineItem = location.start.cfi
@@ -348,13 +342,9 @@ export const Reader = (props) => {
   };
 
   const _return = (
-    <Styled._Reader
-      id={id}
-      ref={root}
-      className={`${className} ${token}`}
-      {..._props}
-    >
+    <Styled._Reader id={id} className={`${className} ${token}`} {..._props}>
       <Icon
+        $if={false}
         name="MdClose"
         className={`round`}
         id="close-reader"
@@ -481,5 +471,16 @@ export const Reader = (props) => {
     </Styled._Reader>
   );
 
+  const observeResize = () => {
+    function onRootResize(e) {
+      let width = $root[0].offsetWidth;
+      let height = $root[0].offsetHeight;
+      // log([width, height], '[width, height] in : ');
+      // log(e, 'e in Reader resize: ');
+      $(slider).trigger('change');
+    }
+    log($root[0], '$root[0] in : ');
+    new ResizeObserver(onRootResize).observe($root[0]);
+  };
   return _return;
 };

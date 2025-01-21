@@ -15,9 +15,7 @@ const jId = (id) => {
 };
 
 const log = (msg, title = '') => {
-  console.log(`--- ${title}`);
-  console.log(msg);
-  console.log(`--- ${title}`);
+  console.log(msg, `--- ${title}`);
 };
 
 const stop = (e) => {
@@ -142,7 +140,7 @@ const copyToClipboard = (text) => {
 const setStorage = (key, value) => {
   log([key, value], '[key, value] in Lib#setStorage');
   if (key) {
-    // value = compress(JSON.stringify(value));
+    value = compress(JSON.stringify(value));
     localStorage.setItem(key, value);
     return getStorage(key);
   }
@@ -151,7 +149,7 @@ const setStorage = (key, value) => {
 const getStorage = (key, value) => {
   let data = localStorage.getItem(key);
   if (data) {
-    // data = decompress(data);
+    data = decompress(data);
     try {
       return JSON.parse(data);
     } catch (err) {
@@ -220,7 +218,17 @@ function removeSpace(str) {
   // return result;
 }
 
+const getAppSettings = () => {
+  return getStorage('settings') || {};
+};
+
+const saveAppSettings = (settings) => {
+  return setStorage('settings', settings);
+};
+
 module.exports = {
+  saveAppSettings,
+  getAppSettings,
   removeSpace,
   randStr,
   newArray,

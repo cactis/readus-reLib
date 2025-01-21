@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './QRCode.styled.jsx';
+import React, { useEffect, useState } from 'react';
 import { log, randStr } from '../../libs/lib.js';
 import { Body, Footer } from '../Layout/Layout.jsx';
 import { Copy } from './Copy.jsx';
+import * as Styled from './QRCode.styled.jsx';
 
 let QRCodeLib = require('qrcode');
 
 export const QRCode = (props) => {
-  const root = React.createRef();
   const id = randStr('QRCode');
 
   useEffect(() => {}, []);
@@ -30,7 +29,7 @@ export const QRCode = (props) => {
   };
 
   const _return = (
-    <Styled._QRCode id={id} ref={root} className={`${className}`} {..._props}>
+    <Styled._QRCode id={id} className={`${className}`} {..._props}>
       <Body>
         <Styled._Canvas id="canvas" />
       </Body>

@@ -93,6 +93,7 @@
     }
   },
   "dependencies": {
+    "@editorjs/editorjs": "^2.30.7",
     "@electron/notarize": "^2.3.2",
     "bindings": "^1.5.0",
     "crypto-js": "^4.2.0",

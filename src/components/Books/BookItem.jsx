@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { Reader, ReaderKit } from '../';
 import { randStr } from '../../libs/lib.js';
 import { renderComponent } from '../../libs/window_lib.js';
 import { Window } from '../Layout/Window.jsx';
-import { Reader } from '../Reader.jsx';
 import * as Styled from './BookItem.styled.jsx';
 import { Cover } from './Cover.jsx';
 
 export const BookItem = (props) => {
-  const root = React.createRef();
   const id = randStr('BookItem');
 
   useEffect(() => {}, []);
@@ -18,13 +17,15 @@ export const BookItem = (props) => {
   const _return = (
     <Styled._BookItem
       id={id}
-      ref={root}
       className={`${className}`}
       onClick={(e) => {
         // log(data, 'data in : ');
         // log(data.url, 'data.url in : ');
         renderComponent(
-          <Window title={`${data.author} - ${data.title}`}>
+          <Window
+            title={`${data.author} - ${data.title}`}
+            side={<ReaderKit book={data} />}
+          >
             <Reader url={`file://${data.url[0]}`} />
           </Window>,
         );

@@ -1,21 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './List.styled.jsx';
-import { Header, Main, Side } from '../Layout/Layout.jsx';
+import React, { useEffect, useState } from 'react';
+import { delayed, isDev, randStr } from '../../libs/lib.js';
 import { sendMessage } from '../../libs/window_lib.js';
-import { Reader } from '../Reader.jsx';
-import {
-  delayed,
-  isDev,
-  log,
-  onMessage,
-  randStr,
-  subscribe,
-} from '../../libs/lib.js';
+import { AnyItem } from '../Books';
 import { Icon } from '../Commons/Icon.jsx';
-import { AnyItem, BookItem, BookWithHighlights } from '../Books';
+import { Header, Main, Side } from '../Layout/Layout.jsx';
+import * as Styled from './List.styled.jsx';
 
 export const List = (props) => {
-  const root = React.createRef();
   const id = randStr('List');
   let _data = [];
 
@@ -28,13 +19,7 @@ export const List = (props) => {
   }, [props.data]);
 
   const _return = (
-    <Styled._List
-      id={id}
-      ref={root}
-      className={`${className}`}
-      time={time}
-      {..._props}
-    >
+    <Styled._List id={id} className={`${className}`} time={time} {..._props}>
       <Header className={``}>
         <Side>{toolbar}</Side>
         <Main></Main>

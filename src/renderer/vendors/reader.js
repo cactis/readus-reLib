@@ -1,18 +1,20 @@
-/*!
- * @overview RSVP - a tiny implementation of Promises/A+.
- * @copyright Copyright (c) 2016 Yehuda Katz, Tom Dale, Stefan Penner and contributors
- * @license   Licensed under MIT license
- *            See https://raw.githubusercontent.com/tildeio/rsvp.js/master/LICENSE
- * @version   3.6.2
- */
+console.log('local reader.js')(
+  /*!
+   * @overview RSVP - a tiny implementation of Promises/A+.
+   * @copyright Copyright (c) 2016 Yehuda Katz, Tom Dale, Stefan Penner and contributors
+   * @license   Licensed under MIT license
+   *            See https://raw.githubusercontent.com/tildeio/rsvp.js/master/LICENSE
+   * @version   3.6.2
+   */
 
-(function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined'
-    ? factory(exports)
-    : typeof define === 'function' && define.amd
-      ? define(['exports'], factory)
-      : factory((global.RSVP = global.RSVP || {}));
-})(this, function (exports) {
+  function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined'
+      ? factory(exports)
+      : typeof define === 'function' && define.amd
+        ? define(['exports'], factory)
+        : factory((global.RSVP = global.RSVP || {}));
+  },
+)(this, function (exports) {
   'use strict';
 
   function indexOf(callbacks, callback) {

@@ -1,20 +1,10 @@
 const { Model, DataTypes, Sequelize } = require('sequelize');
-const { sequelize } = require('../database'); //Bring configured db into model for init
+const { sequelize } = require('../database');
 
 const { Database } = require('sqlite3');
 const { log, decompress, compress } = require('../../lib');
 
-class Book extends Model {
-  // async build(attrs) {
-  //   try {
-  //     const book = await Book.create(attrs);
-  //     return await book.save();
-  //   } catch (e) {
-  //     log(e, 'e in Book.build: ');
-  //   }
-  //   return null;
-  // }
-}
+class Book extends Model {}
 
 Book.init(
   {

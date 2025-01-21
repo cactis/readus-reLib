@@ -20,6 +20,7 @@ import {
   vacuumDatabase,
 } from '../libs/db/createFTS5';
 import { coversPath } from '../libs/db/database';
+import { Note } from '../libs/db/models';
 import { addBooks, getBookContent, loadBooks } from '../libs/library';
 
 ipcMain.on('log-from-renderer', (event, message, level) => {
@@ -40,8 +41,20 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+// console.log(process.env.PUBLIC_URL, '__static');
+
 ipcMain.on('addBook', (event, arg = {}) => {
   addBooks(arg.url);
+});
+
+ipcMain.on('saveNote', async (event, data = {}) => {
+  log([event, data], '[event, data] in : ipcMain.on(saveNote)');
+  let [{ dataValues }, created] = await Note.findOrCreate({
+    where: { id: data.id || null },
+    defaults: data,
+  });
+  log(dataValues, 'dataValues in : ');
+  event.reply('noteSaved', dataValues);
 });
 
 ipcMain.on('deleteBook', (event, data) => {
@@ -257,7 +270,6 @@ app
   .whenReady()
   .then(() => {
     createWindow();
-    initJiebaFromAsar();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.

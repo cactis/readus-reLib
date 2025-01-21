@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './Popup.styled.jsx';
-import { delayed, log, randStr } from '../../libs/lib.js';
+import React, { useEffect, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { delayed, randStr } from '../../libs/lib.js';
 import { Float } from './Layout.jsx';
-import ReactDOM, { createRoot } from 'react-dom/client';
-import { Icon } from '../Commons/Icon.jsx';
+import * as Styled from './Popup.styled.jsx';
 
 const Popup = (props) => {
-  const root = React.createRef();
   const id = randStr('Popup');
 
   useEffect(() => {}, []);
@@ -27,16 +25,15 @@ const Popup = (props) => {
   const _return = (
     <Styled._Popup
       id={id}
-      ref={root}
       className={`${className}`}
       style={{ ..._props }}
       onClick={closePopup}
       {...props}
     >
       {position ? <Float style={{ ...position }}>{children}</Float> : children}
-      <Float>
+      {/* <Styled._CloseButton>
         <Icon name="IoMdClose" onClick={closePopup} />
-      </Float>
+      </Styled._CloseButton> */}
     </Styled._Popup>
   );
 

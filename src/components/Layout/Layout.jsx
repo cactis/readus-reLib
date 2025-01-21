@@ -32,10 +32,6 @@ const Main = (props) => {
   return <Styled._Main {...props}></Styled._Main>;
 };
 
-const Button = (props) => {
-  return <Styled._Button {...props}></Styled._Button>;
-};
-
 const FileInput = (props) => {
   return <Styled._FileInput {...props}></Styled._FileInput>;
 };
@@ -54,7 +50,6 @@ const Float = (props) => {
 
 export {
   Body,
-  Button,
   Col,
   Ellipsis,
   FileInput,

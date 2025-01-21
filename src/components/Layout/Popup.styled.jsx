@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { _Float } from './Layout.styled';
 export const _Popup = styled(_Float).attrs((props) => ({ className: 'Popup' }))`
@@ -17,13 +16,16 @@ export const _Popup = styled(_Float).attrs((props) => ({ className: 'Popup' }))`
     justify-content: flex-end;
     align-items: flex-start;
   }
-  .Float:has(.Icon) {
-    right: 1rem;
-    top: 1rem;
-    color: white;
-    background: #484848ad;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-  }
+`;
+
+export const _CloseButton = styled(_Float).attrs((props) => ({
+  className: `CloseButton`,
+}))`
+  right: 1rem;
+  top: 1rem;
+  color: white;
+  background: #484848ad;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
 `;

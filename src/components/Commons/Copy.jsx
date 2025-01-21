@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './Copy.styled.jsx';
+import React, { useEffect, useState } from 'react';
 import { copyToClipboard, randStr } from '../../libs/lib.js';
 import { Ellipsis, Main, Side } from '../Layout/Layout.jsx';
+import * as Styled from './Copy.styled.jsx';
 import { Icon } from './Icon.jsx';
 
 export const Copy = (props) => {
-  const root = React.createRef();
   const id = randStr('Copy');
 
   useEffect(() => {}, []);
@@ -28,7 +27,7 @@ export const Copy = (props) => {
     stop(e);
   };
   const _return = (
-    <Styled._Copy id={id} ref={root} className={`${className}`} {..._props}>
+    <Styled._Copy id={id} className={`${className}`} {..._props}>
       <Main>
         <Ellipsis data={data} />
       </Main>

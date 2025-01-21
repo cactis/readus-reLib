@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './Html.styled.jsx';
+import React, { useEffect, useState } from 'react';
 import { randStr } from '../../libs/lib.js';
+import * as Styled from './Html.styled.jsx';
 
 export const Html = (props) => {
-  const root = React.createRef();
   const id = randStr('Html');
 
   useEffect(() => {}, []);
@@ -14,7 +13,6 @@ export const Html = (props) => {
   const _return = (
     <Styled._Html
       id={id}
-      ref={root}
       className={`${className}`}
       dangerouslySetInnerHTML={{
         __html: data

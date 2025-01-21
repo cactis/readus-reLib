@@ -1,23 +1,10 @@
 /* eslint-disable import/prefer-default-export */
-import React from 'react';
 import styled from 'styled-components';
 import { _Flex } from '../components/Layout/Layout.styled';
 // eslint-disable-next-line no-underscore-dangle
 export const _Library = styled.div.attrs((props) => ({
   className: 'Library',
 }))`
-  /* &.dev {
-    .Logo {
-      color: #03a9f4;
-    }
-  }
-  &.pro {
-    .Logo {
-      color: red;
-    }
-  } */
-  /* background-color: #333;
-  color: white; */
   color: #0c0b0b;
   width: 100%;
   height: 100%;
@@ -50,7 +37,7 @@ export const _Library = styled.div.attrs((props) => ({
       height: 100%;
     }
   }
-  .Footer {
+  > .Footer {
     justify-content: flex-end;
     /* color: #333; */
     font-size: 0.8rem;

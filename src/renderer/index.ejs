@@ -4,6 +4,14 @@
     <meta charset="utf-8" />
     <!-- <meta
       http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    />
+    <meta
+      http-equiv="X-Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'"
+    /> -->
+    <!-- <meta
+      http-equiv="Content-Security-Policy"
       content="script-src 'self' 'unsafe-inline'"
       /> -->
       <!-- <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script> -->
@@ -19,11 +27,27 @@
     <!-- <script src="https://futurepress.github.io/epubjs-reader/js/reader.js"></script> -->
     <script src="https://readus.org/epubjs/epub.js"></script>
     <script src="https://readus.org/epubjs/reader.js"></script>
-     <!-- <script type="text/javascript" src="./reader.js"></script> -->
+    <script type="text/javascript" src="/assets/libs/test.js"></script>
     <!-- <script src="https://futurepress.github.io/epubjs-reader/js/libs/screenfull.min.js"></script> -->
     <title>Readus reLib</title>
   </head>
   <body class=''>
     <div id="root"></div>
+    <script>
+
+    </script>
   </body>
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        fs.readFile(path.join(__dirname, 'fragments/main/welcome.html'), 'utf8', (err, data) => {
+            document.getElementById('content').innerHTML = data;
+            var scripts = document.getElementById('content').getElementsByTagName("script");
+            for (var i = 0; i < scripts.length; i++) {
+              eval(scripts[i].innerText);
+            }
+        });
+    });
+</script> -->
 </html>
+

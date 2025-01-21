@@ -1,19 +1,23 @@
-import React from 'react';
 import styled from 'styled-components';
-import { _Col, _Flex } from '../Layout/Layout.styled';
+import { _Col } from '../Layout/Layout.styled';
 export const _Settings = styled(_Col).attrs((props) => ({
   className: 'Settings',
 }))`
   width: 50vw;
-  padding: 1rem;
   background-color: white;
   color: #333;
   gap: 0.5rem;
-  border: 10px solid #cfcfcf;
-  .Body {
+  /* border: 10px solid #cfcfcf; */
+  > .Header {
+    background-color: #333;
+    color: white;
+    padding: 0.5rem;
+  }
+  > .Body {
+    padding: 1rem;
     flex-flow: column;
   }
-  .Footer {
+  > .Footer {
     flex-flow: column;
   }
 `;

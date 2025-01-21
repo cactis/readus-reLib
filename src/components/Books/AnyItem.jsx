@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { randStr } from '../../libs/lib.js';
 import * as Styled from './AnyItem.styled.jsx';
 import { BookItem } from './BookItem.jsx';
 import { BookWithHighlights } from './BookWithHighlights.jsx';
-import { log, randStr } from '../../libs/lib.js';
 
 export const AnyItem = (props) => {
-  const root = React.createRef();
   const id = randStr('AnyItem');
 
   useEffect(() => {}, []);
@@ -21,7 +20,7 @@ export const AnyItem = (props) => {
   ];
 
   const _return = (
-    <Styled._AnyItem id={id} ref={root} className={`${className}`} {..._props}>
+    <Styled._AnyItem id={id} className={`${className}`} {..._props}>
       <Component {...props} />
     </Styled._AnyItem>
   );

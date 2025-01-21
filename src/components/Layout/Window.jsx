@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { jId, log, randStr } from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';
-import { Reader } from '../Reader.jsx';
 import { Ellipsis, Main, Side } from './Layout.jsx';
 import * as Styled from './Window.styled.jsx';
 
 log($, '$ in window: ');
 
 export const Window = (props) => {
-  const root = React.createRef();
   const id = randStr('Window');
   let $root;
   useEffect(() => {
@@ -17,14 +15,12 @@ export const Window = (props) => {
     $root.attr('size', 'maximize');
   }, []);
 
-  let { title, children, sideData, className = '', ..._props } = props;
+  let { title, children, side, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
-  const side = sideData ? <Reader url={`file://${sideData.url[0]}`} /> : null;
   const _return = (
     <Styled._Window
       id={id}
-      ref={root}
-      className={`${className} ${sideData && 'side-visible'}`}
+      className={`${className} ${side && 'side-visible'}`}
       {..._props}
     >
       <Styled._WHeader>

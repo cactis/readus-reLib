@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import * as Styled from './Box.styled.jsx';
+import { randStr } from '../../libs';
+import * as Styled from './Button.styled.jsx';
 
-export const Box = (props) => {
-  const id = randStr('Box');
+export const Button = (props) => {
+  const id = randStr('Button');
 
   useEffect(() => {}, []);
 
@@ -10,9 +11,7 @@ export const Box = (props) => {
   const [data, setdata] = useState(props.data || []);
 
   const _return = (
-    <Styled._Box id={id} className={`${className}`} {..._props}>
-      Box
-    </Styled._Box>
+    <Styled._Button id={id} className={`${className}`} {..._props} />
   );
 
   return _return;

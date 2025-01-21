@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import * as Styled from './Cover.styled.jsx';
-import { decompress, isDev, log, randStr, stop } from '../../libs/lib';
-import { Icon } from '../Commons/Icon.jsx';
+import React, { useEffect, useState } from 'react';
+import { isDev, log, randStr, stop } from '../../libs/lib';
 import { sendMessage } from '../../libs/window_lib.js';
-import { popup } from '../Layout/Popup.jsx';
 import { Html } from '../Commons/Html.jsx';
+import { Icon } from '../Commons/Icon.jsx';
+import { popup } from '../Layout/Popup.jsx';
+import * as Styled from './Cover.styled.jsx';
 
 export const Cover = (props) => {
-  const root = React.createRef();
   const id = randStr('Cover');
 
   useEffect(() => {}, []);
@@ -29,7 +28,6 @@ export const Cover = (props) => {
   const _return = (
     <Styled._Cover
       id={id}
-      ref={root}
       className={`${className}`}
       {..._props}
       // style={{ backgroundImage: `url(file://${src})` }}

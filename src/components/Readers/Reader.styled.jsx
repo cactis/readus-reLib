@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { _Col, _Flex, _Footer } from './Layout/Layout.styled.jsx';
-import { ReaderCss } from './ReaderCss.js';
+import { _Col, _Flex, _Footer } from '../Layout';
+import { ReaderCss } from '../ReaderCss';
 
 export const _Reader = styled(_Flex).attrs((props) => ({
   className: 'Reader',
@@ -127,5 +127,5 @@ export const _FooterR = styled(_Flex).attrs((props) => ({
 export const _PageSlider = styled(_Footer).attrs((props) => ({
   className: `PageSlider`,
 }))`
-  margin: 3rem 10% 0rem;
+  margin: 0rem 10% 0rem;
 `;

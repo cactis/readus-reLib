@@ -85,8 +85,9 @@ export const _WBody = styled(_Body).attrs((props) => ({
     flex: 1;
   }
   > .Side {
-    flex: 0;
+    flex: 1;
     transition: all 0.5s ease-in-out;
+    margin-right: -100%;
   }
   ${_Window}.side-visible & {
     > .Main {
@@ -96,9 +97,8 @@ export const _WBody = styled(_Body).attrs((props) => ({
     }
 
     > .Side {
+      margin-right: 0;
       box-shadow: 0 0 1px 1px #e9e9e9;
-      flex: 1;
-      background-color: wheat;
     }
   }
 `;
