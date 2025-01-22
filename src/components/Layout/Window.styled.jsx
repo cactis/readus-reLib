@@ -81,24 +81,50 @@ export const _WHeader = styled(_Header).attrs((props) => ({
 export const _WBody = styled(_Body).attrs((props) => ({
   className: `WBody`,
 }))`
-  > .Main {
-    flex: 1;
+  position: relative;
+  > * {
+    top: 0;
+    bottom: 0;
+    position: absolute;
+  }
+  .Main {
+    left: 0;
+    width: 50%;
+    width: 50%;
+  }
+  > .Main,
+  > .Side {
+  }
+  .Ruler {
+    left: 50%;
+    z-index: 1000;
   }
   > .Side {
-    flex: 1;
-    transition: all 0.5s ease-in-out;
-    margin-right: -100%;
+    left: calc(50% + 2px);
+    right: 0;
   }
-  ${_Window}.side-visible & {
+  > .Side,
+  > .Main,
+  > .VRuler {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  ${_Window}.side-hidden & {
     > .Main {
+      width: 100% !important;
       #divider {
         display: none;
       }
     }
-
-    > .Side {
-      margin-right: 0;
-      box-shadow: 0 0 1px 1px #e9e9e9;
+    > .Side,
+    .Ruler {
+      opacity: 0;
+      left: 100% !important;
+      margin-right: -100%;
+      right: -100% !important;
+      overflow: hidden;
+      /* margin-right: 0;
+      box-shadow: 0 0 1px 1px #e9e9e9; */
     }
   }
 `;

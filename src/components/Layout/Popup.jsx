@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { delayed, randStr } from '../../libs/lib.js';
 import { Float } from './Layout.jsx';
 import * as Styled from './Popup.styled.jsx';
 

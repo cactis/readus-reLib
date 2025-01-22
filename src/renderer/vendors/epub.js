@@ -3004,7 +3004,7 @@
             for (var i = 0; i <= path.length; ++i) {
               if (i < path.length) code = path.charCodeAt(i);
               else if (code === 47 /*/*/) break;
-              else code = 47 /*/*/;
+              else code = 47; /*/*/
               if (code === 47 /*/*/) {
                 if (lastSlash === i - 1 || dots === 1) {
                   // NOOP
@@ -3094,7 +3094,7 @@
                 }
 
                 resolvedPath = path + '/' + resolvedPath;
-                resolvedAbsolute = path.charCodeAt(0) === 47 /*/*/;
+                resolvedAbsolute = path.charCodeAt(0) === 47; /*/*/
               }
 
               // At this point the path should be resolved to a full absolute path, but
@@ -3137,7 +3137,7 @@
 
             isAbsolute: function isAbsolute(path) {
               assertPath(path);
-              return path.length > 0 && path.charCodeAt(0) === 47 /*/*/;
+              return path.length > 0 && path.charCodeAt(0) === 47; /*/*/
             },
 
             join: function join() {
@@ -3246,7 +3246,7 @@
               assertPath(path);
               if (path.length === 0) return '.';
               var code = path.charCodeAt(0);
-              var hasRoot = code === 47 /*/*/;
+              var hasRoot = code === 47; /*/*/
               var end = -1;
               var matchedSlash = true;
               for (var i = path.length - 1; i >= 1; --i) {
@@ -3412,7 +3412,7 @@
               var ret = { root: '', dir: '', base: '', ext: '', name: '' };
               if (path.length === 0) return ret;
               var code = path.charCodeAt(0);
-              var isAbsolute = code === 47 /*/*/;
+              var isAbsolute = code === 47; /*/*/
               var start;
               if (isAbsolute) {
                 ret.root = '/';
@@ -5897,7 +5897,6 @@
                 flow: 'scrolled',
                 ignoreClass: '',
               });
-
               (0, _core.extend)(this.settings, options.settings || {});
 
               this.viewSettings = {
@@ -5918,6 +5917,7 @@
               {
                 key: 'render',
                 value: function render(element, size) {
+                  if (!element) return false;
                   var tag = element.tagName;
 
                   if (
@@ -7386,7 +7386,6 @@ edited down
                 stylesheet: null,
                 script: null,
               });
-
               (0, _core.extend)(this.settings, options);
 
               if (_typeof(this.settings.manager) === 'object') {
@@ -10505,7 +10504,6 @@ edited down
                 width: undefined,
                 height: undefined,
               });
-
               (0, _core.extend)(_this.settings, options.settings || {});
 
               // Gap can be 0, but defaults doesn't handle that
@@ -11146,7 +11144,8 @@ edited down
         /* 25 */
         /***/ function (module, exports, __webpack_require__) {
           'use strict';
-          /* WEBPACK VAR INJECTION */ (function (global) {
+          /* WEBPACK VAR INJECTION */
+          (function (global) {
             Object.defineProperty(exports, '__esModule', {
               value: true,
             });
@@ -11398,7 +11397,6 @@ edited down
                 replacements: undefined,
                 canonical: undefined,
               });
-
               (0, _core.extend)(this.settings, options);
 
               // Promises
@@ -18387,10 +18385,12 @@ edited down
         /* 69 */
         /***/ function (module, exports, __webpack_require__) {
           'use strict';
-          /* WEBPACK VAR INJECTION */ (function (global, module) {
+          /* WEBPACK VAR INJECTION */
+          (function (global, module) {
             var __WEBPACK_AMD_DEFINE_FACTORY__,
               __WEBPACK_AMD_DEFINE_ARRAY__,
-              __WEBPACK_AMD_DEFINE_RESULT__; /* From https://github.com/webcomponents/URL/blob/master/url.js
+              __WEBPACK_AMD_DEFINE_RESULT__;
+            /* From https://github.com/webcomponents/URL/blob/master/url.js
              * Added UMD, file link handling */
 
             /* Any copyright is dedicated to the Public Domain.
@@ -18436,8 +18436,6 @@ edited down
                 __WEBPACK_AMD_DEFINE_RESULT__ !== undefined &&
                   (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
               } else {
-                // Browser globals (root is window)
-                root.URL = factory(root);
               }
             })(undefined, function (scope) {
               // feature detect for URL constructor

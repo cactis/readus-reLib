@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { randStr } from '../../libs';
+import { List } from '../List';
 import * as Styled from './NotesList.styled.jsx';
 
 export const NotesList = (props) => {
@@ -18,7 +19,7 @@ export const NotesList = (props) => {
       className={`${className}`}
       {..._props}
     >
-      NotesList
+      <List />
     </Styled._NotesList>
   );
 

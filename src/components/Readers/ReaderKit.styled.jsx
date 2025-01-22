@@ -3,5 +3,12 @@ import { _Col } from '../Layout';
 export const _ReaderKit = styled(_Col).attrs((props) => ({
   className: 'ReaderKit',
 }))`
-  flex: 1;
+  width: 100%;
+  > .Header {
+    padding: 0.2rem 0;
+  }
+  > .Body {
+    flex: unset;
+    flex-grow: unset;
+  }
 `;

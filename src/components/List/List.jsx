@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { delayed, isDev, randStr } from '../../libs/lib.js';
 import { sendMessage } from '../../libs/window_lib.js';
 import { AnyItem } from '../Books';
 import { Icon } from '../Commons/Icon.jsx';
@@ -15,7 +14,7 @@ export const List = (props) => {
   const [time, settime] = useState(props.time);
 
   useEffect(() => {
-    setdata(props.data);
+    setdata(props.data || []);
   }, [props.data]);
 
   const _return = (

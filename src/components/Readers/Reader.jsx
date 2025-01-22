@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { delayed, jId, log, randStr } from '../../libs';
-import { runLast } from '../../libs/window_lib.js';
 import { Icon } from '../Commons';
 import { EpubReaderCss } from '../EpubReaderContentCss.styled';
 import { Body, Footer, Main, Side } from '../Layout';
 import * as Styled from './Reader.styled.jsx';
 
 const _ = require('lodash');
-
-// require('../renderer/vendors/jszip.min.js');
-// require('../renderer/vendors/epub.js');
-// const ePubReader = require('../renderer/vendors/reader.js');
 
 export const Reader = (props) => {
   const id = randStr('Reader');
@@ -480,7 +474,7 @@ export const Reader = (props) => {
       $(slider).trigger('change');
     }
     log($root[0], '$root[0] in : ');
-    new ResizeObserver(onRootResize).observe($root[0]);
+    new ResizeObserver(onRootResize)?.observe($root[0]);
   };
   return _return;
 };

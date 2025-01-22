@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { getAppSettings, jId, randStr, saveAppSettings } from '../../libs/lib';
 import { Button, Field, Form } from '../Form';
 import { Body, Header } from '../Layout/Layout.jsx';
 import * as Styled from './Settings.styled.jsx';

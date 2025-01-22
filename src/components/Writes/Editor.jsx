@@ -1,6 +1,5 @@
 import EditorJS from '@editorjs/editorjs';
 import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';
 import { Field } from '../Form/Field.jsx';
 import * as Styled from './Editor.styled.jsx';

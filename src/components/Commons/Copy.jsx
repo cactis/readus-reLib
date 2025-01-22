@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { copyToClipboard, randStr } from '../../libs/lib.js';
 import { Ellipsis, Main, Side } from '../Layout/Layout.jsx';
 import * as Styled from './Copy.styled.jsx';
 import { Icon } from './Icon.jsx';

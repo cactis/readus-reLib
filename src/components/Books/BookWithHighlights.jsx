@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs/lib.js';
 import { Html } from '../Commons/Html.jsx';
 import { Main, Side } from '../Layout/Layout.jsx';
 import { BookItem } from './BookItem.jsx';

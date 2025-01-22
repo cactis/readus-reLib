@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs/lib.js';
 import * as Styled from './Html.styled.jsx';
 
 export const Html = (props) => {

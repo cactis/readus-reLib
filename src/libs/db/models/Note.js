@@ -19,6 +19,7 @@ Note.init(
 );
 
 Book.hasMany(Note, { foreignKey: 'book_id' });
+Note.belongsTo(Book);
 
 module.exports.Note = Note;
 

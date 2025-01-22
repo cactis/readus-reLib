@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-import React from 'react';
 import styled from 'styled-components';
 export const _List = styled.div.attrs((props) => ({ className: 'List' }))`
   width: 100%;

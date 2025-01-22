@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs/lib.js';
 import { onMessage, sendMessage } from '../../libs/window_lib.js';
 import { Editor } from './Editor.jsx';
 import * as Styled from './Write.styled.jsx';

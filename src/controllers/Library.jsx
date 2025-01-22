@@ -16,17 +16,6 @@ import {
 import * as Styled from './Library.styled.jsx';
 
 import {
-  env,
-  getStorage,
-  isDev,
-  log,
-  randStr,
-  setStorage,
-  stop,
-  wsClose,
-  wsConnect,
-} from '../libs/lib.js';
-import {
   getEventPos,
   onMessage,
   renderComponent,

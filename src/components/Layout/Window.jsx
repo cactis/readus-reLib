@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { jId, log, randStr } from '../../libs/lib.js';
 import { Icon } from '../Commons/Icon.jsx';
 import { Ellipsis, Main, Side } from './Layout.jsx';
+import { Ruler } from './Ruler.jsx';
 import * as Styled from './Window.styled.jsx';
-
-log($, '$ in window: ');
 
 export const Window = (props) => {
   const id = randStr('Window');
@@ -20,7 +18,7 @@ export const Window = (props) => {
   const _return = (
     <Styled._Window
       id={id}
-      className={`${className} ${side && 'side-visible'}`}
+      className={`${className} ${!side && 'side-hidden'}`}
       {..._props}
     >
       <Styled._WHeader>
@@ -57,16 +55,20 @@ export const Window = (props) => {
           <Icon
             name="BsReverseLayoutSidebarReverse"
             onClick={(e) => {
-              $root.toggleClass('side-visible');
+              // $root.toggleClass('animate');
+              // delayed(() => {
+              $root.toggleClass('side-hidden');
+              // $root.toggleClass('animate');
+              // }, 100);
             }}
           />
         </Side>
       </Styled._WHeader>
       <Styled._WBody>
         <Main>{children}</Main>
+        <Ruler by="window" />
         <Side>{side}</Side>
       </Styled._WBody>
-
       <Styled._WFooter>Footer</Styled._WFooter>
     </Styled._Window>
   );

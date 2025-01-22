@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs/lib';
+import React, { useState } from 'react';
 import * as Styled from './Icon.styled.jsx';
 // import * as I from 'react-icons';
 import * as ai from 'react-icons/ai';
@@ -29,13 +28,19 @@ export const Icon = (props) => {
   let {
     $if,
     label,
+    names,
     name,
+    onClick,
     tip = label,
     children,
     className = '',
     ..._props
   } = props;
   if ($if == false) return null;
+
+  if (name && !names) names = [name, name];
+  if (names && !name) name = names[0];
+  let module;
   if (name) {
     let modules = [
       go,
@@ -58,13 +63,18 @@ export const Icon = (props) => {
       pi,
       lu,
     ];
-    let module = modules.filter(
+    module = modules.filter(
       (module, i) => typeof module[name] == 'function',
     )[0];
-    _Icon = module[name]();
   }
-  useEffect(() => {}, []);
-  const [data, setdata] = useState(props.data || []);
+  const [index, setindex] = useState(0);
+
+  const onClicked = (e) => {
+    setindex(index === 0 ? 1 : 0);
+    if (onClick) onClick(e);
+  };
+  // log([name, names, module], '[name,names, module] in : ');
+  let _icon = names ? module[names[index]]() : null;
   const _return = (
     <Styled._Icon
       id={id}
@@ -72,8 +82,9 @@ export const Icon = (props) => {
       className={`${className}`}
       {..._props}
       title={tip}
+      onClick={onClicked}
     >
-      {_Icon}
+      {_icon}
       {label}
     </Styled._Icon>
   );

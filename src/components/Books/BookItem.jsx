@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Reader, ReaderKit } from '../';
-import { randStr } from '../../libs/lib.js';
 import { renderComponent } from '../../libs/window_lib.js';
 import { Window } from '../Layout/Window.jsx';
 import * as Styled from './BookItem.styled.jsx';
@@ -23,6 +22,7 @@ export const BookItem = (props) => {
         // log(data.url, 'data.url in : ');
         renderComponent(
           <Window
+            className={``}
             title={`${data.author} - ${data.title}`}
             side={<ReaderKit book={data} />}
           >

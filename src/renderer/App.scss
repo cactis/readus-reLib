@@ -105,8 +105,8 @@ a:hover {
 
 ._ {
   border: 3px solid red;
-  > * {
-    border: 3px solid green;
+  * {
+    border: 1px solid green;
   }
 }
 

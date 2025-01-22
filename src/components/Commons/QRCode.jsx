@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { log, randStr } from '../../libs/lib.js';
 import { Body, Footer } from '../Layout/Layout.jsx';
 import { Copy } from './Copy.jsx';
 import * as Styled from './QRCode.styled.jsx';

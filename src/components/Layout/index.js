@@ -4,3 +4,4 @@ export * from './Layout.styled.jsx';
 export * from './Popup.jsx';
 export * from './Window.jsx';
 export * from './Tabs.jsx'
+export * from './Ruler.jsx'

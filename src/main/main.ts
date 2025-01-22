@@ -11,6 +11,7 @@ import { resolveHtmlPath } from './util';
 const { Book } = require('../libs/db/models/index');
 
 import { log } from '../libs';
+
 import {
   createFts5Table,
   dbStatus,
