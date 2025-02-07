@@ -1,6 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { _Float } from '../Layout/Layout.styled';
+import { _Float } from '../../components/Layout/Layout.styled';
 export const _Cover = styled.div.attrs((props) => ({ className: 'Cover' }))`
   width: 100%;
   /* aspect-ratio: 9/16; */

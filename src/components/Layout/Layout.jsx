@@ -12,6 +12,10 @@ const Row = (props) => {
   return <Styled._Row {...props}></Styled._Row>;
 };
 
+const Row1 = (props) => {
+  return <Styled._Row {...props}></Styled._Row>;
+};
+
 const Header = (props) => {
   return <Styled._Header {...props}></Styled._Header>;
 };
@@ -59,5 +63,6 @@ export {
   Header,
   Main,
   Row,
+  Row1,
   Side,
 };

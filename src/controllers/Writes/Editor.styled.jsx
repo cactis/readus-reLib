@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { _Body, _Col, _Footer, _Header } from '../Layout/Layout.styled';
+import {
+  _Body,
+  _Col,
+  _Footer,
+  _Header,
+} from '../../components/Layout/Layout.styled';
 export const _Editor = styled(_Col).attrs((props) => ({ className: 'Editor' }))`
   flex: 1;
 `;

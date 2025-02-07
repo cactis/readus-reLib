@@ -1,8 +1,5 @@
-import React from 'react';
 import styled from 'styled-components';
-import { _Row } from '../Layout/Layout.styled';
-import { List } from '../List';
-import { _ListWrapper } from '../List/List.styled';
+import { _Row } from '../../components/Layout/Layout.styled';
 export const _BookWithHighlights = styled(_Row).attrs((props) => ({
   className: 'BookWithHighlights',
 }))`

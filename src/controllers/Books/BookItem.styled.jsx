@@ -1,7 +1,6 @@
-import React from 'react';
 import styled from 'styled-components';
-import { Ellipsis } from '../Layout';
-import { _Col, _Flex } from '../Layout/Layout.styled';
+import { Ellipsis } from '../../components/Layout';
+import { _Col } from '../../components/Layout/Layout.styled';
 
 export const _BookItem = styled(_Col).attrs((props) => ({
   className: 'BookItem',

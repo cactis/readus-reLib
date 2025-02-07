@@ -1,6 +1,5 @@
 import Peer from 'peerjs';
 import ReactDOM from 'react-dom/client';
-import { delayed, funcId, log } from './lib.js';
 
 const renderComponent = (component) => {
   let body = document.getElementsByTagName('body')[0];

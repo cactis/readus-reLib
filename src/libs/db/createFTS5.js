@@ -107,8 +107,10 @@ function deleteAllBooksFTS() {
   _db.exec('DELETE FROM Books_fts');
 }
 
-function insertBookFTS(bookId, content) {
+function insertBookFTS({ bookId, chapter, content }) {
   if (!_db) _db = loadDb();
+  log(chapter, 'chapter in insertBooksFTS: ');
+
   const segmentedContent = segmentText(content);
 
   const prepare = _db.prepare(
@@ -141,14 +143,14 @@ function searchBooksFTS(query) {
   let highlights = _db
     .prepare(
       `
-      select book_id, snippet(Books_fts, 1, '<b>', '</b>', '...', 60) as highlight
+      select book_id, snippet(Books_fts, 1, '<b>', '</b>', '...', 250) as highlight
       from Books_fts
       where Books_fts match ?
       `,
     )
     .all(segmentedQuery);
 
-  log(highlights, 'highlights in : ');
+  // log(highlights, 'highlights in : ');
   let result = {};
 
   highlights.forEach(

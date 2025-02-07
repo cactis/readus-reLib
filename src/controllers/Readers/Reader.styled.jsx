@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { _Col, _Flex, _Footer } from '../Layout';
-import { ReaderCss } from '../ReaderCss';
+import { _Col, _Flex, _Footer } from '../../components/Layout';
+import { ReaderCss } from '../../components/ReaderCss';
 
 export const _Reader = styled(_Flex).attrs((props) => ({
   className: 'Reader',

@@ -118,13 +118,11 @@ export const _WBody = styled(_Body).attrs((props) => ({
     }
     > .Side,
     .Ruler {
-      opacity: 0;
+      display: none;
+      transition-delay: 1s;
+      transition-property: display;
       left: 100% !important;
-      margin-right: -100%;
-      right: -100% !important;
       overflow: hidden;
-      /* margin-right: 0;
-      box-shadow: 0 0 1px 1px #e9e9e9; */
     }
   }
 `;

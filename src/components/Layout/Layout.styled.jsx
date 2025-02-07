@@ -1,35 +1,37 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components'
 
-export const _Layout = styled.div.attrs((props) => ({ className: 'Layout' }))``;
+export const _Layout = styled.div.attrs((props) => ({ className: 'Layout' }))``
 
 export const _Flex = styled.div.attrs((props) => ({ className: `Flex` }))`
   display: flex;
-`;
+`
 
-export const _Col = styled(_Flex).attrs((props) => ({ className: `Flex` }))`
+export const _Col = styled.div.attrs((props) => ({ className: `Flex` }))`
+  display: flex;
   flex-flow: column;
-`;
-export const _Row = styled(_Flex).attrs((props) => ({ className: `Flex` }))`
+`
+export const _Row = styled.div.attrs((props) => ({ className: `Flex` }))`
+  display: flex;
   flex-flow: row;
-`;
+`
 
 export const _Header = styled(_Flex).attrs((props) => ({
   className: `Header`,
 }))`
   flex-shrink: 1;
-`;
+`
 
 export const _Body = styled(_Flex).attrs((props) => ({ className: `Body` }))`
   flex-grow: 1;
-`;
+`
 
-export const _Side = styled(_Flex).attrs((props) => ({ className: `Side` }))``;
+export const _Side = styled(_Flex).attrs((props) => ({ className: `Side` }))``
 
-export const _Main = styled(_Body).attrs((props) => ({ className: `Main` }))``;
+export const _Main = styled(_Body).attrs((props) => ({ className: `Main` }))``
 
 export const _Footer = styled(_Header).attrs((props) => ({
   className: `Footer`,
-}))``;
+}))``
 
 export const ButtonCss = css`
   appearance: none;
@@ -56,7 +58,7 @@ export const ButtonCss = css`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
+`
 
 export const _Button = styled.div.attrs((props) => ({ className: `Button` }))`
   & {
@@ -89,13 +91,13 @@ export const _Button = styled.div.attrs((props) => ({ className: `Button` }))`
     transform: scale(0.9);
     box-shadow: rgba(20, 70, 32, 0.2) 0 1px 0 inset;
   }
-`;
+`
 
 export const _FileInput = styled.input.attrs((props) => ({
   className: `Input`,
 }))`
   ${_Button.componentStyle.rules}
-`;
+`
 
 export const _Ellipsis = styled(_Flex).attrs((props) => ({
   className: `Ellipsis`,
@@ -106,9 +108,9 @@ export const _Ellipsis = styled(_Flex).attrs((props) => ({
     white-space: nowrap;
     overflow: hidden;
   }
-`;
+`
 
 export const _Float = styled.span.attrs((props) => ({ className: `Float` }))`
   position: absolute;
   display: flex;
-`;
+`

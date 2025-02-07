@@ -4,6 +4,7 @@ import * as Styled from './Ruler.styled.jsx';
 export const Ruler = (props) => {
   const root = React.createRef();
   const id = randStr('Ruler');
+  let $root;
 
   useEffect(() => {}, []);
 
@@ -11,10 +12,13 @@ export const Ruler = (props) => {
   const [data, setdata] = useState(props.data || []);
 
   useEffect(() => {
+    $root = $(jId(id));
     setPosition(getStorage(by));
     $(jId(id)).draggable({
       axis: 'x',
       drag: (e, ui) => {
+        let $parent = $(e.target).parent();
+        if (ui.offset.left / $parent.width() >= 0.8) return false;
         let { offset, position } = ui;
         setPosition(offset.left);
       },
@@ -23,20 +27,22 @@ export const Ruler = (props) => {
 
   const setPosition = (left) => {
     if (!left) return false;
-    let $t = $(jId(id));
+    let { storeBy } = props;
+    let $t = $root;
     let $main = $t.prev();
     let $side = $t.next();
-    let parentWidth = $main.parent().width();
+    let width = $main.parent().width();
+    let mainWidth = px(_.min([80, (left / width) * 100]), '%');
     $main.css({
-      width: left,
+      width: mainWidth,
     });
-    let sideWidth = parentWidth - left;
-    // $t.css({ left: 0 });
     $side.css({
-      left: left + $t.width(),
+      left: `calc(${mainWidth} + 8px)`,
     });
-    $t.css({ left });
-    setStorage(by, left);
+    runLast(() => {
+      $t.css({ left: mainWidth });
+      setStorage(storeBy, left);
+    }, 100);
   };
 
   const _return = (

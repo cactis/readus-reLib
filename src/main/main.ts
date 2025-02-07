@@ -18,7 +18,6 @@ import {
   deleteBookFTS,
   dropFts5Table,
   searchBooksFTS,
-  vacuumDatabase,
 } from '../libs/db/createFTS5';
 import { coversPath } from '../libs/db/database';
 import { Note } from '../libs/db/models';
@@ -117,7 +116,7 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
       case 'title':
         keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]);
         loadBooks({ keyword }).then((data) => {
-          log(data, 'data in : ');
+          // log(data, 'data in : ');
           event.reply('booksLoaded', { data, ...dbStatus() });
         });
         break;
@@ -125,7 +124,7 @@ ipcMain.on('loadBooks', (event, arg = {}) => {
         if (keyword) {
           keyword = _.uniq([zh_tw(keyword), zh_cn(keyword)]).join(' OR ');
           searchBooksFTS(keyword).then((data) => {
-            log(data, 'data in : ');
+            // log(data, 'data in : ');
             event.reply('booksLoaded', { data, ...dbStatus() });
           });
         }
@@ -237,7 +236,7 @@ const createWindow = async () => {
   });
 
   mainWindow.on('closed', () => {
-    vacuumDatabase();
+    // vacuumDatabase();
     mainWindow = null;
   });
 

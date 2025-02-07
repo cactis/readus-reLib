@@ -1,7 +1,7 @@
 import EditorJS from '@editorjs/editorjs';
 import React, { useEffect, useState } from 'react';
-import { Icon } from '../Commons/Icon.jsx';
-import { Field } from '../Form/Field.jsx';
+import { Icon } from '../../components/Commons/Icon.jsx';
+import { Field } from '../../components/Form/Field.jsx';
 import * as Styled from './Editor.styled.jsx';
 
 export const Editor = (props) => {

@@ -13,12 +13,19 @@ export const Window = (props) => {
     $root.attr('size', 'maximize');
   }, []);
 
-  let { title, children, side, className = '', ..._props } = props;
+  let {
+    sidehidden = false,
+    title,
+    children,
+    side,
+    className = '',
+    ..._props
+  } = props;
   const [data, setdata] = useState(props.data || []);
   const _return = (
     <Styled._Window
       id={id}
-      className={`${className} ${!side && 'side-hidden'}`}
+      className={`${className} ${!side || (sidehidden && 'side-hidden')}`}
       {..._props}
     >
       <Styled._WHeader>

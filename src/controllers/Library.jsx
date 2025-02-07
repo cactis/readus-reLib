@@ -4,7 +4,6 @@ import {
   Footer,
   Header,
   Icon,
-  List,
   Main,
   popup,
   Reader,
@@ -13,8 +12,6 @@ import {
   Side,
   Window,
 } from '../components';
-import * as Styled from './Library.styled.jsx';
-
 import {
   getEventPos,
   onMessage,
@@ -22,6 +19,8 @@ import {
   runLast,
   sendMessage,
 } from '../libs/window_lib.js';
+import * as Styled from './Library.styled.jsx';
+import { List } from './List';
 
 export const Library = (props) => {
   const id = 'Library';
@@ -182,8 +181,6 @@ export const Library = (props) => {
       </Header>
       <Body>
         <List
-          // className={!keyword || searchBy == 'title' ? 'grid' : 'list'}
-
           toolbar={
             <Icon
               className={`button`}

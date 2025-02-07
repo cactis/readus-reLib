@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Icon } from '../Commons';
-import { EpubReaderCss } from '../EpubReaderContentCss.styled';
-import { Body, Footer, Main, Side } from '../Layout';
+import { Icon } from '../../components/Commons';
+import { EpubReaderCss } from '../../components/EpubReaderContentCss.styled';
+import { Body, Footer, Main, Side } from '../../components/Layout';
 import * as Styled from './Reader.styled.jsx';
 
 const _ = require('lodash');
@@ -33,15 +33,16 @@ export const Reader = (props) => {
   useEffect(() => {
     $root = $(jId(id));
     $reader = $(`.Reader.${token}`);
-    // log($reader, '$reader in : Reader#useEffect');
 
     controls = $reader.find('#controls')[0];
     slider = $reader.find('#current-percent')[0];
-    // log([controls, slider], '[controls, slider] in : ');
 
     delayed(() => {
       observeResize();
     });
+    return () => {
+      // saveBookPosition();
+    };
   }, []);
 
   useEffect(() => {
@@ -52,7 +53,6 @@ export const Reader = (props) => {
   let _reader;
   const loadEpub = async () => {
     log(url, 'url in : ');
-    // log(window.ePubReader, 'window.ePubReader in : ');
     _reader = ePubReader(
       url,
       {
@@ -73,6 +73,10 @@ export const Reader = (props) => {
       .then(function () {
         var key = book.key() + '-locations';
         var stored = localStorage.getItem(key);
+        window.book - book;
+        log(book, 'book');
+        // book.renderer.currentChapter.find('他');
+
         if (stored) {
           book.locations.load(stored);
           let { location } = book.rendition;
@@ -210,7 +214,11 @@ export const Reader = (props) => {
 
     rendition.on('relocated', function (location) {
       log(location, 'location in : ');
-      updatePageNumber();
+      runLast(() => {
+        updatePageNumber();
+
+        saveBookPosition();
+      });
 
       // var percent = book.locations.percentageFromCfi(location.start.cfi);
       // log(percent, 'percent in : ');
@@ -283,9 +291,9 @@ export const Reader = (props) => {
     header.append(style);
   };
 
-  let { children, className = '', ..._props } = props;
+  let { keyword, children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
-
+  log(keyword, 'keyword in Reader.jsx: ');
   const saveBookPosition = () => {
     log(rendition, 'rendition in : ');
     let location = rendition.currentLocation();
@@ -474,7 +482,10 @@ export const Reader = (props) => {
       $(slider).trigger('change');
     }
     log($root[0], '$root[0] in : ');
-    new ResizeObserver(onRootResize)?.observe($root[0]);
+    if ($root[0]) {
+      let observer = new ResizeObserver(onRootResize);
+      observer?.observe($root[0]);
+    }
   };
   return _return;
 };

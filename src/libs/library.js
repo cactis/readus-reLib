@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeImage } from 'electron';
 import { Op } from 'sequelize';
 import { insertBookFTS } from './db/createFTS5';
 import { coversPath } from './db/database';
@@ -40,7 +40,8 @@ export const addBooks = async (files) => {
                 return book;
               });
             } else {
-              let { content } = book;
+              let { contents } = book;
+              // log(content, 'content in : ');
               delete book['content'];
               Book.create(book).then((book) => {
                 book.save().then(({ dataValues }) => {
@@ -52,28 +53,11 @@ export const addBooks = async (files) => {
                     'bookAdded',
                     _book,
                   );
-                  content.forEach((texts) => {
-                    insertBookFTS(id, texts);
+                  contents.forEach(({ chapter, content }) => {
+                    insertBookFTS({ bookId: id, content, chapter });
                   });
                 });
               });
-
-              // let { content } = book;
-              // delete book['content'];
-              // Book.prototype.build(book).then(({ dataValues }) => {
-              //   // log(book, 'book in : ');
-              //   log('book created', "'book created' in : ");
-              //   let _book = dataValues;
-              //   let { id } = _book;
-              //   log(id, 'id in : ');
-              //   BrowserWindow.getFocusedWindow().webContents.send(
-              //     'bookAdded',
-              //     _book,
-              //   );
-              //   content.forEach((texts) => {
-              //     insertBookFTS(id, texts);
-              //   });
-              // });
             }
           });
         } catch (e) {
@@ -93,22 +77,68 @@ export const getAppPath = () => {
   return app.getAppPath();
 };
 
-export const loadContent = (file) => {
+export const loadContents = (file) => {
   return new Promise((resolve, reject) => {
     Epub.createAsync(file, null, null).then((epub) => {
-      // log(epub, 'epub in : ');
+      log(epub, 'epub in : ');
       const { toc } = epub;
       const { contents } = epub.spine;
       Promise.all(
         contents.map((chapter, i) =>
-          epub.getChapterAsync(chapter.id).then((texts) => {
-            // log(texts, 'texts in : ');
-            return texts;
+          epub.getChapterAsync(chapter.id).then((content) => {
+            // log(chapter, 'chapter in : ');
+            // log(content, 'content in : ');
+            return { chapter, content };
           }),
         ),
       ).then((result) => resolve(result));
     });
   });
+};
+
+const resizeImageToWidthAndOverwrite = async (imagePath) => {
+  log(imagePath, 'imagePath in : ');
+  // try {
+  const image = nativeImage.createFromPath(imagePath);
+  if (image.isEmpty()) {
+    console.error('讀取圖片失敗:', imagePath);
+    return;
+  }
+
+  const width = 300;
+  const ratio = width / image.getSize().width;
+  const height = Math.round(image.getSize().height * ratio);
+  const resizedImage = image.resize({
+    width,
+    height,
+  });
+
+  let resizedBuffer;
+  const fileExtension = path.extname(imagePath).toLowerCase();
+  switch (fileExtension) {
+    case '.png':
+      resizedBuffer = resizedImage.toPNG();
+      break;
+    case '.jpg':
+    case '.jpeg':
+      resizedBuffer = resizedImage.toJPEG(100);
+      break;
+    case '.bmp':
+      resizedBuffer = resizedImage.toBitmap();
+      break;
+    default:
+      // 處理其他格式 (如果支援的話，例如 WebP)。
+      resizedBuffer = resizedImage.toPNG(); // 預設轉成 PNG
+      console.warn('不支援的檔案格式，轉成 PNG: ' + fileExtension);
+      break;
+  }
+  log(resizedBuffer, 'resizedBuffer in : ');
+  // 5. 覆蓋原檔
+  await fse.outputFile(imagePath, resizedBuffer, 'binary').then(() => {});
+  console.log('圖片已縮放並覆蓋原檔:', imagePath);
+  // } catch (error) {
+  //   console.error('圖片縮放失敗:', error);
+  // }
 };
 
 const getDataFromEpub = async (file) => {
@@ -130,14 +160,16 @@ const getDataFromEpub = async (file) => {
           _,
         ]) {
           return fse.outputFile(cover, data, 'binary').then(() => {
-            return loadContent(file).then((content) => {
+            log(cover, 'cover in before resize: ');
+            resizeImageToWidthAndOverwrite(cover).then(() => {});
+            return loadContents(file).then((contents) => {
               var book = {
                 sha256,
                 title: epub.metadata.title || 'unknown',
                 author: epub.metadata.creator || 'unknown',
                 cover: cover,
                 url: [file],
-                content,
+                contents,
                 date: epub.metadata.date,
                 language: epub.metadata.language,
                 publisher: epub.metadata.publisher,

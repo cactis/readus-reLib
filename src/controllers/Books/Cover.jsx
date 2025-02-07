@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Html } from '../../components/Commons/Html.jsx';
+import { Icon } from '../../components/Commons/Icon.jsx';
+import { popup } from '../../components/Layout/Popup.jsx';
 import { sendMessage } from '../../libs/window_lib.js';
-import { Html } from '../Commons/Html.jsx';
-import { Icon } from '../Commons/Icon.jsx';
-import { popup } from '../Layout/Popup.jsx';
 import * as Styled from './Cover.styled.jsx';
 
 export const Cover = (props) => {

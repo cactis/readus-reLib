@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs';
 import * as Styled from './Input.styled.jsx';
 
 export const Input = (props) => {

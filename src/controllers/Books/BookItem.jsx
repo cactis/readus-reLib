@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Reader, ReaderKit } from '../';
+import { Reader, ReaderKit, Window } from '../../components';
 import { renderComponent } from '../../libs/window_lib.js';
-import { Window } from '../Layout/Window.jsx';
 import * as Styled from './BookItem.styled.jsx';
 import { Cover } from './Cover.jsx';
 
@@ -12,16 +11,14 @@ export const BookItem = (props) => {
 
   let { children, className = '', ..._props } = props;
   const [data, setdata] = useState(props.data || []);
-  // log(data, 'data in BookItem: ');
   const _return = (
     <Styled._BookItem
       id={id}
       className={`${className}`}
       onClick={(e) => {
-        // log(data, 'data in : ');
-        // log(data.url, 'data.url in : ');
         renderComponent(
           <Window
+            sidehidden
             className={``}
             title={`${data.author} - ${data.title}`}
             side={<ReaderKit book={data} />}

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Icon } from '../Commons';
-import { Body, Box, Footer, Header, Tabs } from '../Layout';
+import { Icon } from '../../components/Commons';
+import { Body, Box, Footer, Header, Tabs } from '../../components/Layout';
+import { NotesList } from '../NotesList';
 import { BookmarksList } from './BookmarksList';
 import { HighlightsList } from './HighlightsList';
-import { NotesList } from './NotesList';
 import * as Styled from './ReaderKit.styled.jsx';
 
 export const ReaderKit = (props) => {

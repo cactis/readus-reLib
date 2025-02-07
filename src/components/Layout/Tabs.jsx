@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { jId, randStr } from '../../libs';
 import * as Styled from './Tabs.styled.jsx';
 
 export const Tabs = (props) => {

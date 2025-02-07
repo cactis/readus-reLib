@@ -15,7 +15,10 @@ jId = (id) => {
 };
 
 log = (msg, title = '') => {
-  console.log(msg, `--- ${title}`);
+  console.log(`--- ${title}`);
+  console.log(msg);
+  console.log(`--- ${title}`);
+  console.log(' ');
 };
 
 stop = (e) => {
@@ -234,4 +237,8 @@ runLast = (func, wait = 1000, ...args) => {
   window._runLast[key] && clearTimeout(window._runLast[key]);
   window._runLast[key] = delayed(func, wait, ...args);
   // log(window._runLast, 'window._runLast in : 2222')
+};
+
+px = (num, unit = 'px') => {
+  return `${num}${unit}`;
 };

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { randStr } from '../../libs';
-import * as Styled from './BookmarksList.styled.jsx';
+import * as Styled from './HighlightsList.styled.jsx';
 
-export const BookmarksList = (props) => {
+export const HighlightsList = (props) => {
   const root = React.createRef();
-  const id = randStr('BookmarksList');
+  const id = randStr('HighlightsList');
 
   useEffect(() => {}, []);
 
@@ -12,14 +11,14 @@ export const BookmarksList = (props) => {
   const [data, setdata] = useState(props.data || []);
 
   const _return = (
-    <Styled._BookmarksList
+    <Styled._HighlightsList
       id={id}
       ref={root}
       className={`${className}`}
       {..._props}
     >
-      BookmarksList
-    </Styled._BookmarksList>
+      HighlightsList
+    </Styled._HighlightsList>
   );
 
   return _return;
